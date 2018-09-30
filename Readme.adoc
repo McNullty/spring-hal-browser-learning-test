@@ -23,3 +23,10 @@ When adding up all problems Spring Data REST and Spring Data REST HAL Browser be
 HAL Browser should be outside of a project and provided by Docker image. That way you can target localhost while developing REST API for quick check, and then later you can target your project in separate docker container.
 
 Project should link to API documentation created with Spring REST Docs library.
+
+== Current solution
+For now I decided to use simplest solution so I copied https://github.com/mikekelly/hal-browser[HAL Browser] to static resources and created controller that redirects to static index.html.
+
+Now HAL Browser can be accessed at http://localhost:8080/browser/index.html
+
+NOTE:  We could probably extract static files and serve them with nginx, but for now this is good eneough.
