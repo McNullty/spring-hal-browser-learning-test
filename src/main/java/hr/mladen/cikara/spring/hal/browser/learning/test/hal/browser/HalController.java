@@ -1,7 +1,7 @@
-package hr.mladen.cikara.spring.hal.browser.learning.test.hal;
+package hr.mladen.cikara.spring.hal.browser.learning.test.hal.browser;
 
-import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.View;
@@ -11,22 +11,11 @@ import org.springframework.web.util.UriComponents;
 
 import javax.servlet.http.HttpServletRequest;
 
-//@Controller
-@BasePathAwareController
+@Controller
 public class HalController {
 
     private static String BROWSER = "/browser";
     private static String INDEX = "/index.html";
-
-    /**
-     * Redirects requests to the API root asking for HTML to the HAL browser.
-     *
-     * @return
-     */
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public View index(HttpServletRequest request) {
-        return getRedirectView(request, false);
-    }
 
     /**
      * Redirects to the actual {@code index.html}.
