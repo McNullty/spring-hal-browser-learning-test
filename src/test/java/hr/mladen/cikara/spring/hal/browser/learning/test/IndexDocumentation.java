@@ -22,7 +22,7 @@ public class IndexDocumentation  extends AbstractDocumentation {
                                 linkWithRel("profile").description("The ALPS profile for the service")),
                         responseFields(
                                 subsectionWithPath("_links")
-                                        .description("<<resources-index-links,Links>> to other resources"))));
+                                        .description("<<resources-index-access_links,Links>> to other resources"))));
 
     }
 }

@@ -6,6 +6,7 @@ import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +14,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,7 +73,7 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
-    public void noteGetExample() throws Exception {
+    public void bookGetExample() throws Exception {
 
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
@@ -107,6 +107,55 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 fieldWithPath("blurb").description("Short blurb for a book"),
                                 fieldWithPath("pages").description("Number of pages of a book"),
                                 subsectionWithPath("_links").description("<<resources-book-links,Links>> to other resources"))));
+    }
+
+    @Test
+    public void bookUpdateExample() throws Exception {
+        Map<String, Object> book = new HashMap<String, Object>();
+        book.put("title", "Refactoring: Improving the Design of Existing Code");
+        book.put("author", "Martin Fowler");
+        book.put("pages", 448);
+
+        String bookLocation = this.mockMvc
+                .perform(
+                        post("/books").contentType(MediaTypes.HAL_JSON).content(
+                                this.objectMapper.writeValueAsString(book)))
+                .andExpect(status().isCreated()).andReturn().getResponse()
+                .getHeader("Location");
+
+        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+                .andExpect(jsonPath("title", is(book.get("title"))))
+                .andExpect(jsonPath("author", is(book.get("author"))))
+                .andExpect(jsonPath("blurb", is(book.get("blurb"))))
+                .andExpect(jsonPath("pages", is(book.get("pages"))))
+                .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+
+
+        Map<String, Object> bookUpdate = new HashMap<String, Object>();
+        bookUpdate.put("blurb", "Any fool can write code that a computer can understand. Good programmers write code that " +
+                "humans can understand.");
+
+        this.mockMvc.perform(
+                patch(bookLocation).contentType(MediaTypes.HAL_JSON).content(
+                        this.objectMapper.writeValueAsString(bookUpdate)))
+                .andExpect(status().isNoContent())
+                .andDo(document("book-update-example",
+                        requestFields(
+                                fieldWithPath("title").description("The title of the book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("author").description("Author of the book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("blurb").description("Short blurb for a book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("pages").description("Number of pages of a book")
+                                        .type(JsonFieldType.NUMBER).optional())));
+
+        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+                .andExpect(jsonPath("title", is(book.get("title"))))
+                .andExpect(jsonPath("author", is(book.get("author"))))
+                .andExpect(jsonPath("blurb", is(bookUpdate.get("blurb"))))
+                .andExpect(jsonPath("pages", is(book.get("pages"))))
+                .andExpect(jsonPath("_links.self.href", is(bookLocation)));
     }
 
     private void createTestData() {
