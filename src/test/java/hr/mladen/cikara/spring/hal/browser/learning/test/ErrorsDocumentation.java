@@ -1,6 +1,5 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,9 +31,6 @@ public class ErrorsDocumentation {
 
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private WebApplicationContext context;
