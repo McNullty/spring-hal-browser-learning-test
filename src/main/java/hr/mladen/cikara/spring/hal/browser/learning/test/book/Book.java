@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-class Book {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
