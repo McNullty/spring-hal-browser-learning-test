@@ -122,3 +122,45 @@ operation::books-list-example[snippets='response-fields,curl-request,http-respon
 A `POST` request is used to create a booke.
 
 operation::books-create-example[snippets='request-fields,curl-request,http-response']
+
+[[resources-book]]
+== Book
+
+The Book resource is used to retrieve, update, and delete individual books
+
+
+
+[[resources-book-links]]
+=== Links
+
+include::{snippets}/book-get-example/links.adoc[]
+
+
+
+[[resources-book-retrieve]]
+=== Retrieve a book
+
+A `GET` request will retrieve the details of a note
+
+operation::book-get-example[snippets='response-fields,curl-request,http-response']
+
+
+
+[[resources-book-update]]
+=== Update a book
+
+A `PATCH` request is used to update a book
+
+==== Request structure
+
+include::{snippets}/book-update-example/request-fields.adoc[]
+
+To leave an attribute of a book unchanged, any of the above may be omitted from the request.
+
+==== Example request
+
+include::{snippets}/book-update-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-update-example/http-response.adoc[]
