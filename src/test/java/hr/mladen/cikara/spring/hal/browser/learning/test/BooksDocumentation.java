@@ -30,16 +30,18 @@ public class BooksDocumentation extends AbstractDocumentation {
 
     @Test
     public void booksListExample() throws Exception {
-        this.bookRepository.deleteAll();
-
         createTestData();
 
-        this.mockMvc.perform(get("/books"))
+        this.mockMvc.perform(get("/books?page=1&size=4"))
                 .andExpect(status().isOk())
                 .andDo(document("books-list-example",
-                       links(halLinks(),
+                        links(halLinks(),
                                 linkWithRel("self").description("Canonical link for this resource"),
                                 linkWithRel("profile").description("The ALPS profile for this resource"),
+                                linkWithRel("next").description("Next page with list of books").optional(),
+                                linkWithRel("last").description("Last page with list of books").optional(),
+                                linkWithRel("first").description("First page with list of books").optional(),
+                                linkWithRel("prev").description("Previous page with list of books").optional(),
                                 linkWithRel("search").description("Link for creating custom search on this resource")),
                         responseFields(
                                 subsectionWithPath("_links")
@@ -47,7 +49,7 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 subsectionWithPath("_embedded.books")
                                         .description("An array of <<resources-book, Book resources>>"),
                                 subsectionWithPath("page").description("Information about paging data"))
-                        ));
+                ));
     }
 
     @Test
