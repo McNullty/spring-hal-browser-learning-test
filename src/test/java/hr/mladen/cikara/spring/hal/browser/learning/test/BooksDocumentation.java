@@ -1,23 +1,29 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
 
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.halLinks;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class BooksDocumentation extends AbstractDocumentation {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void booksListExample() throws Exception {
@@ -39,6 +45,28 @@ public class BooksDocumentation extends AbstractDocumentation {
                                         .description("An array of <<resources-book, Book resources>>"),
                                 subsectionWithPath("page").description("Information about paging data"))
                         ));
+    }
+
+    @Test
+    public void booksCreateExample() throws Exception {
+
+        Map<String, Object> note = new HashMap<String, Object>();
+        note.put("title", "Refactoring: Improving the Design of Existing Code");
+        note.put("author", "Martin Fowler");
+        note.put("blurb", "Any fool can write code that a computer can understand. Good programmers write code that " +
+                "humans can understand.");
+        note.put("pages", 448);
+
+        this.mockMvc.perform(
+                post("/books").contentType(MediaTypes.HAL_JSON).content(
+                        this.objectMapper.writeValueAsString(note))).andExpect(
+                status().isCreated())
+                .andDo(document("books-create-example",
+                        requestFields(
+                                fieldWithPath("title").description("The title of the book"),
+                                fieldWithPath("author").description("Author of the book"),
+                                fieldWithPath("blurb").description("Short blurb for a book"),
+                                fieldWithPath("pages").description("Number of pages of a book"))));
     }
 
     private void createTestData() {
