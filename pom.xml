@@ -78,6 +78,9 @@
                         <include>**/*Documentation.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/AbstractDocumentation.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
