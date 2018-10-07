@@ -29,4 +29,11 @@ For now I decided to use simplest solution so I copied https://github.com/mikeke
 
 Now HAL Browser can be accessed at http://localhost:8080/browser/index.html
 
-NOTE:  We could probably extract static files and serve them with nginx, but for now this is good eneough.
+NOTE:  We could probably extract static files and serve them with nginx, but for now this is good enough.
+
+== API Documentation
+
+API Documentation is created with Spring REST Docs library and it is packaged with application.
+
+When running application you can access API documentation at http://localhost:8080/docs/api-guide.html
+
