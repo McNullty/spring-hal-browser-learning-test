@@ -68,8 +68,7 @@ that describes the problem. The error object has the following structure:
 
 include::{snippets}/error-example/response-fields.adoc[]
 
-For example, a request that attempts to apply a non-existent tag to a note will produce a
-`400 Bad Request` response:
+Example of `400 Bad Request` response:
 
 include::{snippets}/error-example/http-response.adoc[]
 
@@ -140,9 +139,9 @@ include::{snippets}/book-get-example/links.adoc[]
 [[resources-book-retrieve]]
 === Retrieve a book
 
-A `GET` request will retrieve the details of a note
+A `GET` request will retrieve the details of a book.
 
-operation::book-get-example[snippets='response-fields,curl-request,http-response']
+operation::book-get-example[snippets='path-parameters,response-fields,curl-request,http-response']
 
 
 

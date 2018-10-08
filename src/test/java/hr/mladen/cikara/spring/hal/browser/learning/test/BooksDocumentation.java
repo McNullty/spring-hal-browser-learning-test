@@ -17,6 +17,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -94,11 +95,13 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .perform(
                         post("/books").contentType(MediaTypes.HAL_JSON).content(
                                 this.objectMapper.writeValueAsString(book)))
-                .andExpect(status().isCreated()).andReturn().getResponse()
-                .getHeader("Location");
+                .andExpect(status().isCreated())
+                .andDo(print())
+                .andReturn().getResponse().getHeader("Location");
 
-        // TODO: Think about documenting path parameter
-        this.mockMvc.perform(get(bookLocation))
+        String bookId = bookLocation.substring(bookLocation.lastIndexOf("/") + 1);
+
+        this.mockMvc.perform(get("/books/{bookId}",Long.parseLong(bookId)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(book.get("title"))))
                 .andExpect(jsonPath("author", is(book.get("author"))))
@@ -110,6 +113,7 @@ public class BooksDocumentation extends AbstractDocumentation {
                         links(
                                 linkWithRel("self").description("Canonical link for this <<resources-book,book>>"),
                                 linkWithRel("book").description("This <<resources-book,book>>")),
+                        pathParameters(parameterWithName("bookId").description("Id of a book")),
                         responseFields(
                                 fieldWithPath("title").description("The title of the book"),
                                 fieldWithPath("author").description("Author of the book"),
@@ -129,8 +133,8 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .perform(
                         post("/books").contentType(MediaTypes.HAL_JSON).content(
                                 this.objectMapper.writeValueAsString(book)))
-                .andExpect(status().isCreated()).andReturn().getResponse()
-                .getHeader("Location");
+                .andExpect(status().isCreated()).andDo(print())
+                .andReturn().getResponse().getHeader("Location");
 
         this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(book.get("title"))))
