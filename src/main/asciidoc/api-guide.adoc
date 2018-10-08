@@ -122,6 +122,15 @@ A `POST` request is used to create a booke.
 
 operation::books-create-example[snippets='request-fields,curl-request,http-response']
 
+
+[[resources-book-search]]
+=== Searching books
+
+A `GET` request will list all of the service's books that confirm to query.
+
+operation::books-search-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
+
+
 [[resources-book]]
 == Book
 

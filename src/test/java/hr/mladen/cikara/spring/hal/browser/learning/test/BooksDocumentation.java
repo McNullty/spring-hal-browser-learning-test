@@ -33,6 +33,7 @@ public class BooksDocumentation extends AbstractDocumentation {
 
     @Test
     public void booksListExample() throws Exception {
+        // TODO: think if creating data should be in setup method for this test (BeforeAll)
         createTestData();
 
         this.mockMvc.perform(get("/books?page=1&size=4&sort=pages,desc&sort=title,asc"))
@@ -47,6 +48,31 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 linkWithRel("prev").description("Previous page with list of books").optional(),
                                 linkWithRel("search").description("Link for creating custom search on this resource")),
                         requestParameters(
+                                parameterWithName("page").description("The page to retrieve").optional(),
+                                parameterWithName("size").description("Number of entries per page").optional(),
+                                parameterWithName("sort").description("Order of entries").optional()),
+                        responseFields(
+                                subsectionWithPath("_links")
+                                        .description("<<resources-books-list_links,Links>> to other resources"),
+                                subsectionWithPath("_embedded.books")
+                                        .description("An array of <<resources-book, Book resources>>"),
+                                subsectionWithPath("page").description("Information about paging data"))
+                ));
+    }
+
+    @Test
+    public void booksSearchExample() throws Exception {
+        this.mockMvc.perform(get("/books/search/title-contains?query=1&page=2&size=4&sort=pages,desc&sort=title"))
+                .andExpect(status().isOk())
+                .andDo(document("books-search-example",
+                        links(halLinks(),
+                                linkWithRel("self").description("Canonical link for this resource"),
+                                linkWithRel("next").description("Next page with list of books").optional(),
+                                linkWithRel("last").description("Last page with list of books").optional(),
+                                linkWithRel("first").description("First page with list of books").optional(),
+                                linkWithRel("prev").description("Previous page with list of books").optional()),
+                        requestParameters(
+                                parameterWithName("query").description("Query that book title must have"),
                                 parameterWithName("page").description("The page to retrieve").optional(),
                                 parameterWithName("size").description("Number of entries per page").optional(),
                                 parameterWithName("sort").description("Order of entries").optional()),
