@@ -16,6 +16,8 @@ import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,7 +34,7 @@ public class BooksDocumentation extends AbstractDocumentation {
     public void booksListExample() throws Exception {
         createTestData();
 
-        this.mockMvc.perform(get("/books?page=1&size=4"))
+        this.mockMvc.perform(get("/books?page=1&size=4&sort=pages,desc&sort=title,asc"))
                 .andExpect(status().isOk())
                 .andDo(document("books-list-example",
                         links(halLinks(),
@@ -43,6 +45,10 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 linkWithRel("first").description("First page with list of books").optional(),
                                 linkWithRel("prev").description("Previous page with list of books").optional(),
                                 linkWithRel("search").description("Link for creating custom search on this resource")),
+                        requestParameters(
+                                parameterWithName("page").description("The page to retrieve").optional(),
+                                parameterWithName("size").description("Number of entries per page").optional(),
+                                parameterWithName("sort").description("Order of entries").optional()),
                         responseFields(
                                 subsectionWithPath("_links")
                                         .description("<<resources-books-list_links,Links>> to other resources"),
@@ -91,6 +97,7 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .andExpect(status().isCreated()).andReturn().getResponse()
                 .getHeader("Location");
 
+        // TODO: Think about documenting path parameter
         this.mockMvc.perform(get(bookLocation))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(book.get("title"))))

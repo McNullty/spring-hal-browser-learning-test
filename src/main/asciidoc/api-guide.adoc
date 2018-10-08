@@ -112,7 +112,7 @@ The Books resources is used to create and list books
 
 A `GET` request will list all of the service's books.
 
-operation::books-list-example[snippets='response-fields,curl-request,http-response,links']
+operation::books-list-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
 
 
 
