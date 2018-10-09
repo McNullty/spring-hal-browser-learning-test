@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,7 +126,7 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .andDo(print())
                 .andReturn().getResponse().getHeader("Location");
 
-        String bookId = bookLocation.substring(bookLocation.lastIndexOf("/") + 1);
+        String bookId = getBookIdFromLocation(bookLocation);
 
         this.mockMvc.perform(get("/books/{bookId}",Long.parseLong(bookId)))
                 .andExpect(status().isOk())
@@ -247,6 +248,42 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
                 .andExpect(jsonPath("pages", is(bookReplace.get("pages"))))
                 .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+    }
+
+    @Test
+    public void bookDeleteExample() throws Exception {
+        Map<String, Object> book = new HashMap<String, Object>();
+        book.put("title", "Refactoring: Improving the Design of Existing Code");
+        book.put("author", "Martin Fowler");
+        book.put("pages", 448);
+
+        String bookLocation = this.mockMvc
+                .perform(
+                        post("/books").contentType(MediaTypes.HAL_JSON).content(
+                                this.objectMapper.writeValueAsString(book)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getHeader("Location");
+
+        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+                .andExpect(jsonPath("title", is(book.get("title"))))
+                .andExpect(jsonPath("author", is(book.get("author"))))
+                .andExpect(jsonPath("blurb", is(book.get("blurb"))))
+                .andExpect(jsonPath("pages", is(book.get("pages"))))
+                .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+
+        String bookId = getBookIdFromLocation(bookLocation);
+
+        this.mockMvc.perform(
+                delete("/books/{bookId}",Long.parseLong(bookId)))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("book-delete-example",
+                        pathParameters(parameterWithName("bookId").description("Id of a book"))));
+
+    }
+
+    private String getBookIdFromLocation(@NotNull String bookLocation) {
+        return bookLocation.substring(bookLocation.lastIndexOf("/") + 1);
     }
 
     private void createTestData() {

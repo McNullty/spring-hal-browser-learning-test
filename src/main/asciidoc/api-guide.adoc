@@ -186,7 +186,7 @@ A `PUT` request is used to replace a book
 
 include::{snippets}/book-replace-example/request-fields.adoc[]
 
-To leave an attribute of a book unchanged, any of the above may be omitted from the request.
+If any of the above is omitted from the request, is is the same as making that field null.
 
 ==== Example request
 
@@ -195,3 +195,20 @@ include::{snippets}/book-replace-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/book-replace-example/http-response.adoc[]
+
+[[resources-book-delete]]
+=== Delete a book
+
+A `DELETE` request is used to delete a book
+
+==== Path parameters
+
+include::{snippets}/book-delete-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/book-delete-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-delete-example/http-response.adoc[]
