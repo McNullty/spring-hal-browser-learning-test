@@ -197,6 +197,58 @@ public class BooksDocumentation extends AbstractDocumentation {
                 .andExpect(jsonPath("_links.self.href", is(bookLocation)));
     }
 
+    @Test
+    public void bookReplaceExample() throws Exception {
+        Map<String, Object> book = new HashMap<String, Object>();
+        book.put("title", "Refactoring: Improving the Design of Existing Code");
+        book.put("author", "Martin Fowler");
+        book.put("pages", 448);
+
+        String bookLocation = this.mockMvc
+                .perform(
+                        post("/books").contentType(MediaTypes.HAL_JSON).content(
+                                this.objectMapper.writeValueAsString(book)))
+                .andExpect(status().isCreated()).andDo(print())
+                .andReturn().getResponse().getHeader("Location");
+
+        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+                .andExpect(jsonPath("title", is(book.get("title"))))
+                .andExpect(jsonPath("author", is(book.get("author"))))
+                .andExpect(jsonPath("blurb", is(book.get("blurb"))))
+                .andExpect(jsonPath("pages", is(book.get("pages"))))
+                .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+
+
+        Map<String, Object> bookReplace = new HashMap<String, Object>();
+        bookReplace.put("title", "Refactoring: Improving the Design of Existing Code");
+        bookReplace.put("author", "Martin Fowler");
+        bookReplace.put("blurb", "Any fool can write code that a computer can understand. Good programmers write code that " +
+                "humans can understand.");
+        bookReplace.put("pages", 448);
+
+        this.mockMvc.perform(
+                put(bookLocation).contentType(MediaTypes.HAL_JSON).content(
+                        this.objectMapper.writeValueAsString(bookReplace)))
+                .andExpect(status().isNoContent())
+                .andDo(document("book-replace-example",
+                        requestFields(
+                                fieldWithPath("title").description("The title of the book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("author").description("Author of the book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("blurb").description("Short blurb for a book")
+                                        .type(JsonFieldType.STRING).optional(),
+                                fieldWithPath("pages").description("Number of pages of a book")
+                                        .type(JsonFieldType.NUMBER).optional())));
+
+        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+                .andExpect(jsonPath("title", is(bookReplace.get("title"))))
+                .andExpect(jsonPath("author", is(bookReplace.get("author"))))
+                .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
+                .andExpect(jsonPath("pages", is(bookReplace.get("pages"))))
+                .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+    }
+
     private void createTestData() {
         createBook("Patterns of Enterprise Application Architecture",
                 "Martin Fowler", "The practice of enterprise application development has benefited from the " +

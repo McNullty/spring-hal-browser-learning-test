@@ -30,6 +30,9 @@ use of HTTP verbs.
 | `PATCH`
 | Used to update an existing resource, including partial updates
 
+| `PUT`
+| Used to replace an existing resource
+
 | `DELETE`
 | Used to delete an existing resource
 |===
@@ -172,3 +175,23 @@ include::{snippets}/book-update-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/book-update-example/http-response.adoc[]
+
+
+[[resources-book-replace]]
+=== Replace a book
+
+A `PUT` request is used to replace a book
+
+==== Request structure
+
+include::{snippets}/book-replace-example/request-fields.adoc[]
+
+To leave an attribute of a book unchanged, any of the above may be omitted from the request.
+
+==== Example request
+
+include::{snippets}/book-replace-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-replace-example/http-response.adoc[]
