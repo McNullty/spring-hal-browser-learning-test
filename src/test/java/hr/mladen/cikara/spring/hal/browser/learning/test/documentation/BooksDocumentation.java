@@ -1,4 +1,4 @@
-package hr.mladen.cikara.spring.hal.browser.learning.test;
+package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;

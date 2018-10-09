@@ -1,4 +1,4 @@
-package hr.mladen.cikara.spring.hal.browser.learning.test;
+package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
 import org.junit.Test;
 
