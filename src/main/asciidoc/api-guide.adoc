@@ -1,0 +1,214 @@
+= HAL Browser learning test API Guide
+Mladen Čikara;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+HAL Browser learning test tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PATCH`
+| Used to update an existing resource, including partial updates
+
+| `PUT`
+| Used to replace an existing resource
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+HAL Browser learning test tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[overview-errors]]
+== Errors
+
+Whenever an error response (status code >= 400) is returned, the body will contain a JSON object
+that describes the problem. The error object has the following structure:
+
+include::{snippets}/error-example/response-fields.adoc[]
+
+Example of `400 Bad Request` response:
+
+include::{snippets}/error-example/http-response.adoc[]
+
+[[overview-hypermedia]]
+== Hypermedia
+
+HAL Browser learning test uses hypermedia and resources include links to other resources in their
+responses. Responses are in http://stateless.co/hal_specification.html[Hypertext Application
+Language (HAL)] format. Links can be found beneath the `_links` key. Users of the API should
+not create URIs themselves, instead they should use the above-described links to navigate
+
+[[resources]]
+= Resources
+
+
+
+[[resources-index]]
+== Index
+
+The index provides the entry point into the service.
+
+
+
+[[resources-index-access]]
+=== Accessing the index
+
+A `GET` request is used to access the index
+
+operation::index-example[snippets='response-fields,http-response,links']
+
+[[resources-books]]
+== Books
+
+The Books resources is used to create and list books
+
+
+
+[[resources-books-list]]
+=== Listing books
+
+A `GET` request will list all of the service's books.
+
+operation::books-list-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
+
+
+
+[[resources-books-create]]
+=== Creating a book
+
+A `POST` request is used to create a booke.
+
+operation::books-create-example[snippets='request-fields,curl-request,http-response']
+
+
+[[resources-book-search]]
+=== Searching books
+
+A `GET` request will list all of the service's books that confirm to query.
+
+operation::books-search-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
+
+
+[[resources-book]]
+== Book
+
+The Book resource is used to retrieve, update, and delete individual books
+
+
+
+[[resources-book-links]]
+=== Links
+
+include::{snippets}/book-get-example/links.adoc[]
+
+
+
+[[resources-book-retrieve]]
+=== Retrieve a book
+
+A `GET` request will retrieve the details of a book.
+
+operation::book-get-example[snippets='path-parameters,response-fields,curl-request,http-response']
+
+
+
+[[resources-book-update]]
+=== Update a book
+
+A `PATCH` request is used to update a book
+
+==== Request structure
+
+include::{snippets}/book-update-example/request-fields.adoc[]
+
+To leave an attribute of a book unchanged, any of the above may be omitted from the request.
+
+==== Example request
+
+include::{snippets}/book-update-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-update-example/http-response.adoc[]
+
+
+[[resources-book-replace]]
+=== Replace a book
+
+A `PUT` request is used to replace a book
+
+==== Request structure
+
+include::{snippets}/book-replace-example/request-fields.adoc[]
+
+If any of the above is omitted from the request, is is the same as making that field null.
+
+==== Example request
+
+include::{snippets}/book-replace-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-replace-example/http-response.adoc[]
+
+[[resources-book-delete]]
+=== Delete a book
+
+A `DELETE` request is used to delete a book
+
+==== Path parameters
+
+include::{snippets}/book-delete-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/book-delete-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/book-delete-example/http-response.adoc[]
