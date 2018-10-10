@@ -1,6 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
