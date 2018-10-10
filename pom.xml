@@ -22,6 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
+        <junit-platform-launcher.version>1.3.1</junit-platform-launcher.version>
     </properties>
 
     <dependencies>
@@ -52,11 +54,32 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform-launcher.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-mockmvc</artifactId>
@@ -129,6 +152,15 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 
