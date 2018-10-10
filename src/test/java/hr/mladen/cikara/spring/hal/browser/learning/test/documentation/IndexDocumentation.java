@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class IndexDocumentation  extends AbstractDocumentation {
 
     @Test
+    @DisplayName("Documentation for index endpoint")
     public void indexExample() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
