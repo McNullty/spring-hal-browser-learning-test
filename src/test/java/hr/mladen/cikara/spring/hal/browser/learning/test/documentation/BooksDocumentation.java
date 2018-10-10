@@ -3,6 +3,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("Documentation for /books endpoint")
 public class BooksDocumentation extends AbstractDocumentation {
 
     @Autowired
@@ -31,11 +33,16 @@ public class BooksDocumentation extends AbstractDocumentation {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("Documentation for listing all books")
     public void booksListExample() throws Exception {
+
+        // GIVEN:
         // TODO: think if creating data should be in setup method for this test (BeforeAll)
         createTestData();
 
+        //WHEN:
         this.mockMvc.perform(get("/books?page=1&size=4&sort=pages,desc&sort=title,asc"))
+        // THEN:
                 .andExpect(status().isOk())
                 .andDo(document("books-list-example",
                         links(halLinks(),
@@ -60,8 +67,12 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for searching books")
     public void booksSearchExample() throws Exception {
+        // GIVEN:
+        // WHEN:
         this.mockMvc.perform(get("/books/search/title-contains?query=1&page=2&size=4&sort=pages,desc&sort=title"))
+        // THEN:
                 .andExpect(status().isOk())
                 .andDo(document("books-search-example",
                         links(halLinks(),
@@ -85,7 +96,10 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for creating books")
     public void booksCreateExample() throws Exception {
+
+        // GIVEN:
 
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
@@ -94,10 +108,12 @@ public class BooksDocumentation extends AbstractDocumentation {
                 "humans can understand.");
         book.put("pages", 448);
 
+        // WHEN:
         this.mockMvc.perform(
                 post("/books").contentType(MediaTypes.HAL_JSON).content(
-                        this.objectMapper.writeValueAsString(book))).andExpect(
-                status().isCreated())
+                        this.objectMapper.writeValueAsString(book)))
+        // THEN:
+                .andExpect(status().isCreated())
                 .andDo(document("books-create-example",
                         requestFields(
                                 fieldWithPath("title").description("The title of the book"),
@@ -107,8 +123,10 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for fetching a book")
     public void bookGetExample() throws Exception {
 
+        // GIVEN:
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
         book.put("author", "Martin Fowler");
@@ -126,7 +144,9 @@ public class BooksDocumentation extends AbstractDocumentation {
 
         String bookId = getBookIdFromLocation(bookLocation);
 
+        // WHEN:
         this.mockMvc.perform(get("/books/{bookId}",Long.parseLong(bookId)))
+        // THEN:
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(book.get("title"))))
                 .andExpect(jsonPath("author", is(book.get("author"))))
@@ -148,7 +168,11 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for updating a book")
     public void bookUpdateExample() throws Exception {
+
+        // GIVEN:
+
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
         book.put("author", "Martin Fowler");
@@ -188,7 +212,10 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 fieldWithPath("pages").description("Number of pages of a book")
                                         .type(JsonFieldType.NUMBER).optional())));
 
-        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+        // WHEN:
+        this.mockMvc.perform(get(bookLocation))
+        // THEN:
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(book.get("title"))))
                 .andExpect(jsonPath("author", is(book.get("author"))))
                 .andExpect(jsonPath("blurb", is(bookUpdate.get("blurb"))))
@@ -197,7 +224,11 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for replacing a book")
     public void bookReplaceExample() throws Exception {
+
+        // GIVEN:
+
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
         book.put("author", "Martin Fowler");
@@ -240,7 +271,10 @@ public class BooksDocumentation extends AbstractDocumentation {
                                 fieldWithPath("pages").description("Number of pages of a book")
                                         .type(JsonFieldType.NUMBER).optional())));
 
-        this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+        // WHEN:
+        this.mockMvc.perform(get(bookLocation))
+        // THEN:
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("title", is(bookReplace.get("title"))))
                 .andExpect(jsonPath("author", is(bookReplace.get("author"))))
                 .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
@@ -249,7 +283,11 @@ public class BooksDocumentation extends AbstractDocumentation {
     }
 
     @Test
+    @DisplayName("Documentation for deleting a book")
     public void bookDeleteExample() throws Exception {
+
+        // GIVEN:
+
         Map<String, Object> book = new HashMap<String, Object>();
         book.put("title", "Refactoring: Improving the Design of Existing Code");
         book.put("author", "Martin Fowler");
@@ -271,8 +309,10 @@ public class BooksDocumentation extends AbstractDocumentation {
 
         String bookId = getBookIdFromLocation(bookLocation);
 
+        // WHEN:
         this.mockMvc.perform(
                 delete("/books/{bookId}",Long.parseLong(bookId)))
+        // THEN:
                 .andExpect(status().isNoContent())
                 .andDo(print())
                 .andDo(document("book-delete-example",
