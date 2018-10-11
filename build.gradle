@@ -80,3 +80,7 @@ bootJar {
         into 'static/tests'
     }
 }
+
+checkstyle {
+    toolVersion '8.13'
+}
