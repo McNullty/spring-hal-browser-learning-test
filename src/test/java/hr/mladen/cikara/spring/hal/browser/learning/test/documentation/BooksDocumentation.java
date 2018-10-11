@@ -26,7 +26,9 @@ import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,6 +175,10 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(status().isCreated())
             .andDo(print())
             .andReturn().getResponse().getHeader("Location");
+
+    if(bookLocation == null) {
+      Assert.fail();
+    }
 
     String bookId = getBookIdFromLocation(bookLocation);
 
@@ -335,6 +341,9 @@ public class BooksDocumentation extends AbstractDocumentation {
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getHeader("Location");
+    if(bookLocation == null) {
+      Assert.fail();
+    }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
             .andExpect(jsonPath("title", is(book.get("title"))))
@@ -344,6 +353,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
 
     String bookId = getBookIdFromLocation(bookLocation);
+
 
     // WHEN:
     this.mockMvc.perform(
@@ -357,6 +367,8 @@ public class BooksDocumentation extends AbstractDocumentation {
   }
 
   private String getBookIdFromLocation(@NotNull String bookLocation) {
+    Objects.requireNonNull(bookLocation);
+
     return bookLocation.substring(bookLocation.lastIndexOf("/") + 1);
   }
 
