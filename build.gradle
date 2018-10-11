@@ -75,12 +75,18 @@ bootJar {
     from ("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
-    //TODO: test reports may be unnecessary
-    from ("${project.buildDir}/reports/tests") {
-        into 'static/tests'
-    }
 }
 
 checkstyle {
     toolVersion '8.13'
 }
+
+
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
