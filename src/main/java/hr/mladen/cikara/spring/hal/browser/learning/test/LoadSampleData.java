@@ -14,14 +14,14 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
 
   private final BookRepository bookRepository;
 
-  private Random rand = new Random();
+  private final Random rand = new Random();
 
-  public LoadSampleData(BookRepository bookRepository) {
+  public LoadSampleData(final BookRepository bookRepository) {
     this.bookRepository = bookRepository;
   }
 
   @Override
-  public void onApplicationEvent(ContextRefreshedEvent event) {
+  public void onApplicationEvent(final ContextRefreshedEvent event) {
     log.info("Creating sample data");
     for (int i = 0; i < 100; i++) {
       Book book = new Book();

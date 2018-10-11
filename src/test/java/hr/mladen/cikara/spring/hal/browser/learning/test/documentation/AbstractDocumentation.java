@@ -1,5 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,22 +13,26 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 @SpringBootTest
 public class AbstractDocumentation {
 
-    protected MockMvc mockMvc;
+  protected MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext context;
+  @Autowired
+  private WebApplicationContext context;
 
-    @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext,
-                      RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }
+  /**
+   * Setting up documentation tests.
+   *
+   * @param webApplicationContext test application context
+   * @param restDocumentation documentation context provider
+   */
+  @BeforeEach
+  public void setUp(final WebApplicationContext webApplicationContext,
+                    final RestDocumentationContextProvider restDocumentation) {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+            .apply(documentationConfiguration(restDocumentation))
+            .build();
+  }
 }
