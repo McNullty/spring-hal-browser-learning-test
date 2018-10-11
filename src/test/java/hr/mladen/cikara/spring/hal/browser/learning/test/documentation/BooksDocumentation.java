@@ -176,7 +176,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andDo(print())
             .andReturn().getResponse().getHeader("Location");
 
-    if(bookLocation == null) {
+    if (bookLocation == null) {
       Assert.fail();
     }
 
@@ -341,7 +341,8 @@ public class BooksDocumentation extends AbstractDocumentation {
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getHeader("Location");
-    if(bookLocation == null) {
+
+    if (bookLocation == null) {
       Assert.fail();
     }
 
