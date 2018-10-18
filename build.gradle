@@ -26,9 +26,12 @@ apply plugin: 'jacoco'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
+apply plugin: 'jdepend'
+
 
 group = 'hr.mladen.cikara'
 version = '0.0.1-SNAPSHOT'
+
 
 description = "spring-hal-browser-learning-test"
 
@@ -81,12 +84,33 @@ checkstyle {
     toolVersion '8.13'
 }
 
-
-
-tasks.withType(FindBugs) {
+jacocoTestReport {
     reports {
-        xml.enabled false
-        html.enabled true
+        xml.enabled = false
+        csv.enabled = false
+        html.destination file("${buildDir}/reports/jacocoHtml")
     }
 }
 
+
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+tasks.withType(JDepend) {
+    reports {
+        xml.enabled = false
+        text.enabled = true
+    }
+}
