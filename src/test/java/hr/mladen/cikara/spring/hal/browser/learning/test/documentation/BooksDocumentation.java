@@ -36,7 +36,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @DisplayName("Documentation for /books endpoint")
-public class BooksDocumentation extends AbstractDocumentation {
+class BooksDocumentation extends AbstractDocumentation {
 
   @Autowired
   private BookRepository bookRepository;
@@ -46,7 +46,7 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for listing all books")
-  public void booksListExample() throws Exception {
+  void booksListExample() throws Exception {
 
     // GIVEN:
     // TODO: think if creating data should be in setup method for this test (BeforeAll)
@@ -91,7 +91,7 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for searching books")
-  public void booksSearchExample() throws Exception {
+  void booksSearchExample() throws Exception {
     // GIVEN:
     // WHEN:
     this.mockMvc.perform(
@@ -131,11 +131,11 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for creating books")
-  public void booksCreateExample() throws Exception {
+  void booksCreateExample() throws Exception {
 
     // GIVEN:
 
-    Map<String, Object> book = new HashMap<String, Object>();
+    Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
     book.put("blurb", "Any fool can write code that a computer can understand. "
@@ -158,10 +158,10 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for fetching a book")
-  public void bookGetExample() throws Exception {
+  void bookGetExample() throws Exception {
 
     // GIVEN:
-    Map<String, Object> book = new HashMap<String, Object>();
+    Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
     book.put("blurb", "Any fool can write code that a computer can understand. "
@@ -177,7 +177,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail();
+      Assert.fail("Book is not create");
     }
 
     String bookId = getBookIdFromLocation(bookLocation);
@@ -211,11 +211,11 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for updating a book")
-  public void bookUpdateExample() throws Exception {
+  void bookUpdateExample() throws Exception {
 
     // GIVEN:
 
-    Map<String, Object> book = new HashMap<String, Object>();
+    Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
     book.put("pages", 448);
@@ -227,6 +227,10 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(status().isCreated()).andDo(print())
             .andReturn().getResponse().getHeader("Location");
 
+    if (bookLocation == null) {
+      Assert.fail("Book is not create");
+    }
+
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
             .andExpect(jsonPath("title", is(book.get("title"))))
             .andExpect(jsonPath("author", is(book.get("author"))))
@@ -235,7 +239,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
 
 
-    Map<String, Object> bookUpdate = new HashMap<String, Object>();
+    Map<String, Object> bookUpdate = new HashMap<>();
     bookUpdate.put("blurb", "Any fool can write code that a computer can understand. "
             + "Good programmers write code that humans can understand.");
 
@@ -267,11 +271,11 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for replacing a book")
-  public void bookReplaceExample() throws Exception {
+  void bookReplaceExample() throws Exception {
 
     // GIVEN:
 
-    Map<String, Object> book = new HashMap<String, Object>();
+    Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
     book.put("pages", 448);
@@ -283,6 +287,10 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(status().isCreated()).andDo(print())
             .andReturn().getResponse().getHeader("Location");
 
+    if (bookLocation == null) {
+      Assert.fail("Book is not create");
+    }
+
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
             .andExpect(jsonPath("title", is(book.get("title"))))
             .andExpect(jsonPath("author", is(book.get("author"))))
@@ -291,7 +299,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
 
 
-    Map<String, Object> bookReplace = new HashMap<String, Object>();
+    Map<String, Object> bookReplace = new HashMap<>();
     bookReplace.put("title", "Refactoring: Improving the Design of Existing Code");
     bookReplace.put("author", "Martin Fowler");
     bookReplace.put("blurb", "Any fool can write code that a computer can understand. "
@@ -326,11 +334,11 @@ public class BooksDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for deleting a book")
-  public void bookDeleteExample() throws Exception {
+  void bookDeleteExample() throws Exception {
 
     // GIVEN:
 
-    Map<String, Object> book = new HashMap<String, Object>();
+    Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
     book.put("pages", 448);
@@ -343,7 +351,7 @@ public class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail();
+      Assert.fail("Book is not create");
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())

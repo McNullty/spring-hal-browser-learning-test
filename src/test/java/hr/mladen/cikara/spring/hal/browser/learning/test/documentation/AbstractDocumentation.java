@@ -15,9 +15,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 @SpringBootTest
-public class AbstractDocumentation {
+class AbstractDocumentation {
 
-  protected MockMvc mockMvc;
+  MockMvc mockMvc;
 
   @Autowired
   private WebApplicationContext context;
