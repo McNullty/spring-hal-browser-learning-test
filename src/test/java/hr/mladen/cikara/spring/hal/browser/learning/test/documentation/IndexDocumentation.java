@@ -11,11 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class IndexDocumentation extends AbstractDocumentation {
+class IndexDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for index endpoint")
-  public void indexExample() throws Exception {
+  void indexExample() throws Exception {
     this.mockMvc.perform(get("/"))
             .andExpect(status().isOk())
             .andDo(document("index-example",

@@ -14,11 +14,11 @@ import javax.servlet.RequestDispatcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ErrorsDocumentation extends AbstractDocumentation {
+class ErrorsDocumentation extends AbstractDocumentation {
 
   @Test
   @DisplayName("Documentation for /error endpoint")
-  public void errorExample() throws Exception {
+  void errorExample() throws Exception {
     this.mockMvc
             .perform(get("/error")
                     .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
