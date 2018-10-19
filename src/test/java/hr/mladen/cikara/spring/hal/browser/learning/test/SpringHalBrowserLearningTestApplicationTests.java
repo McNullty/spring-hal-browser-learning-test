@@ -9,10 +9,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @DisplayName("Smoke test for spring context")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class SpringHalBrowserLearningTestApplicationTests {
+class SpringHalBrowserLearningTestApplicationTests {
 
+  @DisplayName("Starting Spring context")
   @Test
-  public void contextLoads() {
+  void contextLoads() {
   }
 
 }
