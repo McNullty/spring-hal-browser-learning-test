@@ -2,6 +2,10 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,8 +22,14 @@ public class BooksController {
   }
 
   @RequestMapping(method = RequestMethod.GET, produces = {"application/hal+json"})
-  ResponseEntity<Page<Book>> findAll(Pageable pageable) {
+  ResponseEntity<PagedResources<Resource<Book>>> findAll(
+          Pageable pageable, PagedResourcesAssembler<Book> assembler) {
 
-    return ResponseEntity.ok(bookRepository.findAll(pageable));
+    Page<Book> books = bookRepository.findAll(pageable);
+    PagedResources<Resource<Book>> booksPagedResources =
+            assembler.toResource(books,
+                    ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel());
+
+    return ResponseEntity.ok(booksPagedResources);
   }
 }
