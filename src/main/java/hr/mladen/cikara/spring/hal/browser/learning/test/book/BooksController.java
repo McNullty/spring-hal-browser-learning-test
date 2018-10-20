@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.profile.ProfileController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -40,10 +41,17 @@ public class BooksController {
 
     PagedResources<BookResource> booksPagedResources =
             assembler.toResource(books, bookToBookResourceAssembler, self);
+
     booksPagedResources.add(
             ControllerLinkBuilder.linkTo(
                     ControllerLinkBuilder.methodOn(BooksController.class)
                             .search(null, null, null)).withRel("search"));
+
+    booksPagedResources.add(
+            ControllerLinkBuilder.linkTo(
+                    ControllerLinkBuilder.methodOn(ProfileController.class)
+                            .booksProfile()).withRel("profile"));
+
 
     return ResponseEntity.ok(booksPagedResources);
   }
