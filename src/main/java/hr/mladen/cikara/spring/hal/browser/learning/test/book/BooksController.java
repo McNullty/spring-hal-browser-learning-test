@@ -40,7 +40,20 @@ public class BooksController {
 
     PagedResources<BookResource> booksPagedResources =
             assembler.toResource(books, bookToBookResourceAssembler, self);
+    booksPagedResources.add(
+            ControllerLinkBuilder.linkTo(
+                    ControllerLinkBuilder.methodOn(BooksController.class)
+                            .search(null, null, null)).withRel("search"));
 
     return ResponseEntity.ok(booksPagedResources);
+  }
+
+  @RequestMapping(
+          value = "search", method = RequestMethod.GET, produces = {"application/hal+json"})
+  ResponseEntity<PagedResources<BookResource>> search(
+          String query, Pageable pageable, PagedResourcesAssembler<Book> assembler) {
+    // TODO: Implement search functionality
+
+    return ResponseEntity.ok(null);
   }
 }
