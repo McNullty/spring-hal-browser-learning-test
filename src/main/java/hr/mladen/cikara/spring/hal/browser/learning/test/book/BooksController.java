@@ -3,9 +3,9 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("books")
+@ExposesResourceFor(Book.class)
 public class BooksController {
 
   private final BookRepository bookRepository;
+  private final BookToBookResourceAssembler bookToBookResourceAssembler;
 
-  public BooksController(final BookRepository bookRepository) {
+  public BooksController(
+          final BookRepository bookRepository,
+          final BookToBookResourceAssembler bookToBookResourceAssembler) {
     this.bookRepository = bookRepository;
+    this.bookToBookResourceAssembler = bookToBookResourceAssembler;
   }
 
   @RequestMapping(method = RequestMethod.GET, produces = {"application/hal+json"})
-  ResponseEntity<PagedResources<Resource<Book>>> findAll(
+  ResponseEntity<PagedResources<BookResource>> findAll(
           Pageable pageable, PagedResourcesAssembler<Book> assembler) {
 
     Page<Book> books = bookRepository.findAll(pageable);
@@ -33,8 +38,8 @@ public class BooksController {
     Link self = new Link(booksLinkWithoutParameters.getHref() + "{?page,size,sort}")
             .withSelfRel();
 
-    PagedResources<Resource<Book>> booksPagedResources =
-            assembler.toResource(books, self);
+    PagedResources<BookResource> booksPagedResources =
+            assembler.toResource(books, bookToBookResourceAssembler, self);
 
     return ResponseEntity.ok(booksPagedResources);
   }
