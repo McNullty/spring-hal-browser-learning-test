@@ -34,14 +34,23 @@ public class BooksController {
 
     Page<Book> books = bookRepository.findAll(pageable);
 
-    Link booksLinkWithoutParameters =
-            ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
-    Link self = new Link(booksLinkWithoutParameters.getHref() + "{?page,size,sort}")
-            .withSelfRel();
+    Link self = getSelfLink();
 
     PagedResources<BookResource> booksPagedResources =
             assembler.toResource(books, bookToBookResourceAssembler, self);
 
+    addLinksToPagedResources(booksPagedResources);
+
+
+    return ResponseEntity.ok(booksPagedResources);
+  }
+
+  /**
+   * Adds links to search and profile
+   *
+   * @param booksPagedResources Paged Resources
+   */
+  private void addLinksToPagedResources(final PagedResources<BookResource> booksPagedResources) {
     booksPagedResources.add(
             ControllerLinkBuilder.linkTo(
                     ControllerLinkBuilder.methodOn(BooksController.class)
@@ -51,9 +60,18 @@ public class BooksController {
             ControllerLinkBuilder.linkTo(
                     ControllerLinkBuilder.methodOn(ProfileController.class)
                             .booksProfile()).withRel("profile"));
+  }
 
-
-    return ResponseEntity.ok(booksPagedResources);
+  /**
+   * Builds link with template for books
+   *
+   * @return Link to self with template
+   */
+  private Link getSelfLink() {
+    Link booksLinkWithoutParameters =
+            ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
+    return new Link(booksLinkWithoutParameters.getHref() + "{?page,size,sort}")
+            .withSelfRel();
   }
 
   @RequestMapping(
