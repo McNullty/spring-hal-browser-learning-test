@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("books")
+@RequestMapping("/books")
 @ExposesResourceFor(Book.class)
 public class BooksController {
 
