@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-class Link {
+public class Link {
   private final String name;
   private final String href;
   private final Boolean templated;

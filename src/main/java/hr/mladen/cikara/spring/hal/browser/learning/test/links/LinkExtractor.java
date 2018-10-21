@@ -11,7 +11,7 @@ public class LinkExtractor {
   private final Class controllerClass;
   private final org.springframework.hateoas.Link hateoasLink;
 
-  LinkExtractor(final Class controllerClass) {
+  public LinkExtractor(final Class controllerClass) {
     this.controllerClass = controllerClass;
     this.hateoasLink = getHateoasLink();
   }
