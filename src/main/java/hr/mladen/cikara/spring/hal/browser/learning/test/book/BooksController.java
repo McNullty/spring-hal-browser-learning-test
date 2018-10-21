@@ -1,6 +1,5 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import hr.mladen.cikara.spring.hal.browser.learning.test.profile.ProfileController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -46,7 +45,7 @@ public class BooksController {
   }
 
   /**
-   * Adds links to search and profile
+   * Adds link for search
    *
    * @param booksPagedResources Paged Resources
    */
@@ -55,11 +54,6 @@ public class BooksController {
             ControllerLinkBuilder.linkTo(
                     ControllerLinkBuilder.methodOn(BooksController.class)
                             .search(null, null, null)).withRel("search"));
-
-    booksPagedResources.add(
-            ControllerLinkBuilder.linkTo(
-                    ControllerLinkBuilder.methodOn(ProfileController.class)
-                            .booksProfile()).withRel("profile"));
   }
 
   /**
@@ -76,7 +70,7 @@ public class BooksController {
 
   @RequestMapping(
           value = "search", method = RequestMethod.GET, produces = {"application/hal+json"})
-  ResponseEntity<PagedResources<BookResource>> search(
+  public ResponseEntity<PagedResources<BookResource>> search(
           String query, Pageable pageable, PagedResourcesAssembler<Book> assembler) {
     // TODO: Implement search functionality
 

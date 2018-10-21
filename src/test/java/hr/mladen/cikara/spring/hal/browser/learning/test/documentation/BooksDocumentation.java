@@ -59,8 +59,6 @@ class BooksDocumentation extends AbstractDocumentation {
             .andDo(document("books-list-example",
                     links(halLinks(),
                             linkWithRel("self").description("Canonical link for this resource"),
-                            linkWithRel("profile")
-                                    .description("The ALPS profile for this resource"),
                             linkWithRel("next")
                                     .description("Next page with list of books").optional(),
                             linkWithRel("last")
