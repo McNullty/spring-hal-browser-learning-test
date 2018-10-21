@@ -62,7 +62,7 @@ public class BooksController {
    *
    * @return Link to self with template
    */
-  private Link getSelfLink() {
+  public static Link getSelfLink() {
     Link booksLinkWithoutParameters =
             ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
     return new Link(booksLinkWithoutParameters.getHref() + "{?page,size,sort}")
