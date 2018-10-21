@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.RestMediaTypes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -27,7 +28,7 @@ public class BooksController {
     this.bookToBookResourceAssembler = bookToBookResourceAssembler;
   }
 
-  @RequestMapping(method = RequestMethod.GET, produces = {"application/hal+json"})
+  @RequestMapping(method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
   ResponseEntity<PagedResources<BookResource>> findAll(
           Pageable pageable, PagedResourcesAssembler<Book> assembler) {
 
@@ -69,7 +70,7 @@ public class BooksController {
   }
 
   @RequestMapping(
-          value = "search", method = RequestMethod.GET, produces = {"application/hal+json"})
+          value = "search", method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
   public ResponseEntity<PagedResources<BookResource>> search(
           String query, Pageable pageable, PagedResourcesAssembler<Book> assembler) {
     // TODO: Implement search functionality
