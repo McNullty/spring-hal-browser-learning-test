@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.RestMediaTypes;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -11,6 +12,7 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,7 +32,8 @@ public class BooksController {
 
   @RequestMapping(method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
   ResponseEntity<PagedResources<BookResource>> findAll(
-          Pageable pageable, PagedResourcesAssembler<Book> assembler) {
+          final Pageable pageable,
+          final PagedResourcesAssembler<Book> assembler) {
 
     Page<Book> books = bookRepository.findAll(pageable);
 
@@ -70,11 +73,20 @@ public class BooksController {
   }
 
   @RequestMapping(
-          value = "search", method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+          value = "/search/title-contains", method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
   public ResponseEntity<PagedResources<BookResource>> search(
-          String query, Pageable pageable, PagedResourcesAssembler<Book> assembler) {
-    // TODO: Implement search functionality
+          @RequestParam(name = "query") @NotNull final String query,
+          final Pageable pageable, @NotNull final PagedResourcesAssembler<Book> assembler) {
 
-    return ResponseEntity.ok(null);
+    Page<Book> books = bookRepository.findByTitleContaining(query, pageable);
+
+    Link self = getSelfLink();
+
+    PagedResources<BookResource> booksPagedResources =
+            assembler.toResource(books, bookToBookResourceAssembler, self);
+
+    addLinksToPagedResources(booksPagedResources);
+
+    return ResponseEntity.ok(booksPagedResources);
   }
 }

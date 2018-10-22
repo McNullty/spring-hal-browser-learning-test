@@ -107,7 +107,10 @@ class BooksDocumentation extends AbstractDocumentation {
                             linkWithRel("first")
                                     .description("First page with list of books").optional(),
                             linkWithRel("prev")
-                                    .description("Previous page with list of books").optional()),
+                                    .description("Previous page with list of books").optional(),
+                            linkWithRel("search")
+                                    .description(
+                                            "Link for creating custom search on this resource")),
                     requestParameters(
                             parameterWithName("query")
                                     .description("Query that book title must have"),
