@@ -9,13 +9,13 @@ import org.springframework.hateoas.core.Relation;
 @EqualsAndHashCode(callSuper = false)
 @Relation(value = "book", collectionRelation = "books")
 class BookResource extends ResourceSupport {
-  private String title;
+  private final String title;
 
-  private String author;
+  private final String author;
 
-  private String blurb;
+  private final String blurb;
 
-  private int pages;
+  private final int pages;
 
   BookResource(Book book) {
     this.title = book.getTitle();

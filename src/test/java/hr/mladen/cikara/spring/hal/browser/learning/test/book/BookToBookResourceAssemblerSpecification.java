@@ -22,12 +22,13 @@ class BookToBookResourceAssemblerSpecification {
 
   @BeforeEach
   void setup() {
-    book = new Book();
-    book.setId(1);
-    book.setAuthor("Test Author");
-    book.setTitle("Test Title");
-    book.setBlurb("Test Blurb");
-    book.setPages(369);
+    book = Book.builder()
+            .id(1)
+            .author("Test Author")
+            .title("Test Title")
+            .blurb("Test Blurb")
+            .pages(369)
+            .build();
   }
 
   @Nested

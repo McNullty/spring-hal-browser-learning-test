@@ -407,11 +407,12 @@ class BooksDocumentation extends AbstractDocumentation {
   }
 
   private void createBook(String bookTitle, String author, String blurb, int pages) {
-    Book book = new Book();
-    book.setTitle(bookTitle);
-    book.setAuthor(author);
-    book.setBlurb(blurb);
-    book.setPages(pages);
+    Book book = Book.builder()
+            .author(author)
+            .title(bookTitle)
+            .blurb(blurb)
+            .pages(pages)
+            .build();
 
     bookRepository.save(book);
   }
