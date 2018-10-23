@@ -1,7 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.RestMediaTypes;
-import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -37,15 +36,38 @@ public class BooksController {
 
     Page<Book> books = bookRepository.findAll(pageable);
 
-    Link self = getSelfLink();
+    PagedResources<BookResource> booksPagedResources =
+            getPagedBookResourcesWithLinks(assembler, books);
+
+
+    return ResponseEntity.ok(booksPagedResources);
+  }
+
+  @RequestMapping(
+          value = "/search/title-contains", method = RequestMethod.GET,
+          produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  public ResponseEntity<PagedResources<BookResource>> search(
+          @RequestParam(name = "query") final String query,
+          final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
+
+    Page<Book> books = bookRepository.findByTitleContaining(query, pageable);
+
+    PagedResources<BookResource> booksPagedResources =
+            getPagedBookResourcesWithLinks(assembler, books);
+
+    return ResponseEntity.ok(booksPagedResources);
+  }
+
+  private PagedResources<BookResource> getPagedBookResourcesWithLinks(
+          final PagedResourcesAssembler<Book> assembler, final Page<Book> books) {
+    Link self = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
 
     PagedResources<BookResource> booksPagedResources =
             assembler.toResource(books, bookToBookResourceAssembler, self);
 
     addLinksToPagedResources(booksPagedResources);
 
-
-    return ResponseEntity.ok(booksPagedResources);
+    return booksPagedResources;
   }
 
   /**
@@ -60,33 +82,5 @@ public class BooksController {
                             .search(null, null, null)).withRel("search"));
   }
 
-  /**
-   * Builds link with template for books
-   *
-   * @return Link to self with template
-   */
-  public static Link getSelfLink() {
-    Link booksLinkWithoutParameters =
-            ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
-    return new Link(booksLinkWithoutParameters.getHref() + "{?page,size,sort}")
-            .withSelfRel();
-  }
 
-  @RequestMapping(
-          value = "/search/title-contains", method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
-  public ResponseEntity<PagedResources<BookResource>> search(
-          @RequestParam(name = "query") @NotNull final String query,
-          final Pageable pageable, @NotNull final PagedResourcesAssembler<Book> assembler) {
-
-    Page<Book> books = bookRepository.findByTitleContaining(query, pageable);
-
-    Link self = getSelfLink();
-
-    PagedResources<BookResource> booksPagedResources =
-            assembler.toResource(books, bookToBookResourceAssembler, self);
-
-    addLinksToPagedResources(booksPagedResources);
-
-    return ResponseEntity.ok(booksPagedResources);
-  }
 }
