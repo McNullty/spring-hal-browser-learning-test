@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import org.junit.Assert;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,6 +158,7 @@ class BooksDocumentation extends AbstractDocumentation {
                             fieldWithPath("pages").description("Number of pages of a book"))));
   }
 
+  @Disabled
   @Test
   @DisplayName("Documentation for fetching a book")
   void bookGetExample() throws Exception {
@@ -210,6 +212,7 @@ class BooksDocumentation extends AbstractDocumentation {
                                             + "to other resources"))));
   }
 
+  @Disabled
   @Test
   @DisplayName("Documentation for updating a book")
   void bookUpdateExample() throws Exception {
@@ -270,6 +273,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
   }
 
+  @Disabled
   @Test
   @DisplayName("Documentation for replacing a book")
   void bookReplaceExample() throws Exception {
@@ -333,6 +337,8 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
   }
 
+
+  @Disabled
   @Test
   @DisplayName("Documentation for deleting a book")
   void bookDeleteExample() throws Exception {

@@ -33,7 +33,8 @@ public class IndexController {
     return ResponseEntity.ok(object.toString());
   }
 
-  private JsonObject createJsonObject(final JsonBuilderFactory factory, final HttpServletRequest request) {
+  private JsonObject createJsonObject(
+          final JsonBuilderFactory factory, final HttpServletRequest request) {
 
     LinkExtractor indexExtractor = new LinkExtractor(IndexController.class);
     Link indexLink = indexExtractor.getLink();

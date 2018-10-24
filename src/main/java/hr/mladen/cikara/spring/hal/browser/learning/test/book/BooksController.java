@@ -90,7 +90,7 @@ public class BooksController {
   }
 
   /**
-   * Adds link for search
+   * Adds link for search.
    *
    * @param booksPagedResources Paged Resources
    */
@@ -98,7 +98,9 @@ public class BooksController {
     booksPagedResources.add(
             ControllerLinkBuilder.linkTo(
                     ControllerLinkBuilder.methodOn(BooksController.class)
-                            .search(null, null, null)).withRel("search"));
+                            .search(null, null,
+                                    new PagedResourcesAssembler<>(null, null)))
+                    .withRel("search"));
   }
 
 

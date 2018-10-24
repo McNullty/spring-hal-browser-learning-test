@@ -15,6 +15,14 @@ public class BookDto {
 
   private final int pages;
 
+  /**
+   * DTO for mapping JSON data from request.
+   *
+   * @param author Authors name
+   * @param title  Book title
+   * @param blurb  Short description
+   * @param pages  Number of pages
+   */
   public BookDto(
           @JsonProperty("author") final String author,
           @JsonProperty("title") final String title,
@@ -26,6 +34,11 @@ public class BookDto {
     this.pages = pages;
   }
 
+  /**
+   * Converting from DTO to Entity.
+   *
+   * @return Book entity
+   */
   public Book getBook() {
     return Book.builder()
             .author(author)

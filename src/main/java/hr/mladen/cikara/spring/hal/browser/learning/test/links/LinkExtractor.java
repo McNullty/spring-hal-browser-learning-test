@@ -16,10 +16,12 @@ public class LinkExtractor {
     this.hateoasLink = getHateoasLink();
   }
 
+  @SuppressWarnings("unchecked")
   private org.springframework.hateoas.Link getHateoasLink() {
     try {
       return (org.springframework.hateoas.Link) controllerClass.getMethod(
               "getSelfLink", new Class<?>[0]).invoke(new Object[0]);
+
     } catch (NoSuchMethodException e) {
       log.error("NoSuchMethodException for getSelfLink");
 
@@ -35,6 +37,11 @@ public class LinkExtractor {
     }
   }
 
+  /**
+   * Builds Link from data extracted from controller class.
+   *
+   * @return Link for extracting data
+   */
   public Link getLink() {
 
     return Link.builder()
