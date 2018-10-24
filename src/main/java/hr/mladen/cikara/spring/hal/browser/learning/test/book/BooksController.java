@@ -12,6 +12,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -115,6 +116,19 @@ public class BooksController {
       BookResource bookResource = bookToBookResourceAssembler.toResource(book.get());
 
       return ResponseEntity.ok(bookResource);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @DeleteMapping(value = "/{bookId}", produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
+    Optional<Book> book = bookRepository.findById(bookId);
+
+    if (book.isPresent()) {
+      bookRepository.delete(book.get());
+
+      return ResponseEntity.noContent().build();
     } else {
       return ResponseEntity.notFound().build();
     }

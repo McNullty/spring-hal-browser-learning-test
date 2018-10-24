@@ -214,7 +214,7 @@ class BooksDocumentation extends AbstractDocumentation {
   @Test
   @DisplayName("Documentation for updating a book")
   void bookUpdateExample() throws Exception {
-
+    // https://www.baeldung.com/http-put-patch-difference-spring
     // GIVEN:
 
     Map<String, Object> book = new HashMap<>();
@@ -336,7 +336,6 @@ class BooksDocumentation extends AbstractDocumentation {
   }
 
 
-  @Disabled
   @Test
   @DisplayName("Documentation for deleting a book")
   void bookDeleteExample() throws Exception {
