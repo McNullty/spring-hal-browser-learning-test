@@ -40,7 +40,7 @@ public class Book {
   /**
    * For Hibernate.
    */
-  Book(long id, String author, String title, String blurb, int pages) {
+  Book(long id, String title, String author, String blurb, int pages) {
     this.id = id;
     this.author = author;
     this.title = title;

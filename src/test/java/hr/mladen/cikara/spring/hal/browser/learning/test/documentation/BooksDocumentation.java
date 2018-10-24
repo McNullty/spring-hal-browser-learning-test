@@ -158,7 +158,6 @@ class BooksDocumentation extends AbstractDocumentation {
                             fieldWithPath("pages").description("Number of pages of a book"))));
   }
 
-  @Disabled
   @Test
   @DisplayName("Documentation for fetching a book")
   void bookGetExample() throws Exception {
@@ -198,9 +197,8 @@ class BooksDocumentation extends AbstractDocumentation {
             .andDo(document("book-get-example",
                     links(
                             linkWithRel("self")
-                                    .description("Canonical link for this <<resources-book,book>>"),
-                            linkWithRel("book")
-                                    .description("This <<resources-book,book>>")),
+                                    .description("Canonical link for this <<resources-book,book>>")
+                    ),
                     pathParameters(parameterWithName("bookId").description("Id of a book")),
                     responseFields(
                             fieldWithPath("title").description("The title of the book"),
