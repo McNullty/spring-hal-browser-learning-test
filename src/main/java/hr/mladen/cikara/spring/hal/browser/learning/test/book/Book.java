@@ -30,4 +30,21 @@ public class Book {
   private String blurb;
 
   private int pages;
+
+  /**
+   * For Hibernate.
+   */
+  Book() {
+  }
+
+  /**
+   * For Hibernate.
+   */
+  Book(long id, String author, String title, String blurb, int pages) {
+    this.id = id;
+    this.author = author;
+    this.title = title;
+    this.blurb = blurb;
+    this.pages = pages;
+  }
 }
