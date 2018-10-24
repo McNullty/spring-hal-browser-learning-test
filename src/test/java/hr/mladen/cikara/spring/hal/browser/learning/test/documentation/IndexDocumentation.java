@@ -21,7 +21,9 @@ class IndexDocumentation extends AbstractDocumentation {
             .andDo(document("index-example",
                     links(
                             linkWithRel("books")
-                                    .description("The <<resources-books,Books resource>>")),
+                                    .description("The <<resources-books,Books resource>>"),
+                            linkWithRel("docs")
+                                    .description("Link to documentation")),
                     responseFields(
                             subsectionWithPath("_links")
                                     .description("<<resources-index-access_links,Links>> "
