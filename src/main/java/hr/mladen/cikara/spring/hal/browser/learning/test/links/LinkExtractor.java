@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LinkExtractor {
 
-  private final static String CONTROLLER_SUFFIX = "Controller";
+  private static final String CONTROLLER_SUFFIX = "Controller";
 
   private final Class controllerClass;
   private final org.springframework.hateoas.Link hateoasLink;

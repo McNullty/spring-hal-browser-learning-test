@@ -33,8 +33,15 @@ public class BooksController {
     this.bookToBookResourceAssembler = bookToBookResourceAssembler;
   }
 
+  /**
+   * Endpoint for listing all books.
+   *
+   * @param pageable  Pageable object, injected by Spring
+   * @param assembler ResourcesAssembler object, injected by Spring
+   * @return List of books
+   */
   @RequestMapping(method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
-  ResponseEntity<PagedResources<BookResource>> findAll(
+  public ResponseEntity<PagedResources<BookResource>> findAll(
           final Pageable pageable,
           final PagedResourcesAssembler<Book> assembler) {
 
@@ -47,6 +54,14 @@ public class BooksController {
     return ResponseEntity.ok(booksPagedResources);
   }
 
+  /**
+   * Searching for books that in titla have query string.
+   *
+   * @param query Query that must match in book title
+   * @param pageable Pageable object, injected by Spring
+   * @param assembler ResourcesAssembler object, injected by Spring
+   * @return List of books that match query
+   */
   @RequestMapping(
           value = "/search/title-contains", method = RequestMethod.GET,
           produces = {RestMediaTypes.APPLICATION_HAL_JSON})
@@ -62,6 +77,12 @@ public class BooksController {
     return ResponseEntity.ok(booksPagedResources);
   }
 
+  /**
+   * Endpoint for creating new Book.
+   *
+   * @param bookDto Book DTO
+   * @return returns HTTP 201 Created
+   */
   @RequestMapping(method = RequestMethod.POST, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
   public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
