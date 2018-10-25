@@ -1,7 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import hr.mladen.cikara.spring.hal.browser.learning.test.RestMediaTypes;
+import hr.mladen.cikara.spring.hal.browser.learning.test.ConversionToJsonException;
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,11 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +47,7 @@ public class BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books
    */
-  @RequestMapping(method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> findAll(
           final Pageable pageable,
           final PagedResourcesAssembler<Book> assembler) {
@@ -68,7 +71,7 @@ public class BooksController {
    */
   @RequestMapping(
           value = "/search/title-contains", method = RequestMethod.GET,
-          produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+          produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> search(
           @RequestParam(name = "query") final String query,
           final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
@@ -87,7 +90,7 @@ public class BooksController {
    * @param bookDto Book DTO
    * @return returns HTTP 201 Created
    */
-  @RequestMapping(method = RequestMethod.POST, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  @RequestMapping(method = RequestMethod.POST, produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 
@@ -108,7 +111,7 @@ public class BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  @GetMapping(value = "/{bookId}", produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  @GetMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -121,7 +124,7 @@ public class BooksController {
     }
   }
 
-  @DeleteMapping(value = "/{bookId}", produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  @DeleteMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -132,6 +135,66 @@ public class BooksController {
     } else {
       return ResponseEntity.notFound().build();
     }
+  }
+
+  @PatchMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
+          produces = {MediaTypes.HAL_JSON_VALUE})
+  public ResponseEntity<?> updateBook(
+          @RequestBody final Map<String, Object> updates,
+          @PathVariable("bookId") final Long bookId) {
+    log.debug("Got map: {}", updates);
+
+    Optional<Book> book = bookRepository.findById(bookId);
+
+    if (book.isPresent()) {
+
+      try {
+        Book updatedBook = applyChanges(book.get(), updates);
+
+        bookRepository.save(updatedBook);
+      } catch (ConversionToJsonException e) {
+        return ResponseEntity.badRequest().build();
+      }
+
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  private Book applyChanges(final Book book, final Map<String, Object> updates)
+          throws ConversionToJsonException {
+
+    Book.BookBuilder builder = Book.builder();
+
+    builder
+            .id(book.getId())
+            .title(book.getTitle())
+            .author(book.getAuthor())
+            .blurb(book.getBlurb())
+            .pages(book.getPages());
+
+    for (String key : updates.keySet()) {
+      switch (key.toLowerCase()) {
+        case "title":
+          builder.title((String) updates.get(key));
+          break;
+        case "author":
+          builder.author((String) updates.get(key));
+          break;
+        case "blurb":
+          builder.blurb((String) updates.get(key));
+          break;
+        case "pages":
+          builder.pages((Integer) updates.get(key));
+          break;
+        default:
+          throw new ConversionToJsonException();
+      }
+    }
+
+    return builder.build();
+
   }
 
   private PagedResources<BookResource> getPagedBookResourcesWithLinks(
