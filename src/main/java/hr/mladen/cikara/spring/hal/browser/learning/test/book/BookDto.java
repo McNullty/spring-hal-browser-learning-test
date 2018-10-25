@@ -47,4 +47,19 @@ public class BookDto {
             .pages(pages)
             .build();
   }
+
+  /**
+   * Converting from DTO to Entity with ID.
+   *
+   * @return Book entity
+   */
+  Book getBook(final Long bookId) {
+    return Book.builder()
+            .id(bookId)
+            .author(author)
+            .title(title)
+            .blurb(blurb)
+            .pages(pages)
+            .build();
+  }
 }
