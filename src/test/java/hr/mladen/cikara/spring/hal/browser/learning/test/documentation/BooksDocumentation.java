@@ -210,7 +210,6 @@ class BooksDocumentation extends AbstractDocumentation {
                                             + "to other resources"))));
   }
 
-  @Disabled
   @Test
   @DisplayName("Documentation for updating a book")
   void bookUpdateExample() throws Exception {

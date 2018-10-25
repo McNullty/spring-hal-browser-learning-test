@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class IndexController {
 
-  public static org.springframework.hateoas.Link getSelfLink() {
-    return ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
-  }
-
   @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
   ResponseEntity<?> index(final HttpServletRequest request) {
 

@@ -124,6 +124,12 @@ public class BooksController {
     }
   }
 
+  /**
+   * Endpoint for deleting book.
+   *
+   * @param bookId Book Id
+   * @return Returns HTTP 204
+   */
   @DeleteMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
@@ -137,6 +143,13 @@ public class BooksController {
     }
   }
 
+  /**
+   * Endpoint for updating book data.
+   *
+   * @param updates Map with update data
+   * @param bookId  Book Id
+   * @return Returns HTTP 204
+   */
   @PatchMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> updateBook(
@@ -174,19 +187,19 @@ public class BooksController {
             .blurb(book.getBlurb())
             .pages(book.getPages());
 
-    for (String key : updates.keySet()) {
-      switch (key.toLowerCase()) {
+    for (Map.Entry<String, Object> entry : updates.entrySet()) {
+      switch (entry.getKey().toLowerCase()) {
         case "title":
-          builder.title((String) updates.get(key));
+          builder.title((String) entry.getValue());
           break;
         case "author":
-          builder.author((String) updates.get(key));
+          builder.author((String) entry.getValue());
           break;
         case "blurb":
-          builder.blurb((String) updates.get(key));
+          builder.blurb((String) entry.getValue());
           break;
         case "pages":
-          builder.pages((Integer) updates.get(key));
+          builder.pages((Integer) entry.getValue());
           break;
         default:
           throw new ConversionToJsonException();
