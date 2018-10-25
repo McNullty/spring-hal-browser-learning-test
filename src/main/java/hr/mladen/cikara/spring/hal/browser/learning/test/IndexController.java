@@ -7,6 +7,7 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,19 +22,19 @@ public class IndexController {
     return ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
   }
 
-  @RequestMapping(method = RequestMethod.GET, produces = {RestMediaTypes.APPLICATION_HAL_JSON})
+  @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
   ResponseEntity<?> index(final HttpServletRequest request) {
 
     JsonBuilderFactory factory = Json.createBuilderFactory(Collections.emptyMap());
     JsonObject object = factory.createObjectBuilder()
-            .add("_links", createJsonObject(factory, request))
+            .add("_links", createJsonObject(factory))
             .build();
 
     return ResponseEntity.ok(object.toString());
   }
 
   private JsonObject createJsonObject(
-          final JsonBuilderFactory factory, final HttpServletRequest request) {
+          final JsonBuilderFactory factory) {
 
     Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
     Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
