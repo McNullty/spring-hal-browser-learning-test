@@ -6,9 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Entity
 public class Book {
 
@@ -28,4 +30,21 @@ public class Book {
   private String blurb;
 
   private int pages;
+
+  /**
+   * For Hibernate.
+   */
+  Book() {
+  }
+
+  /**
+   * For Hibernate.
+   */
+  Book(long id, String title, String author, String blurb, int pages) {
+    this.id = id;
+    this.author = author;
+    this.title = title;
+    this.blurb = blurb;
+    this.pages = pages;
+  }
 }

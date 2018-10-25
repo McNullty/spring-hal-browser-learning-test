@@ -24,11 +24,13 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
   public void onApplicationEvent(final ContextRefreshedEvent event) {
     log.info("Creating sample data");
     for (int i = 0; i < 100; i++) {
-      Book book = new Book();
-      book.setTitle("Test title " + i);
-      book.setAuthor("Test author " + i);
-      book.setBlurb("Test blurb " + i);
-      book.setPages(rand.nextInt(500));
+
+      Book book = Book.builder()
+              .author("Test author " + i)
+              .title("Test title " + i)
+              .blurb("Test blurb " + i)
+              .pages(rand.nextInt(500))
+              .build();
 
       bookRepository.save(book);
     }

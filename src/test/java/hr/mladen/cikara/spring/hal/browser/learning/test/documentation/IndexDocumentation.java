@@ -22,7 +22,8 @@ class IndexDocumentation extends AbstractDocumentation {
                     links(
                             linkWithRel("books")
                                     .description("The <<resources-books,Books resource>>"),
-                            linkWithRel("profile").description("The ALPS profile for the service")),
+                            linkWithRel("docs")
+                                    .description("Link to documentation")),
                     responseFields(
                             subsectionWithPath("_links")
                                     .description("<<resources-index-access_links,Links>> "

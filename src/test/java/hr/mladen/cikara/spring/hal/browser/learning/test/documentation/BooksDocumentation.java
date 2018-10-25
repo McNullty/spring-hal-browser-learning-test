@@ -59,8 +59,6 @@ class BooksDocumentation extends AbstractDocumentation {
             .andDo(document("books-list-example",
                     links(halLinks(),
                             linkWithRel("self").description("Canonical link for this resource"),
-                            linkWithRel("profile")
-                                    .description("The ALPS profile for this resource"),
                             linkWithRel("next")
                                     .description("Next page with list of books").optional(),
                             linkWithRel("last")
@@ -109,7 +107,10 @@ class BooksDocumentation extends AbstractDocumentation {
                             linkWithRel("first")
                                     .description("First page with list of books").optional(),
                             linkWithRel("prev")
-                                    .description("Previous page with list of books").optional()),
+                                    .description("Previous page with list of books").optional(),
+                            linkWithRel("search")
+                                    .description(
+                                            "Link for creating custom search on this resource")),
                     requestParameters(
                             parameterWithName("query")
                                     .description("Query that book title must have"),
@@ -195,9 +196,8 @@ class BooksDocumentation extends AbstractDocumentation {
             .andDo(document("book-get-example",
                     links(
                             linkWithRel("self")
-                                    .description("Canonical link for this <<resources-book,book>>"),
-                            linkWithRel("book")
-                                    .description("This <<resources-book,book>>")),
+                                    .description("Canonical link for this <<resources-book,book>>")
+                    ),
                     pathParameters(parameterWithName("bookId").description("Id of a book")),
                     responseFields(
                             fieldWithPath("title").description("The title of the book"),
@@ -332,6 +332,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
   }
 
+
   @Test
   @DisplayName("Documentation for deleting a book")
   void bookDeleteExample() throws Exception {
@@ -406,11 +407,12 @@ class BooksDocumentation extends AbstractDocumentation {
   }
 
   private void createBook(String bookTitle, String author, String blurb, int pages) {
-    Book book = new Book();
-    book.setTitle(bookTitle);
-    book.setAuthor(author);
-    book.setBlurb(blurb);
-    book.setPages(pages);
+    Book book = Book.builder()
+            .author(author)
+            .title(bookTitle)
+            .blurb(blurb)
+            .pages(pages)
+            .build();
 
     bookRepository.save(book);
   }
