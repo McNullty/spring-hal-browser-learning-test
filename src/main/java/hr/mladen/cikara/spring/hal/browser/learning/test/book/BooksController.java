@@ -4,6 +4,7 @@ import hr.mladen.cikara.spring.hal.browser.learning.test.ConversionToJsonExcepti
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,7 +91,7 @@ public class BooksController {
    * @return returns HTTP 201 Created
    */
   @PostMapping(consumes = MediaTypes.HAL_JSON_VALUE, produces = {MediaTypes.HAL_JSON_VALUE})
-  public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
+  public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 
     Book book = bookRepository.save(bookDto.getBook());

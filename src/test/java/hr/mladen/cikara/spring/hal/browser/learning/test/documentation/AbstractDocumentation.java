@@ -4,7 +4,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -18,9 +17,6 @@ import org.springframework.web.context.WebApplicationContext;
 class AbstractDocumentation {
 
   MockMvc mockMvc;
-
-  @Autowired
-  private WebApplicationContext context;
 
   /**
    * Setting up documentation tests.

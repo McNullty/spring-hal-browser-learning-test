@@ -1,18 +1,23 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class BookDto {
+
+  @NotNull
   private final String title;
 
+  @NotNull
   private final String author;
 
   private final String blurb;
 
+  @NotNull
   private final int pages;
 
   /**

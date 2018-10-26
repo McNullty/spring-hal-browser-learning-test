@@ -332,7 +332,6 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(jsonPath("_links.self.href", is(bookLocation)));
   }
 
-
   @Test
   @DisplayName("Documentation for deleting a book")
   void bookDeleteExample() throws Exception {
