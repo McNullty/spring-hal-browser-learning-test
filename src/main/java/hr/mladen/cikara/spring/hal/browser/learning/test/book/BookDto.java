@@ -18,7 +18,7 @@ public class BookDto {
   private final String blurb;
 
   @NotNull
-  private final int pages;
+  private final Integer pages;
 
   /**
    * DTO for mapping JSON data from request.
@@ -32,7 +32,7 @@ public class BookDto {
           @JsonProperty("author") final String author,
           @JsonProperty("title") final String title,
           @JsonProperty("blurb") final String blurb,
-          @JsonProperty("pages") final int pages) {
+          @JsonProperty("pages") final Integer pages) {
     this.title = title;
     this.author = author;
     this.blurb = blurb;

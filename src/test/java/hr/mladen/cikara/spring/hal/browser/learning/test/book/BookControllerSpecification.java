@@ -70,8 +70,7 @@ class BookControllerSpecification {
               post("/books").contentType(MediaTypes.HAL_JSON).content(
                       objectMapper.writeValueAsString(book)))
               .andDo(print())
-              .andExpect(status().isBadRequest())
-      ;
+              .andExpect(status().isBadRequest());
     }
   }
 
@@ -135,6 +134,24 @@ class BookControllerSpecification {
     @DisplayName(
             "When trying to create new book, "
                     + "Then controller returns Unsupported Media Type")
+    @Test
+    void testCreatingBookWithPayloadWithExtraField() throws Exception {
+      mockMvc.perform(
+              post("/books").contentType(MediaType.TEXT_PLAIN_VALUE).content(
+                      objectMapper.writeValueAsString(book)))
+              .andDo(print())
+              .andExpect(status().isUnsupportedMediaType());
+    }
+  }
+
+  @DisplayName("and empty payload")
+  @Nested
+  class EmptyPayload {
+    Map<String, Object> book = new HashMap<>();
+
+    @DisplayName(
+            "When trying to create new book, "
+                    + "Then controller returns Bad Request")
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(

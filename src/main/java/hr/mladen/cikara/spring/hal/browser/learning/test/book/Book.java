@@ -29,7 +29,7 @@ public class Book {
   @Column(columnDefinition = "VARCHAR", length = 1000)
   private String blurb;
 
-  private int pages;
+  private Integer pages;
 
   /**
    * For Hibernate.
@@ -40,7 +40,7 @@ public class Book {
   /**
    * For Hibernate.
    */
-  Book(long id, String title, String author, String blurb, int pages) {
+  Book(long id, String title, String author, String blurb, Integer pages) {
     this.id = id;
     this.author = author;
     this.title = title;
