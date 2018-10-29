@@ -53,7 +53,8 @@ class BookControllerSpecification {
     }
 
     @DisplayName(
-            "When trying to create new book, controller returns bad request with error description")
+            "When trying to create new book, "
+                    + "Then controller returns bad request with error description")
     @Test
     void testCreatingBookWithInvalidPayload() throws Exception {
       mockMvc.perform(
@@ -81,7 +82,36 @@ class BookControllerSpecification {
     }
 
     @DisplayName(
-            "When trying to create new book, controller returns Created and extra field is ignored")
+            "When trying to create new book, "
+                    + "Then controller returns Created and extra field is ignored")
+    @Test
+    void testCreatingBookWithPayloadWithExtraField() throws Exception {
+      mockMvc.perform(
+              post("/books").contentType(MediaTypes.HAL_JSON).content(
+                      objectMapper.writeValueAsString(book)))
+              .andDo(print())
+              .andExpect(status().isCreated());
+    }
+  }
+
+  @DisplayName("and valid payload")
+  @Nested
+  class NormalPayload {
+    Map<String, Object> book;
+
+    @BeforeEach
+    void setup() {
+      book = new HashMap<>();
+      book.put("author", "Martin Fowler");
+      book.put("title", "Refactoring: Improving the Design of Existing Code");
+      book.put("blurb", "Any fool can write code that a computer can understand. "
+              + "Good programmers write code that humans can understand.");
+      book.put("pages", 448);
+    }
+
+    @DisplayName(
+            "When trying to create new book, "
+                    + "Then controller returns Created")
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
