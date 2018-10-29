@@ -13,6 +13,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,7 +90,8 @@ public class BooksController {
    * @param bookDto Book DTO
    * @return returns HTTP 201 Created
    */
-  @PostMapping(consumes = MediaTypes.HAL_JSON_VALUE, produces = {MediaTypes.HAL_JSON_VALUE})
+  @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
+          produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 

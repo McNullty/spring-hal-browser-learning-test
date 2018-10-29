@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,6 +38,17 @@ class BookControllerSpecification {
             .build();
   }
 
+  private Map<String, Object> createMapWithBookData() {
+    Map<String, Object> book = new HashMap<>();
+    book.put("author", "Martin Fowler");
+    book.put("title", "Refactoring: Improving the Design of Existing Code");
+    book.put("blurb", "Any fool can write code that a computer can understand. "
+            + "Good programmers write code that humans can understand.");
+    book.put("pages", 448);
+
+    return book;
+  }
+
   @DisplayName("and invalid payload with missing author")
   @Nested
   class InvalidPayload {
@@ -45,11 +57,8 @@ class BookControllerSpecification {
 
     @BeforeEach
     void setup() {
-      book = new HashMap<>();
-      book.put("title", "Refactoring: Improving the Design of Existing Code");
-      book.put("blurb", "Any fool can write code that a computer can understand. "
-              + "Good programmers write code that humans can understand.");
-      book.put("pages", 448);
+      book = createMapWithBookData();
+      book.remove("author");
     }
 
     @DisplayName(
@@ -61,7 +70,8 @@ class BookControllerSpecification {
               post("/books").contentType(MediaTypes.HAL_JSON).content(
                       objectMapper.writeValueAsString(book)))
               .andDo(print())
-              .andExpect(status().isBadRequest());
+              .andExpect(status().isBadRequest())
+      ;
     }
   }
 
@@ -72,12 +82,7 @@ class BookControllerSpecification {
 
     @BeforeEach
     void setup() {
-      book = new HashMap<>();
-      book.put("author", "Martin Fowler");
-      book.put("title", "Refactoring: Improving the Design of Existing Code");
-      book.put("blurb", "Any fool can write code that a computer can understand. "
-              + "Good programmers write code that humans can understand.");
-      book.put("pages", 448);
+      book = createMapWithBookData();
       book.put("test", "bad");
     }
 
@@ -101,12 +106,7 @@ class BookControllerSpecification {
 
     @BeforeEach
     void setup() {
-      book = new HashMap<>();
-      book.put("author", "Martin Fowler");
-      book.put("title", "Refactoring: Improving the Design of Existing Code");
-      book.put("blurb", "Any fool can write code that a computer can understand. "
-              + "Good programmers write code that humans can understand.");
-      book.put("pages", 448);
+      book = createMapWithBookData();
     }
 
     @DisplayName(
@@ -119,6 +119,29 @@ class BookControllerSpecification {
                       objectMapper.writeValueAsString(book)))
               .andDo(print())
               .andExpect(status().isCreated());
+    }
+  }
+
+  @DisplayName("and unsupported ContentType")
+  @Nested
+  class WrongContentType {
+    Map<String, Object> book;
+
+    @BeforeEach
+    void setup() {
+      book = createMapWithBookData();
+    }
+
+    @DisplayName(
+            "When trying to create new book, "
+                    + "Then controller returns Unsupported Media Type")
+    @Test
+    void testCreatingBookWithPayloadWithExtraField() throws Exception {
+      mockMvc.perform(
+              post("/books").contentType(MediaType.TEXT_PLAIN_VALUE).content(
+                      objectMapper.writeValueAsString(book)))
+              .andDo(print())
+              .andExpect(status().isUnsupportedMediaType());
     }
   }
 }
