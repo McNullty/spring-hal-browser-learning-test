@@ -219,6 +219,8 @@ public class BooksController {
         case "pages":
           builder.pages((Integer) entry.getValue());
           break;
+        default:
+          break;
       }
     }
 
