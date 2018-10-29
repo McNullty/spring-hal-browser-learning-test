@@ -33,6 +33,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @DisplayName("Documentation for /books endpoint")
@@ -244,9 +245,10 @@ class BooksDocumentation extends AbstractDocumentation {
             + "Good programmers write code that humans can understand.");
 
     this.mockMvc.perform(
-            patch(bookLocation).contentType(MediaTypes.HAL_JSON).content(
+            patch(bookLocation).contentType(MediaTypes.HAL_JSON)
+                    .accept(MediaType.ALL_VALUE).content(
                     this.objectMapper.writeValueAsString(bookUpdate)))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(document("book-update-example",
                     requestFields(
                             fieldWithPath("title").description("The title of the book")
@@ -282,7 +284,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON).content(
+                    post("/books").contentType(MediaTypes.HAL_JSON)
+                            .accept(MediaType.ALL_VALUE)
+                            .content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated()).andDo(print())
             .andReturn().getResponse().getHeader("Location");
@@ -345,8 +349,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON).content(
-                            this.objectMapper.writeValueAsString(book)))
+                    post("/books").contentType(MediaTypes.HAL_JSON)
+                            .accept(MediaType.ALL_VALUE)
+                            .content(this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getHeader("Location");
 
