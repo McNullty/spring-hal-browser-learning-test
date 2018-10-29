@@ -1,6 +1,5 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import hr.mladen.cikara.spring.hal.browser.learning.test.ConversionToJsonException;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -66,8 +65,8 @@ public class BooksController {
   /**
    * Searching for books that in titla have query string.
    *
-   * @param query Query that must match in book title
-   * @param pageable Pageable object, injected by Spring
+   * @param query     Query that must match in book title
+   * @param pageable  Pageable object, injected by Spring
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books that match query
    */
@@ -161,15 +160,14 @@ public class BooksController {
 
     if (book.isPresent()) {
 
-      try {
-        Book updatedBook = applyChanges(book.get(), updates);
+      Book updatedBook = applyChanges(book.get(), updates);
 
-        bookRepository.save(updatedBook);
-      } catch (ConversionToJsonException e) {
-        return ResponseEntity.badRequest().build();
-      }
+      Book returnBook = bookRepository.save(updatedBook);
 
-      return ResponseEntity.noContent().build();
+      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+
+      return ResponseEntity.ok(bookResource);
+
     } else {
       return ResponseEntity.notFound().build();
     }
@@ -194,8 +192,7 @@ public class BooksController {
     return ResponseEntity.noContent().build();
   }
 
-  private Book applyChanges(final Book book, final Map<String, Object> updates)
-          throws ConversionToJsonException {
+  private Book applyChanges(final Book book, final Map<String, Object> updates) {
 
     Book.BookBuilder builder = Book.builder();
 
@@ -220,8 +217,6 @@ public class BooksController {
         case "pages":
           builder.pages((Integer) entry.getValue());
           break;
-        default:
-          throw new ConversionToJsonException();
       }
     }
 

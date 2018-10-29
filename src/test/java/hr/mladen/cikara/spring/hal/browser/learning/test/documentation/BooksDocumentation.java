@@ -179,7 +179,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail("Book is not create");
+      Assert.fail("Book is not created");
     }
 
     String bookId = getBookIdFromLocation(bookLocation);
@@ -229,7 +229,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail("Book is not create");
+      Assert.fail("Book is not created");
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
@@ -249,6 +249,11 @@ class BooksDocumentation extends AbstractDocumentation {
                     .accept(MediaType.ALL_VALUE).content(
                     this.objectMapper.writeValueAsString(bookUpdate)))
             .andExpect(status().isOk())
+            .andExpect(jsonPath("title", is(book.get("title"))))
+            .andExpect(jsonPath("author", is(book.get("author"))))
+            .andExpect(jsonPath("blurb", is(bookUpdate.get("blurb"))))
+            .andExpect(jsonPath("pages", is(book.get("pages"))))
+            .andExpect(jsonPath("_links.self.href", is(bookLocation)))
             .andDo(document("book-update-example",
                     requestFields(
                             fieldWithPath("title").description("The title of the book")
@@ -258,7 +263,15 @@ class BooksDocumentation extends AbstractDocumentation {
                             fieldWithPath("blurb").description("Short blurb for a book")
                                     .type(JsonFieldType.STRING).optional(),
                             fieldWithPath("pages").description("Number of pages of a book")
-                                    .type(JsonFieldType.NUMBER).optional())));
+                                    .type(JsonFieldType.NUMBER).optional()),
+                    responseFields(
+                            fieldWithPath("title").description("The title of the book"),
+                            fieldWithPath("author").description("Author of the book"),
+                            fieldWithPath("blurb").description("Short blurb for a book"),
+                            fieldWithPath("pages").description("Number of pages of a book"),
+                            subsectionWithPath("_links")
+                                    .description("<<resources-book-links,Links>> "
+                                            + "to other resources"))));
 
     // WHEN:
     this.mockMvc.perform(get(bookLocation))
@@ -292,7 +305,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail("Book is not create");
+      Assert.fail("Book is not created");
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
@@ -356,7 +369,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andReturn().getResponse().getHeader("Location");
 
     if (bookLocation == null) {
-      Assert.fail("Book is not create");
+      Assert.fail("Book is not created");
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
