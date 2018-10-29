@@ -37,7 +37,7 @@ class BookControllerSpecification {
             .build();
   }
 
-  @DisplayName("and invalid payload")
+  @DisplayName("and invalid payload with missing author")
   @Nested
   class InvalidPayload {
 
@@ -61,6 +61,34 @@ class BookControllerSpecification {
                       objectMapper.writeValueAsString(book)))
               .andDo(print())
               .andExpect(status().isBadRequest());
+    }
+  }
+
+  @DisplayName("and payload with field that is not any of DTO fields (\"test\": \"bad\")")
+  @Nested
+  class PayloadWithFieldThatCanNotBeMapped {
+    Map<String, Object> book;
+
+    @BeforeEach
+    void setup() {
+      book = new HashMap<>();
+      book.put("author", "Martin Fowler");
+      book.put("title", "Refactoring: Improving the Design of Existing Code");
+      book.put("blurb", "Any fool can write code that a computer can understand. "
+              + "Good programmers write code that humans can understand.");
+      book.put("pages", 448);
+      book.put("test", "bad");
+    }
+
+    @DisplayName(
+            "When trying to create new book, controller returns Created and extra field is ignored")
+    @Test
+    void testCreatingBookWithPayloadWithExtraField() throws Exception {
+      mockMvc.perform(
+              post("/books").contentType(MediaTypes.HAL_JSON).content(
+                      objectMapper.writeValueAsString(book)))
+              .andDo(print())
+              .andExpect(status().isCreated());
     }
   }
 }
