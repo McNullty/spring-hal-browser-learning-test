@@ -88,7 +88,7 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
 
     @DisplayName(
             "When trying to create new book, "
-                    + "Then controller returns Created")
+                    + "Then controller returns Created with Location in header")
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
@@ -96,7 +96,8 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
                       .contentType(MediaType.APPLICATION_JSON_VALUE)
                       .content(objectMapper.writeValueAsString(book)))
               .andDo(MockMvcResultHandlers.print())
-              .andExpect(MockMvcResultMatchers.status().isCreated());
+              .andExpect(MockMvcResultMatchers.status().isCreated())
+              .andExpect(MockMvcResultMatchers.header().exists("Location"));
     }
   }
 
