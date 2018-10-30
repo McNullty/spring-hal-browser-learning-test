@@ -13,6 +13,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -151,7 +152,7 @@ public class BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  @PatchMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
+  @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
@@ -176,7 +177,7 @@ public class BooksController {
     }
   }
 
-  @PutMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
+  @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> replacingBook(
           @RequestBody BookDto bookDto,
