@@ -1,45 +1,21 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("Given BookController")
-@ExtendWith({SpringExtension.class})
-@SpringBootTest
-class BookControllerGetBookSpecification {
-
-  @Autowired
-  ObjectMapper objectMapper;
-
-  @Autowired
-  WebApplicationContext webApplicationContext;
+class BookControllerGetBookSpecification extends AbstractBookControllerSpecification {
 
   @Autowired
   BookRepository bookRepository;
-
-  private MockMvc mockMvc;
-
-  @BeforeEach
-  void setUp() {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-            .build();
-  }
 
   @DisplayName("and valid book id")
   @Nested
