@@ -14,17 +14,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DisplayName("Given BookController")
 class BookControllerPostSpecification extends AbstractBookControllerSpecification {
 
-  private Map<String, Object> createMapWithBookData() {
-    Map<String, Object> book = new HashMap<>();
-    book.put("author", "Martin Fowler");
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("blurb", "Any fool can write code that a computer can understand. "
-            + "Good programmers write code that humans can understand.");
-    book.put("pages", 448);
-
-    return book;
-  }
-
   @DisplayName("and invalid payload with missing author")
   @Nested
   class InvalidPayload {

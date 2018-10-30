@@ -25,7 +25,7 @@ class BookControllerDeleteSpecification extends AbstractBookControllerSpecificat
             "When trying to delete book, "
                     + "Then controller returns no content")
     @Test
-    void testGettingBookJson() throws Exception {
+    void testDeletingBook() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
                       .author("Test author")
@@ -51,7 +51,7 @@ class BookControllerDeleteSpecification extends AbstractBookControllerSpecificat
     @DisplayName(
             "When trying to get book, Then controller returns not found")
     @Test
-    void testGettingBook() throws Exception {
+    void testDeletingBook() throws Exception {
       mockMvc.perform(
               RestDocumentationRequestBuilders.delete("/books/99999")
                       .accept(MediaType.APPLICATION_JSON_VALUE))
