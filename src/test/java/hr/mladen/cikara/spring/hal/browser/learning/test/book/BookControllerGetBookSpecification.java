@@ -93,8 +93,6 @@ class BookControllerGetBookSpecification extends AbstractBookControllerSpecifica
             "When trying to get book, Then controller returns not found")
     @Test
     void testGettingBook() throws Exception {
-
-
       mockMvc.perform(
               RestDocumentationRequestBuilders.get("/books/99999")
                       .accept(MediaType.APPLICATION_JSON_VALUE))
