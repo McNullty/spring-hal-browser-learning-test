@@ -1,9 +1,5 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,17 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("Given BookController")
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
-class BookControllerSpecification {
+class BookControllerPostSpecification {
 
   @Autowired
   ObjectMapper objectMapper;
@@ -67,10 +65,11 @@ class BookControllerSpecification {
     @Test
     void testCreatingBookWithInvalidPayload() throws Exception {
       mockMvc.perform(
-              post("/books").contentType(MediaTypes.HAL_JSON).content(
-                      objectMapper.writeValueAsString(book)))
-              .andDo(print())
-              .andExpect(status().isBadRequest());
+              RestDocumentationRequestBuilders.post("/books")
+                      .contentType(MediaType.APPLICATION_JSON_VALUE)
+                      .content(objectMapper.writeValueAsString(book)))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
   }
 
@@ -91,10 +90,11 @@ class BookControllerSpecification {
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
-              post("/books").contentType(MediaTypes.HAL_JSON).content(
-                      objectMapper.writeValueAsString(book)))
-              .andDo(print())
-              .andExpect(status().isCreated());
+              RestDocumentationRequestBuilders.post("/books")
+                      .contentType(MediaType.APPLICATION_JSON_VALUE)
+                      .content(objectMapper.writeValueAsString(book)))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isCreated());
     }
   }
 
@@ -114,10 +114,11 @@ class BookControllerSpecification {
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
-              post("/books").contentType(MediaTypes.HAL_JSON).content(
-                      objectMapper.writeValueAsString(book)))
-              .andDo(print())
-              .andExpect(status().isCreated());
+              RestDocumentationRequestBuilders.post("/books")
+                      .contentType(MediaType.APPLICATION_JSON_VALUE)
+                      .content(objectMapper.writeValueAsString(book)))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isCreated());
     }
   }
 
@@ -137,10 +138,11 @@ class BookControllerSpecification {
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
-              post("/books").contentType(MediaType.TEXT_PLAIN_VALUE).content(
-                      objectMapper.writeValueAsString(book)))
-              .andDo(print())
-              .andExpect(status().isUnsupportedMediaType());
+              RestDocumentationRequestBuilders.post("/books")
+                      .contentType(MediaType.TEXT_PLAIN_VALUE)
+                      .content(objectMapper.writeValueAsString(book)))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType());
     }
   }
 
@@ -155,10 +157,11 @@ class BookControllerSpecification {
     @Test
     void testCreatingBookWithPayloadWithExtraField() throws Exception {
       mockMvc.perform(
-              post("/books").contentType(MediaType.TEXT_PLAIN_VALUE).content(
-                      objectMapper.writeValueAsString(book)))
-              .andDo(print())
-              .andExpect(status().isUnsupportedMediaType());
+              RestDocumentationRequestBuilders.post("/books")
+                      .contentType(MediaType.APPLICATION_JSON_VALUE)
+                      .content(objectMapper.writeValueAsString(book)))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
   }
 }

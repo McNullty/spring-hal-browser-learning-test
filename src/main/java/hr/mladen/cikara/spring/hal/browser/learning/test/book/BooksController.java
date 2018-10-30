@@ -49,7 +49,7 @@ public class BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books
    */
-  @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> findAll(
           final Pageable pageable,
           final PagedResourcesAssembler<Book> assembler) {
@@ -71,7 +71,9 @@ public class BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books that match query
    */
-  @GetMapping(value = "/search/title-contains", produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(
+          value = "/search/title-contains",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> search(
           @RequestParam(name = "query") final String query,
           final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
@@ -91,7 +93,7 @@ public class BooksController {
    * @return returns HTTP 201 Created
    */
   @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
-          produces = {MediaTypes.HAL_JSON_VALUE})
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 
@@ -112,7 +114,9 @@ public class BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  @GetMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -131,7 +135,9 @@ public class BooksController {
    * @param bookId Book Id
    * @return Returns HTTP 204
    */
-  @DeleteMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
+  @DeleteMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -152,7 +158,7 @@ public class BooksController {
    * @return Returns HTTP 204
    */
   @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-          produces = {MediaTypes.HAL_JSON_VALUE})
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
           @PathVariable("bookId") final Long bookId) {
@@ -183,7 +189,7 @@ public class BooksController {
    * @return Returns HTTP 204
    */
   @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-          produces = {MediaTypes.HAL_JSON_VALUE})
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> replacingBook(
           @RequestBody BookDto bookDto,
           @PathVariable("bookId") final Long bookId) {
