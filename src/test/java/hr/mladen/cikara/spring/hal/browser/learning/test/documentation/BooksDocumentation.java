@@ -245,7 +245,7 @@ class BooksDocumentation extends AbstractDocumentation {
             + "Good programmers write code that humans can understand.");
 
     this.mockMvc.perform(
-            patch(bookLocation).contentType(MediaTypes.HAL_JSON)
+            patch(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE)
                     .accept(MediaType.ALL_VALUE).content(
                     this.objectMapper.writeValueAsString(bookUpdate)))
             .andExpect(status().isOk())
@@ -324,7 +324,7 @@ class BooksDocumentation extends AbstractDocumentation {
     bookReplace.put("pages", 448);
 
     this.mockMvc.perform(
-            put(bookLocation).contentType(MediaTypes.HAL_JSON).content(
+            put(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE).content(
                     this.objectMapper.writeValueAsString(bookReplace)))
             .andExpect(status().isNoContent())
             .andDo(document("book-replace-example",
