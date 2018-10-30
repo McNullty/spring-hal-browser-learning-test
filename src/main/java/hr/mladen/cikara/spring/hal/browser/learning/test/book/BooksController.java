@@ -151,7 +151,7 @@ public class BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  @PatchMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
+  @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
@@ -182,7 +182,7 @@ public class BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  @PutMapping(value = "/{bookId}", consumes = MediaTypes.HAL_JSON_VALUE,
+  @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE})
   public ResponseEntity<?> replacingBook(
           @RequestBody BookDto bookDto,
