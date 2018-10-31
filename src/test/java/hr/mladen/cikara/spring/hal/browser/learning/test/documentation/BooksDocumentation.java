@@ -50,7 +50,6 @@ class BooksDocumentation extends AbstractDocumentation {
   void booksListExample() throws Exception {
 
     // GIVEN:
-    // TODO: think if creating data should be in setup method for this test (BeforeAll)
     createTestData();
 
     //WHEN:
