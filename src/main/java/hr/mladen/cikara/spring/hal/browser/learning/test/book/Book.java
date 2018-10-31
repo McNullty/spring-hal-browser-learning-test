@@ -16,7 +16,7 @@ public class Book {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @NotNull
   @Column(columnDefinition = "VARCHAR", length = 100)
@@ -40,7 +40,7 @@ public class Book {
   /**
    * For Hibernate.
    */
-  Book(long id, String title, String author, String blurb, Integer pages) {
+  Book(Long id, String title, String author, String blurb, Integer pages) {
     this.id = id;
     this.author = author;
     this.title = title;

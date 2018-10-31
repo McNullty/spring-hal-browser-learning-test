@@ -20,7 +20,7 @@ class BookToBookResourceAssemblerSpecification {
   @BeforeEach
   void setup() {
     book = Book.builder()
-            .id(1)
+            .id(1L)
             .author("Test Author")
             .title("Test Title")
             .blurb("Test Blurb")
