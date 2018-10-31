@@ -190,14 +190,24 @@ public class BooksController {
    */
   @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<?> replacingBook(
-          @RequestBody BookDto bookDto,
+  public ResponseEntity<?> replaceBook(
+          @Valid @RequestBody BookDto bookDto,
           @PathVariable("bookId") final Long bookId) {
     log.debug("Got book: {}", bookDto);
 
-    bookRepository.save(bookDto.getBook(bookId));
+    Optional<Book> book = bookRepository.findById(bookId);
 
-    return ResponseEntity.noContent().build();
+    if (book.isPresent()) {
+
+      Book returnBook = bookRepository.save(bookDto.getBook(bookId));
+
+      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+
+      return ResponseEntity.ok(bookResource);
+    } else {
+      // TODO: add instruction that you can't replace not existing book and to use POST for creating new books
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   private Book applyChanges(final Book book, final Map<String, Object> updates) {
