@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
 import java.util.Map;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +27,10 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
   class ValidBookId {
 
     @DisplayName(
-            "When trying to patch book, "
+            "When trying to patch book with valid body, "
                     + "Then controller returns ok with book body")
     @Test
-    void testPatchingBook() throws Exception {
+    void testPatchingBookValidBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
                       .author("Test author")
@@ -60,6 +61,79 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
                               "pages", Matchers.is(book.get("pages"))));
+    }
+
+    @DisplayName(
+            "When trying to patch book with not existing field, "
+                    + "Then controller returns ok with book body, no fields are updated")
+    @Test
+    void testPatchingBookNotExistingField() throws Exception {
+      Book savedBook = bookRepository.save(
+              new Book.BookBuilder()
+                      .author("Test author")
+                      .title("Test title")
+                      .blurb("Test blurb")
+                      .pages(190)
+                      .build());
+
+      Map<String, Object> book = new HashMap<>();
+      book.put("not-existing", "test");
+
+      mockMvc.perform(
+              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+                      .content(objectMapper.writeValueAsString(book))
+                      .accept(MediaType.APPLICATION_JSON_VALUE)
+                      .contentType(MediaType.APPLICATION_JSON_VALUE))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isOk())
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "author", Matchers.is(savedBook.getAuthor())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "title", Matchers.is(savedBook.getTitle())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "blurb", Matchers.is(savedBook.getBlurb())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "pages", Matchers.is(savedBook.getPages())));
+    }
+
+    @DisplayName(
+            "When trying to patch book with empty body, "
+                    + "Then controller returns ok with book body, no fields are updated")
+    @Test
+    void testPatchingBookEmptyBody() throws Exception {
+      Book savedBook = bookRepository.save(
+              new Book.BookBuilder()
+                      .author("Test author")
+                      .title("Test title")
+                      .blurb("Test blurb")
+                      .pages(190)
+                      .build());
+
+      Map<String, Object> book = new HashMap<>();
+
+      mockMvc.perform(
+              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+                      .content(objectMapper.writeValueAsString(book))
+                      .accept(MediaType.APPLICATION_JSON_VALUE)
+                      .contentType(MediaType.APPLICATION_JSON_VALUE))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isOk())
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "author", Matchers.is(savedBook.getAuthor())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "title", Matchers.is(savedBook.getTitle())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "blurb", Matchers.is(savedBook.getBlurb())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "pages", Matchers.is(savedBook.getPages())));
     }
   }
 
