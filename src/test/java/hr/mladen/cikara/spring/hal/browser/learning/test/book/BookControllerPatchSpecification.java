@@ -64,6 +64,42 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     }
 
     @DisplayName(
+            "When trying to patch book with valid body and all class field are set, "
+                    + "Then controller returns ok with book body")
+    @Test
+    void testPatchingBookValidBodyAllFields() throws Exception {
+      Book savedBook = bookRepository.save(
+              new Book.BookBuilder()
+                      .author("Test author")
+                      .title("Test title")
+                      .blurb("Test blurb")
+                      .pages(190)
+                      .build());
+
+      Map<String, Object> book = createMapWithBookData();
+
+      mockMvc.perform(
+              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+                      .content(objectMapper.writeValueAsString(book))
+                      .accept(MediaType.APPLICATION_JSON_VALUE)
+                      .contentType(MediaType.APPLICATION_JSON_VALUE))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isOk())
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "author", Matchers.is(book.get("author"))))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "title", Matchers.is(book.get("title"))))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "blurb", Matchers.is(book.get("blurb"))))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "pages", Matchers.is(book.get("pages"))));
+    }
+
+    @DisplayName(
             "When trying to patch book with not existing field, "
                     + "Then controller returns ok with book body, no fields are updated")
     @Test

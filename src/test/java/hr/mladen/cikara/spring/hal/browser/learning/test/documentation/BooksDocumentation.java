@@ -287,8 +287,6 @@ class BooksDocumentation extends AbstractDocumentation {
   @DisplayName("Documentation for replacing a book")
   void bookReplaceExample() throws Exception {
 
-    // GIVEN:
-
     Map<String, Object> book = new HashMap<>();
     book.put("title", "Refactoring: Improving the Design of Existing Code");
     book.put("author", "Martin Fowler");
@@ -325,7 +323,12 @@ class BooksDocumentation extends AbstractDocumentation {
     this.mockMvc.perform(
             put(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE).content(
                     this.objectMapper.writeValueAsString(bookReplace)))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("title", is(bookReplace.get("title"))))
+            .andExpect(jsonPath("author", is(bookReplace.get("author"))))
+            .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
+            .andExpect(jsonPath("pages", is(bookReplace.get("pages"))))
+            .andExpect(jsonPath("_links.self.href", is(bookLocation)))
             .andDo(document("book-replace-example",
                     requestFields(
                             fieldWithPath("title").description("The title of the book")
@@ -335,17 +338,15 @@ class BooksDocumentation extends AbstractDocumentation {
                             fieldWithPath("blurb").description("Short blurb for a book")
                                     .type(JsonFieldType.STRING).optional(),
                             fieldWithPath("pages").description("Number of pages of a book")
-                                    .type(JsonFieldType.NUMBER).optional())));
-
-    // WHEN:
-    this.mockMvc.perform(get(bookLocation))
-            // THEN:
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(bookReplace.get("title"))))
-            .andExpect(jsonPath("author", is(bookReplace.get("author"))))
-            .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
-            .andExpect(jsonPath("pages", is(bookReplace.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+                                    .type(JsonFieldType.NUMBER).optional()),
+                    responseFields(
+                            fieldWithPath("title").description("The title of the book"),
+                            fieldWithPath("author").description("Author of the book"),
+                            fieldWithPath("blurb").description("Short blurb for a book"),
+                            fieldWithPath("pages").description("Number of pages of a book"),
+                            subsectionWithPath("_links")
+                                    .description("<<resources-book-links,Links>> "
+                                            + "to other resources"))));
   }
 
   @Test
