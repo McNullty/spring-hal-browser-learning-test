@@ -2,7 +2,6 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,13 +31,19 @@ import org.springframework.web.bind.annotation.RestController;
 @ExposesResourceFor(Book.class)
 public class BooksControllerImpl implements BooksController {
 
-  private final BookRepository bookRepository;
+  private final BookService bookService;
   private final BookToBookResourceAssembler bookToBookResourceAssembler;
 
+  /**
+   * Constructor for BookController default implementation.
+   *
+   * @param bookService                 Book Service
+   * @param bookToBookResourceAssembler Assembler that creates BookResources
+   */
   public BooksControllerImpl(
-          final BookRepository bookRepository,
+          final BookService bookService,
           final BookToBookResourceAssembler bookToBookResourceAssembler) {
-    this.bookRepository = bookRepository;
+    this.bookService = bookService;
     this.bookToBookResourceAssembler = bookToBookResourceAssembler;
   }
 
@@ -48,15 +53,13 @@ public class BooksControllerImpl implements BooksController {
           final Pageable pageable,
           final PagedResourcesAssembler<Book> assembler) {
 
-    Page<Book> books = bookRepository.findAll(pageable);
+    Page<Book> books = bookService.findAll(pageable);
 
     PagedResources<BookResource> booksPagedResources =
             getPagedBookResourcesWithLinks(assembler, books);
 
-
     return ResponseEntity.ok(booksPagedResources);
   }
-
 
   @Override
   @GetMapping(
@@ -66,7 +69,7 @@ public class BooksControllerImpl implements BooksController {
           @RequestParam(name = "query") final String query,
           final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
 
-    Page<Book> books = bookRepository.findByTitleContaining(query, pageable);
+    Page<Book> books = bookService.findByTitleContaining(query, pageable);
 
     PagedResources<BookResource> booksPagedResources =
             getPagedBookResourcesWithLinks(assembler, books);
@@ -80,8 +83,7 @@ public class BooksControllerImpl implements BooksController {
   public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 
-    Book book = bookRepository.save(bookDto.getBook());
-
+    Book book = bookService.save(bookDto.getBook());
 
     BookResource bookResource = bookToBookResourceAssembler.toResource(book);
 
@@ -96,13 +98,13 @@ public class BooksControllerImpl implements BooksController {
           value = "/{bookId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId) {
-    Optional<Book> book = bookRepository.findById(bookId);
+    try {
+      Book book = bookService.getBook(bookId);
 
-    if (book.isPresent()) {
-      BookResource bookResource = bookToBookResourceAssembler.toResource(book.get());
+      BookResource bookResource = bookToBookResourceAssembler.toResource(book);
 
       return ResponseEntity.ok(bookResource);
-    } else {
+    } catch (BookService.BookNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
   }
@@ -112,13 +114,11 @@ public class BooksControllerImpl implements BooksController {
           value = "/{bookId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
-    Optional<Book> book = bookRepository.findById(bookId);
-
-    if (book.isPresent()) {
-      bookRepository.delete(book.get());
+    try {
+      bookService.deleteBook(bookId);
 
       return ResponseEntity.noContent().build();
-    } else {
+    } catch (BookService.BookNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
   }
@@ -131,19 +131,13 @@ public class BooksControllerImpl implements BooksController {
           @PathVariable("bookId") final Long bookId) {
     log.debug("Got map: {}", updates);
 
-    Optional<Book> book = bookRepository.findById(bookId);
+    try {
+      Book updatedBook = bookService.updateBook(bookId, updates);
 
-    if (book.isPresent()) {
-
-      Book updatedBook = applyChanges(book.get(), updates);
-
-      Book returnBook = bookRepository.save(updatedBook);
-
-      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+      BookResource bookResource = bookToBookResourceAssembler.toResource(updatedBook);
 
       return ResponseEntity.ok(bookResource);
-
-    } else {
+    } catch (BookService.BookNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
   }
@@ -156,53 +150,16 @@ public class BooksControllerImpl implements BooksController {
           @PathVariable("bookId") final Long bookId) {
     log.debug("Got book: {}", bookDto);
 
-    Optional<Book> book = bookRepository.findById(bookId);
-
-    if (book.isPresent()) {
-
-      Book returnBook = bookRepository.save(bookDto.getBook(bookId));
+    try {
+      Book returnBook = bookService.replaceBook(bookId, bookDto);
 
       BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
 
       return ResponseEntity.ok(bookResource);
-    } else {
+    } catch (BookService.BookNotFoundException e) {
       // TODO: add instruction that you can't replace book and to use POST for creating new books
       return ResponseEntity.badRequest().build();
     }
-  }
-
-  private Book applyChanges(final Book book, final Map<String, Object> updates) {
-
-    Book.BookBuilder builder = Book.builder();
-
-    builder
-            .id(book.getId())
-            .title(book.getTitle())
-            .author(book.getAuthor())
-            .blurb(book.getBlurb())
-            .pages(book.getPages());
-
-    for (Map.Entry<String, Object> entry : updates.entrySet()) {
-      switch (entry.getKey().toLowerCase()) {
-        case "title":
-          builder.title((String) entry.getValue());
-          break;
-        case "author":
-          builder.author((String) entry.getValue());
-          break;
-        case "blurb":
-          builder.blurb((String) entry.getValue());
-          break;
-        case "pages":
-          builder.pages((Integer) entry.getValue());
-          break;
-        default:
-          break;
-      }
-    }
-
-    return builder.build();
-
   }
 
   private PagedResources<BookResource> getPagedBookResourcesWithLinks(
