@@ -1,6 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
-import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksControllerImpl;
 import java.util.Collections;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -32,7 +32,7 @@ public class IndexController {
   private JsonObject createJsonObject(
           final JsonBuilderFactory factory) {
 
-    Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
+    Link bookLink = ControllerLinkBuilder.linkTo(BooksControllerImpl.class).withSelfRel();
     Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
 
     return factory.createObjectBuilder()
