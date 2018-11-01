@@ -5,14 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.Link;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DisplayName("Given Spring Context and example book")
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class BookToBookResourceAssemblerSpecification {
 
@@ -23,7 +20,7 @@ class BookToBookResourceAssemblerSpecification {
   @BeforeEach
   void setup() {
     book = Book.builder()
-            .id(1)
+            .id(1L)
             .author("Test Author")
             .title("Test Title")
             .blurb("Test Blurb")

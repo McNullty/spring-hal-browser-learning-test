@@ -1,9 +1,9 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import hr.mladen.cikara.spring.hal.browser.learning.test.ConversionToJsonException;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,7 +49,7 @@ public class BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books
    */
-  @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> findAll(
           final Pageable pageable,
           final PagedResourcesAssembler<Book> assembler) {
@@ -66,14 +66,14 @@ public class BooksController {
   /**
    * Searching for books that in titla have query string.
    *
-   * @param query Query that must match in book title
-   * @param pageable Pageable object, injected by Spring
+   * @param query     Query that must match in book title
+   * @param pageable  Pageable object, injected by Spring
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books that match query
    */
-  @RequestMapping(
-          value = "/search/title-contains", method = RequestMethod.GET,
-          produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(
+          value = "/search/title-contains",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> search(
           @RequestParam(name = "query") final String query,
           final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
@@ -92,8 +92,9 @@ public class BooksController {
    * @param bookDto Book DTO
    * @return returns HTTP 201 Created
    */
-  @RequestMapping(method = RequestMethod.POST, produces = {MediaTypes.HAL_JSON_VALUE})
-  public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
+  @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 
     Book book = bookRepository.save(bookDto.getBook());
@@ -113,7 +114,9 @@ public class BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  @GetMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
+  @GetMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -132,7 +135,9 @@ public class BooksController {
    * @param bookId Book Id
    * @return Returns HTTP 204
    */
-  @DeleteMapping(value = "/{bookId}", produces = {MediaTypes.HAL_JSON_VALUE})
+  @DeleteMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
     Optional<Book> book = bookRepository.findById(bookId);
 
@@ -153,7 +158,7 @@ public class BooksController {
    * @return Returns HTTP 204
    */
   @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-          produces = {MediaTypes.HAL_JSON_VALUE})
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
           @PathVariable("bookId") final Long bookId) {
@@ -163,34 +168,49 @@ public class BooksController {
 
     if (book.isPresent()) {
 
-      try {
-        Book updatedBook = applyChanges(book.get(), updates);
+      Book updatedBook = applyChanges(book.get(), updates);
 
-        bookRepository.save(updatedBook);
-      } catch (ConversionToJsonException e) {
-        return ResponseEntity.badRequest().build();
-      }
+      Book returnBook = bookRepository.save(updatedBook);
 
-      return ResponseEntity.noContent().build();
+      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+
+      return ResponseEntity.ok(bookResource);
+
     } else {
       return ResponseEntity.notFound().build();
     }
   }
 
+  /**
+   * Endpoint for replacing books.
+   *
+   * @param bookDto Book DTO
+   * @param bookId  Book Id
+   * @return Returns HTTP 204
+   */
   @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-          produces = {MediaTypes.HAL_JSON_VALUE})
-  public ResponseEntity<?> replacingBook(
-          @RequestBody BookDto bookDto,
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> replaceBook(
+          @Valid @RequestBody BookDto bookDto,
           @PathVariable("bookId") final Long bookId) {
     log.debug("Got book: {}", bookDto);
 
-    bookRepository.save(bookDto.getBook(bookId));
+    Optional<Book> book = bookRepository.findById(bookId);
 
-    return ResponseEntity.noContent().build();
+    if (book.isPresent()) {
+
+      Book returnBook = bookRepository.save(bookDto.getBook(bookId));
+
+      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+
+      return ResponseEntity.ok(bookResource);
+    } else {
+      // TODO: add instruction that you can't replace not existing book and to use POST for creating new books
+      return ResponseEntity.badRequest().build();
+    }
   }
 
-  private Book applyChanges(final Book book, final Map<String, Object> updates)
-          throws ConversionToJsonException {
+  private Book applyChanges(final Book book, final Map<String, Object> updates) {
 
     Book.BookBuilder builder = Book.builder();
 
@@ -216,7 +236,7 @@ public class BooksController {
           builder.pages((Integer) entry.getValue());
           break;
         default:
-          throw new ConversionToJsonException();
+          break;
       }
     }
 

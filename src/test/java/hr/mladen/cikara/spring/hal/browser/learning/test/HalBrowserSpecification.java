@@ -7,14 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import hr.mladen.cikara.spring.hal.browser.learning.test.hal.browser.HalController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("Given HalController")
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(HalController.class)
 class HalBrowserSpecification {
 

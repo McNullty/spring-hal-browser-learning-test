@@ -34,7 +34,6 @@ var uritemplate = (function () {
      * occuring expansions within one template.
      * Note: Uses key-value tupples to be able to cache null values as well.
      */
-    //TODO move this into prep-processing
     function CachingContext(context) {
         this.raw = context;
         this.cache = {};
@@ -95,7 +94,6 @@ var uritemplate = (function () {
         return res;
     };
 
-//TODO: change since draft-0.6 about characters in literals
     /* extract:
     The characters outside of expressions in a URI Template string are intended to be copied literally to the URI-reference if the character is allowed in a URI (reserved / unreserved / pct-encoded) or, if not allowed, copied to the URI-reference in its UTF-8 pct-encoded form.
     */
@@ -454,8 +452,6 @@ var uritemplate = (function () {
 
 
 //-------------------------------------------comments and ideas
-
-//TODO: consider building cache of previously parsed uris or even parsed expressions?
 
     return parse;
 

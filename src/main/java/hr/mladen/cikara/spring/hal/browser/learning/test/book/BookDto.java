@@ -1,19 +1,24 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class BookDto {
+
+  @NotNull
   private final String title;
 
+  @NotNull
   private final String author;
 
   private final String blurb;
 
-  private final int pages;
+  @NotNull
+  private final Integer pages;
 
   /**
    * DTO for mapping JSON data from request.
@@ -27,7 +32,7 @@ public class BookDto {
           @JsonProperty("author") final String author,
           @JsonProperty("title") final String title,
           @JsonProperty("blurb") final String blurb,
-          @JsonProperty("pages") final int pages) {
+          @JsonProperty("pages") final Integer pages) {
     this.title = title;
     this.author = author;
     this.blurb = blurb;
