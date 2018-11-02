@@ -43,7 +43,7 @@ public interface BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  ResponseEntity<BookResource> getBook(Long bookId);
+  ResponseEntity<BookResource> getBook(Long bookId) throws BookService.BookNotFoundException;
 
   /**
    * Endpoint for deleting book.
