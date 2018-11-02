@@ -1,6 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,13 +14,13 @@ import org.springframework.validation.ObjectError;
 @Data
 class ApiError {
   private HttpStatus status;
-  private LocalDateTime timestamp;
+  private ZonedDateTime timestamp;
   private String message;
   private String debugMessage;
   private List<ApiSubError> subErrors;
 
   private ApiError() {
-    timestamp = LocalDateTime.now();
+    timestamp = ZonedDateTime.now();
   }
 
   ApiError(HttpStatus status) {
