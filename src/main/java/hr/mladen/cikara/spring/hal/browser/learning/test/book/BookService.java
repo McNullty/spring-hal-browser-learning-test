@@ -1,6 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -68,6 +70,9 @@ public interface BookService {
    */
   Book replaceBook(Long bookId, BookDto bookDto) throws BookNotFoundException;
 
+  @Value
+  @EqualsAndHashCode
   class BookNotFoundException extends Exception {
+    private final Long bookId;
   }
 }

@@ -30,7 +30,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(BookService.BookNotFoundException.class)
   protected ResponseEntity<Object> handleEntityNotFound(BookService.BookNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
-    apiError.setMessage("Couldn't find book with id TODO");
+    apiError.setMessage("Couldn't find book with id " + ex.getBookId());
 
     return buildResponseEntity(apiError);
   }
