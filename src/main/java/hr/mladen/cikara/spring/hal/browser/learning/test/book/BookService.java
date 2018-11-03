@@ -71,7 +71,7 @@ public interface BookService {
   Book replaceBook(Long bookId, BookDto bookDto) throws BookNotFoundException;
 
   @Value
-  @EqualsAndHashCode
+  @EqualsAndHashCode(callSuper = false)
   class BookNotFoundException extends Exception {
     private final Long bookId;
   }

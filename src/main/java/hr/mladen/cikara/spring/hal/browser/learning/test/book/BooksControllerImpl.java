@@ -99,11 +99,11 @@ public class BooksControllerImpl implements BooksController {
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId)
           throws BookService.BookNotFoundException {
-      Book book = bookService.getBook(bookId);
+    Book book = bookService.getBook(bookId);
 
-      BookResource bookResource = bookToBookResourceAssembler.toResource(book);
+    BookResource bookResource = bookToBookResourceAssembler.toResource(book);
 
-      return ResponseEntity.ok(bookResource);
+    return ResponseEntity.ok(bookResource);
 
   }
 

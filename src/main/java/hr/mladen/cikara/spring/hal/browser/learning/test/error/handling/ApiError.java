@@ -49,7 +49,8 @@ class ApiError {
     subErrors.add(subError);
   }
 
-  private void addValidationError(String object, String field, Object rejectedValue, String message) {
+  private void addValidationError(
+          String object, String field, Object rejectedValue, String message) {
     addSubError(new ApiValidationError(object, field, rejectedValue, message));
   }
 
@@ -65,22 +66,15 @@ class ApiError {
             fieldError.getDefaultMessage());
   }
 
-  void addValidationErrors(List<FieldError> fieldErrors) {
-    fieldErrors.forEach(this::addValidationError);
-  }
-
   private void addValidationError(ObjectError objectError) {
     this.addValidationError(
             objectError.getObjectName(),
             objectError.getDefaultMessage());
   }
 
-  void addValidationError(List<ObjectError> globalErrors) {
-    globalErrors.forEach(this::addValidationError);
-  }
-
   /**
-   * Utility method for adding error of ConstraintViolation. Usually when a @Validated validation fails.
+   * Utility method for adding error of ConstraintViolation. Usually when a @Validated
+   * validation fails.
    *
    * @param cv the ConstraintViolation
    */
@@ -90,6 +84,14 @@ class ApiError {
             ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
             cv.getInvalidValue(),
             cv.getMessage());
+  }
+
+  void addValidationErrors(List<FieldError> fieldErrors) {
+    fieldErrors.forEach(this::addValidationError);
+  }
+
+  void addValidationError(List<ObjectError> globalErrors) {
+    globalErrors.forEach(this::addValidationError);
   }
 
   void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
