@@ -86,15 +86,15 @@ class ApiError {
             cv.getMessage());
   }
 
-  void addValidationErrors(List<FieldError> fieldErrors) {
-    fieldErrors.forEach(this::addValidationError);
-  }
-
   void addValidationError(List<ObjectError> globalErrors) {
     globalErrors.forEach(this::addValidationError);
   }
 
   void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
     constraintViolations.forEach(this::addValidationError);
+  }
+
+  void addValidationErrors(List<FieldError> fieldErrors) {
+    fieldErrors.forEach(this::addValidationError);
   }
 }
