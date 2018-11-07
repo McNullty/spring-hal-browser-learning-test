@@ -111,14 +111,11 @@ public class BooksControllerImpl implements BooksController {
   @DeleteMapping(
           value = "/{bookId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<?> deleteBook(@PathVariable final Long bookId) {
-    try {
-      bookService.deleteBook(bookId);
+  public ResponseEntity<?> deleteBook(
+          @PathVariable final Long bookId) throws BookService.BookNotFoundException {
+    bookService.deleteBook(bookId);
 
-      return ResponseEntity.noContent().build();
-    } catch (BookService.BookNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+    return ResponseEntity.noContent().build();
   }
 
   @Override
@@ -126,18 +123,14 @@ public class BooksControllerImpl implements BooksController {
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
-          @PathVariable("bookId") final Long bookId) {
+          @PathVariable("bookId") final Long bookId) throws BookService.BookNotFoundException {
     log.debug("Got map: {}", updates);
 
-    try {
-      Book updatedBook = bookService.updateBook(bookId, updates);
+    Book updatedBook = bookService.updateBook(bookId, updates);
 
-      BookResource bookResource = bookToBookResourceAssembler.toResource(updatedBook);
+    BookResource bookResource = bookToBookResourceAssembler.toResource(updatedBook);
 
-      return ResponseEntity.ok(bookResource);
-    } catch (BookService.BookNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+    return ResponseEntity.ok(bookResource);
   }
 
   @Override
@@ -145,7 +138,8 @@ public class BooksControllerImpl implements BooksController {
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> replaceBook(
           @Valid @RequestBody BookDto bookDto,
-          @PathVariable("bookId") final Long bookId) {
+          @PathVariable("bookId") final Long bookId)
+          throws WrongMethodUsedForCreatingBookException {
     log.debug("Got book: {}", bookDto);
 
     try {
@@ -155,8 +149,7 @@ public class BooksControllerImpl implements BooksController {
 
       return ResponseEntity.ok(bookResource);
     } catch (BookService.BookNotFoundException e) {
-      // TODO: add instruction that you can't replace book and to use POST for creating new books
-      return ResponseEntity.badRequest().build();
+      throw new WrongMethodUsedForCreatingBookException();
     }
   }
 
@@ -187,4 +180,6 @@ public class BooksControllerImpl implements BooksController {
   }
 
 
+  public class WrongMethodUsedForCreatingBookException extends Throwable {
+  }
 }

@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookService;
+import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksControllerImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -22,6 +23,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleEntityNotFound(BookService.BookNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
     apiError.setMessage("Couldn't find book with id " + ex.getBookId());
+
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler({BooksControllerImpl.WrongMethodUsedForCreatingBookException.class})
+  protected ResponseEntity<Object> handleWrongMethodUsedForCreatingBook(
+          BooksControllerImpl.WrongMethodUsedForCreatingBookException ex) {
+    ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
+    apiError.setMessage("Please use POST method for creating new record");
 
     return buildResponseEntity(apiError);
   }
