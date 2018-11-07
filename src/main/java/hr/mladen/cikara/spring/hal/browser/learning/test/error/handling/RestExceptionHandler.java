@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -43,6 +44,43 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
     apiError.setMessage("Resource not found " + ex.getRequestURL());
 
+    return buildResponseEntity(apiError);
+  }
+
+  /**
+   * Handle MethodArgumentNotValidException. Triggered when an object fails @Valid validation.
+   *
+   * @param ex      the MethodArgumentNotValidException that is thrown when @Valid validation fails
+   * @param headers HttpHeaders
+   * @param status  HttpStatus
+   * @param request WebRequest
+   * @return the ApiError object
+   */
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+          MethodArgumentNotValidException ex,
+          HttpHeaders headers,
+          HttpStatus status,
+          WebRequest request) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+    apiError.setMessage("Validation error");
+    apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
+    apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
+    return buildResponseEntity(apiError);
+  }
+
+  /**
+   * Handles javax.validation.ConstraintViolationException. Thrown when @Validated fails.
+   *
+   * @param ex the ConstraintViolationException
+   * @return the ApiError object
+   */
+  @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+  protected ResponseEntity<Object> handleConstraintViolation(
+          javax.validation.ConstraintViolationException ex) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+    apiError.setMessage("Validation error");
+    apiError.addValidationErrors(ex.getConstraintViolations());
     return buildResponseEntity(apiError);
   }
 
