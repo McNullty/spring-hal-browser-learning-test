@@ -60,7 +60,8 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> updateBook(Map<String, Object> updates, Long bookId) throws BookService.BookNotFoundException;
+  ResponseEntity<?> updateBook(Map<String, Object> updates, Long bookId)
+          throws BookService.BookNotFoundException;
 
   /**
    * Endpoint for replacing books.
@@ -69,5 +70,9 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> replaceBook(BookDto bookDto, Long bookId) throws BooksControllerImpl.WrongMethodUsedForCreatingBookException;
+  ResponseEntity<?> replaceBook(BookDto bookDto, Long bookId)
+          throws BooksController.WrongMethodUsedForCreatingBookException;
+
+  class WrongMethodUsedForCreatingBookException extends Exception {
+  }
 }

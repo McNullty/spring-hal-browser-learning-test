@@ -178,8 +178,4 @@ public class BooksControllerImpl implements BooksController {
                                     new PagedResourcesAssembler<>(null, null)))
                     .withRel("search"));
   }
-
-
-  public class WrongMethodUsedForCreatingBookException extends Throwable {
-  }
 }
