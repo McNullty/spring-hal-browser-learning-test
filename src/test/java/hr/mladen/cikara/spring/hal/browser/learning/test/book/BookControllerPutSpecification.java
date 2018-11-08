@@ -148,6 +148,43 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
               .andDo(MockMvcResultHandlers.print())
               .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+
+    @DisplayName(
+            "When trying to put book with all required fields filled and blurb set to null , "
+                    + "Then controller returns ok with book body")
+    @Test
+    void testPutValidBodyWithNullBlurb() throws Exception {
+      Book savedBook = bookRepository.save(
+              new Book.BookBuilder()
+                      .author("Test author")
+                      .title("Test title")
+                      .blurb("Test blurb")
+                      .pages(190)
+                      .build());
+
+      Map<String, Object> book = createMapWithBookData();
+      book.put("blurb", null);
+
+      mockMvc.perform(
+              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+                      .content(objectMapper.writeValueAsString(book))
+                      .accept(MediaType.APPLICATION_JSON_VALUE)
+                      .contentType(MediaType.APPLICATION_JSON_VALUE))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isOk())
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "author", Matchers.is(book.get("author"))))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "title", Matchers.is(book.get("title"))))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "blurb", Matchers.is(Matchers.nullValue())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "pages", Matchers.is(book.get("pages"))));
+    }
   }
 
   @DisplayName("and invalid book id")
