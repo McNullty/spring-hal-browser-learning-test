@@ -167,7 +167,7 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
               .andDo(MockMvcResultHandlers.print())
-              .andExpect(MockMvcResultMatchers.status().isBadRequest());
+              .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
   }
 }

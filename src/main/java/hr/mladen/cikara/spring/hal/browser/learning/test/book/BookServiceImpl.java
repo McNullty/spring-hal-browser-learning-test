@@ -38,10 +38,10 @@ public class BookServiceImpl implements BookService {
       if (book.isPresent()) {
         return book.get();
       } else {
-        throw new BookNotFoundException();
+        throw new BookNotFoundException(bookId);
       }
     } catch (IllegalArgumentException e) {
-      throw new BookNotFoundException();
+      throw new BookNotFoundException(bookId);
     }
 
   }
@@ -54,10 +54,10 @@ public class BookServiceImpl implements BookService {
       if (book.isPresent()) {
         bookRepository.delete(book.get());
       } else {
-        throw new BookNotFoundException();
+        throw new BookNotFoundException(bookId);
       }
     } catch (IllegalArgumentException e) {
-      throw new BookNotFoundException();
+      throw new BookNotFoundException(bookId);
     }
   }
 
@@ -71,7 +71,7 @@ public class BookServiceImpl implements BookService {
 
       return bookRepository.save(updatedBook);
     } else {
-      throw new BookNotFoundException();
+      throw new BookNotFoundException(bookId);
     }
   }
 
@@ -82,7 +82,7 @@ public class BookServiceImpl implements BookService {
     if (book.isPresent()) {
       return bookRepository.save(bookDto.getBook(bookId));
     } else {
-      throw new BookNotFoundException();
+      throw new BookNotFoundException(bookId);
     }
   }
 

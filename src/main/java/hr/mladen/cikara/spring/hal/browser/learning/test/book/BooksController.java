@@ -43,7 +43,7 @@ public interface BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  ResponseEntity<BookResource> getBook(Long bookId);
+  ResponseEntity<BookResource> getBook(Long bookId) throws BookService.BookNotFoundException;
 
   /**
    * Endpoint for deleting book.
@@ -51,7 +51,7 @@ public interface BooksController {
    * @param bookId Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> deleteBook(Long bookId);
+  ResponseEntity<?> deleteBook(Long bookId) throws BookService.BookNotFoundException;
 
   /**
    * Endpoint for updating book data.
@@ -60,7 +60,8 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> updateBook(Map<String, Object> updates, Long bookId);
+  ResponseEntity<?> updateBook(Map<String, Object> updates, Long bookId)
+          throws BookService.BookNotFoundException;
 
   /**
    * Endpoint for replacing books.
@@ -69,5 +70,9 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> replaceBook(BookDto bookDto, Long bookId);
+  ResponseEntity<?> replaceBook(BookDto bookDto, Long bookId)
+          throws BooksController.WrongMethodUsedForCreatingBookException;
+
+  class WrongMethodUsedForCreatingBookException extends Exception {
+  }
 }
