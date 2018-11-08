@@ -171,6 +171,43 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
                       MockMvcResultMatchers.jsonPath(
                               "pages", Matchers.is(savedBook.getPages())));
     }
+
+    @DisplayName(
+            "When trying to patch book with blurb set to null, "
+                    + "Then controller returns ok with book body, blurb is updated to null")
+    @Test
+    void testPatchBookSetBlurbToNull() throws Exception {
+      Book savedBook = bookRepository.save(
+              new Book.BookBuilder()
+                      .author("Test author")
+                      .title("Test title")
+                      .blurb("Test blurb")
+                      .pages(190)
+                      .build());
+
+      Map<String, Object> book = new HashMap<>();
+      book.put("blurb", null);
+
+      mockMvc.perform(
+              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+                      .content(objectMapper.writeValueAsString(book))
+                      .accept(MediaType.APPLICATION_JSON_VALUE)
+                      .contentType(MediaType.APPLICATION_JSON_VALUE))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpect(MockMvcResultMatchers.status().isOk())
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "author", Matchers.is(savedBook.getAuthor())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "title", Matchers.is(savedBook.getTitle())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "blurb", Matchers.is(Matchers.nullValue())))
+              .andExpect(
+                      MockMvcResultMatchers.jsonPath(
+                              "pages", Matchers.is(savedBook.getPages())));
+    }
   }
 
   @DisplayName("and invalid book id")
