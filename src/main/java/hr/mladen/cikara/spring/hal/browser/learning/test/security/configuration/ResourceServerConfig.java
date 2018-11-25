@@ -15,8 +15,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     http
             .authorizeRequests()
             .antMatchers("/h2-console/**").permitAll()
-            .and()
-            .authorizeRequests()
             .antMatchers("/users/**").access("hasRole('ADMIN')")
             .antMatchers("/books/**").access("hasRole('ADMIN')")
             .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
