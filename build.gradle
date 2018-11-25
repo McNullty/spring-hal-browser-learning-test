@@ -46,7 +46,6 @@ ext {
     springCloudVersion = 'Greenwich.M3'
 }
 
-
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-hateoas')
@@ -108,8 +107,6 @@ jacocoTestReport {
         html.destination file("${buildDir}/reports/jacocoHtml")
     }
 }
-
-
 
 tasks.withType(Checkstyle) {
     reports {
