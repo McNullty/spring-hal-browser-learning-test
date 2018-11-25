@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("Given HalController")
-@WebMvcTest(HalController.class)
+@WebMvcTest(controllers = {HalController.class}, secure = false)
 class HalBrowserSpecification {
 
   @Autowired
