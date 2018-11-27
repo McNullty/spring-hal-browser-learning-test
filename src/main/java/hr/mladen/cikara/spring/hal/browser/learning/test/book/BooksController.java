@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 @ExposesResourceFor(Book.class)
-public class BooksControllerImpl {
+public class BooksController {
 
   private final BookService bookService;
   private final BookToBookResourceAssembler bookToBookResourceAssembler;
@@ -41,7 +41,7 @@ public class BooksControllerImpl {
    * @param bookService                 Book Service
    * @param bookToBookResourceAssembler Assembler that creates BookResources
    */
-  public BooksControllerImpl(
+  public BooksController(
           final BookService bookService,
           final BookToBookResourceAssembler bookToBookResourceAssembler) {
     Assert.notNull(bookService, "Controller can't work without service");
@@ -200,7 +200,7 @@ public class BooksControllerImpl {
 
   private PagedResources<BookResource> getPagedBookResourcesWithLinks(
           final PagedResourcesAssembler<Book> assembler, final Page<Book> books) {
-    Link self = ControllerLinkBuilder.linkTo(BooksControllerImpl.class).withSelfRel();
+    Link self = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
 
     PagedResources<BookResource> booksPagedResources =
             assembler.toResource(books, bookToBookResourceAssembler, self);
@@ -218,7 +218,7 @@ public class BooksControllerImpl {
   private void addLinksToPagedResources(final PagedResources<BookResource> booksPagedResources) {
     booksPagedResources.add(
             ControllerLinkBuilder.linkTo(
-                    ControllerLinkBuilder.methodOn(BooksControllerImpl.class)
+                    ControllerLinkBuilder.methodOn(BooksController.class)
                             .search(null, null,
                                     new PagedResourcesAssembler<>(null, null)))
                     .withRel("search"));
