@@ -14,6 +14,7 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 @ExposesResourceFor(Book.class)
-public class BooksControllerImpl implements BooksController {
+public class BooksControllerImpl {
 
   private final BookService bookService;
   private final BookToBookResourceAssembler bookToBookResourceAssembler;
@@ -43,11 +44,21 @@ public class BooksControllerImpl implements BooksController {
   public BooksControllerImpl(
           final BookService bookService,
           final BookToBookResourceAssembler bookToBookResourceAssembler) {
+    Assert.notNull(bookService, "Controller can't work without service");
+    Assert.notNull(
+            bookToBookResourceAssembler, "Controller can't work without resource assembler");
+
     this.bookService = bookService;
     this.bookToBookResourceAssembler = bookToBookResourceAssembler;
   }
 
-  @Override
+  /**
+   * Endpoint for listing all books.
+   *
+   * @param pageable  Pageable object, injected by Spring
+   * @param assembler ResourcesAssembler object, injected by Spring
+   * @return List of books
+   */
   @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<BookResource>> findAll(
           final Pageable pageable,
@@ -61,7 +72,14 @@ public class BooksControllerImpl implements BooksController {
     return ResponseEntity.ok(booksPagedResources);
   }
 
-  @Override
+  /**
+   * Searching for books that in titla have query string.
+   *
+   * @param query     Query that must match in book title
+   * @param pageable  Pageable object, injected by Spring
+   * @param assembler ResourcesAssembler object, injected by Spring
+   * @return List of books that match query
+   */
   @GetMapping(
           value = "/search/title-contains",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -77,7 +95,12 @@ public class BooksControllerImpl implements BooksController {
     return ResponseEntity.ok(booksPagedResources);
   }
 
-  @Override
+  /**
+   * Endpoint for creating new Book.
+   *
+   * @param bookDto Book DTO
+   * @return returns HTTP 201 Created
+   */
   @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
@@ -93,7 +116,12 @@ public class BooksControllerImpl implements BooksController {
             .build();
   }
 
-  @Override
+  /**
+   * Endpoint for getting book details.
+   *
+   * @param bookId Book Id
+   * @return Book details
+   */
   @GetMapping(
           value = "/{bookId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -107,7 +135,12 @@ public class BooksControllerImpl implements BooksController {
 
   }
 
-  @Override
+  /**
+   * Endpoint for deleting book.
+   *
+   * @param bookId Book Id
+   * @return Returns HTTP 204
+   */
   @DeleteMapping(
           value = "/{bookId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -118,7 +151,13 @@ public class BooksControllerImpl implements BooksController {
     return ResponseEntity.noContent().build();
   }
 
-  @Override
+  /**
+   * Endpoint for updating book data.
+   *
+   * @param updates Map with update data
+   * @param bookId  Book Id
+   * @return Returns HTTP 204
+   */
   @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> updateBook(
@@ -133,7 +172,13 @@ public class BooksControllerImpl implements BooksController {
     return ResponseEntity.ok(bookResource);
   }
 
-  @Override
+  /**
+   * Endpoint for replacing books.
+   *
+   * @param bookDto Book DTO
+   * @param bookId  Book Id
+   * @return Returns HTTP 204
+   */
   @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> replaceBook(
@@ -177,5 +222,8 @@ public class BooksControllerImpl implements BooksController {
                             .search(null, null,
                                     new PagedResourcesAssembler<>(null, null)))
                     .withRel("search"));
+  }
+
+  public class WrongMethodUsedForCreatingBookException extends Exception {
   }
 }
