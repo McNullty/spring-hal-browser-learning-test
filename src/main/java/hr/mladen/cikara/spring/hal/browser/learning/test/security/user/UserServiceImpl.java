@@ -14,18 +14,18 @@ import org.springframework.util.Assert;
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
 
-  private final UserDao userDao;
+  private final UserRepository userRepository;
 
   @Autowired
-  public UserServiceImpl(final UserDao userDao) {
-    Assert.notNull(userDao, "Service can't work without repository");
+  public UserServiceImpl(final UserRepository userRepository) {
+    Assert.notNull(userRepository, "Service can't work without repository");
 
-    this.userDao = userDao;
+    this.userRepository = userRepository;
   }
 
   @Override
   public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-    User user = userDao.findByUsername(userId);
+    User user = userRepository.findByUsername(userId);
     if(user == null){
       throw new UsernameNotFoundException("Invalid username or password.");
     }
@@ -38,17 +38,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   public List<User> findAll() {
     List<User> list = new ArrayList<>();
-    userDao.findAll().iterator().forEachRemaining(list::add);
+    userRepository.findAll().iterator().forEachRemaining(list::add);
     return list;
   }
 
   @Override
   public void delete(long id) {
-    userDao.deleteById(id);
+    userRepository.deleteById(id);
   }
 
   @Override
   public User save(User user) {
-    return userDao.save(user);
+    return userRepository.save(user);
   }
 }
