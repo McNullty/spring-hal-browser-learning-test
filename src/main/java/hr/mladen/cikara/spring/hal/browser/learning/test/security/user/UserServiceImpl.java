@@ -1,9 +1,10 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,8 +25,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(userId);
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByUsername(username);
     if(user == null){
       throw new UsernameNotFoundException("Invalid username or password.");
     }
@@ -36,10 +37,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
   }
 
-  public List<User> findAll() {
-    List<User> list = new ArrayList<>();
-    userRepository.findAll().iterator().forEachRemaining(list::add);
-    return list;
+  public Page<User> findAll(Pageable pageable) {
+    return userRepository.findAll(pageable);
   }
 
   @Override

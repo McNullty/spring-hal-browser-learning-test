@@ -24,12 +24,6 @@ public class User {
   @JsonIgnore
   private String password;
 
-  @Column
-  private long salary;
-
-  @Column
-  private int age;
-
   /**
    * For Hibernate
    */
