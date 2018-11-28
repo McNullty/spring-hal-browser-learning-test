@@ -2,6 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   @Override
   public void delete(long id) {
     userRepository.deleteById(id);
+  }
+
+  @Override
+  public User findById(final Long userId) throws UserNotFoundException {
+    try {
+      Optional<User> user = userRepository.findById(userId);
+      if (user.isPresent()) {
+        return user.get();
+      } else {
+        throw new UserNotFoundException(userId);
+      }
+
+    } catch (IllegalArgumentException e) {
+      throw new UserNotFoundException(userId);
+    }
   }
 
   @Override

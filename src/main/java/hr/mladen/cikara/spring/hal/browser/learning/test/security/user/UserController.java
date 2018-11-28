@@ -56,13 +56,25 @@ public class UserController {
     return assembler.toResource(users, userToUserResourceAssembler, self);
   }
 
+  @GetMapping(
+          value = "/{userId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<UserResource> getBook(@PathVariable final Long userId)
+    throws UserService.UserNotFoundException {
+    User user = userService.findById(userId);
+
+    UserResource userResource = userToUserResourceAssembler.toResource(user);
+
+    return ResponseEntity.ok(userResource);
+  }
+
   @RequestMapping(value = "/user", method = RequestMethod.POST)
   public User create(@RequestBody User user){
     return userService.save(user);
   }
 
-  @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-  public String delete(@PathVariable(value = "id") Long id){
+  @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+  public String delete(@PathVariable(value = "userId") Long id){
     userService.delete(id);
     return "success";
   }
