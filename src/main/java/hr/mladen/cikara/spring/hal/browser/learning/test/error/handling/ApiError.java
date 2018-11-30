@@ -20,7 +20,7 @@ class ApiError {
   private List<ApiSubError> subErrors;
 
   private ApiError() {
-    timestamp = ZonedDateTime.now();
+    this.timestamp = ZonedDateTime.now();
   }
 
   ApiError(HttpStatus status) {
