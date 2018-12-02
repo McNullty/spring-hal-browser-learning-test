@@ -43,11 +43,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   }
 
   @Override
-  public void delete(long id) {
-    userRepository.deleteById(id);
-  }
-
-  @Override
   public User findById(final Long userId) throws UserNotFoundException {
     try {
       Optional<User> user = userRepository.findById(userId);
@@ -60,10 +55,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     } catch (IllegalArgumentException e) {
       throw new UserNotFoundException(userId);
     }
-  }
-
-  @Override
-  public User save(User user) {
-    return userRepository.save(user);
   }
 }
