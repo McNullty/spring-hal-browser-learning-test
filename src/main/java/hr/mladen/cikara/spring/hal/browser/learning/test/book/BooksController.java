@@ -224,6 +224,6 @@ public class BooksController {
                     .withRel("search"));
   }
 
-  public class WrongMethodUsedForCreatingBookException extends Exception {
+  public static class WrongMethodUsedForCreatingBookException extends Exception {
   }
 }

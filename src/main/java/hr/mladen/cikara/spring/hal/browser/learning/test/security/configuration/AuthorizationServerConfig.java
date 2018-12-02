@@ -19,6 +19,11 @@ public class AuthorizationServerConfig {
     this.jwtProperties = jwtProperties;
   }
 
+  /**
+   * Configure JwtAccessTokenConverter.
+   *
+   * @return JwtAccessTokenConverter
+   */
   @Bean
   public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -26,6 +31,11 @@ public class AuthorizationServerConfig {
     return converter;
   }
 
+  /**
+   * Configure TokenStore.
+   *
+   * @return JwtTokenStore with converter
+   */
   @Bean
   public TokenStore tokenStore() {
     return new JwtTokenStore(accessTokenConverter());

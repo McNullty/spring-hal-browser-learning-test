@@ -44,6 +44,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api-docs/**").permitAll();
   }
 
+  /**
+   * Configure Filter for CORS.
+   *
+   * @return CORS Filter
+   */
   @Bean
   public FilterRegistrationBean<CorsFilter> corsFilter() {
     CorsConfiguration config = new CorsConfiguration();

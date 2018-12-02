@@ -26,7 +26,15 @@ public class UserController {
   private final UserService userService;
   private final UserToUserResourceAssembler userToUserResourceAssembler;
 
-  public UserController(final UserService userService, final UserToUserResourceAssembler userToUserResourceAssembler) {
+  /**
+   * Controller for displaying user resources.
+   *
+   * @param userService UserService
+   * @param userToUserResourceAssembler Assembler to convert form Zser to UserResource
+   */
+  public UserController(
+          final UserService userService,
+          final UserToUserResourceAssembler userToUserResourceAssembler) {
     Assert.notNull(userService, "Controller can't work without user service");
     Assert.notNull(userToUserResourceAssembler, "Controller can't work without resource assembler");
 
@@ -34,6 +42,13 @@ public class UserController {
     this.userToUserResourceAssembler = userToUserResourceAssembler;
   }
 
+  /**
+   * Returns all users.
+   *
+   * @param pageable Pageable object
+   * @param assembler Assembler to convert form Zser to UserResource
+   * @return Page with UserResources
+   */
   @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<UserResource>> findAll(
           final Pageable pageable,
@@ -54,11 +69,18 @@ public class UserController {
     return assembler.toResource(users, userToUserResourceAssembler, self);
   }
 
+  /**
+   * Returns User resource for given id.
+   *
+   * @param userId User id
+   * @return UserResource
+   * @throws UserService.UserNotFoundException when user with give ID is not found
+   */
   @GetMapping(
           value = "/{userId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<UserResource> getBook(@PathVariable final Long userId)
-    throws UserService.UserNotFoundException {
+          throws UserService.UserNotFoundException {
     User user = userService.findById(userId);
 
     UserResource userResource = userToUserResourceAssembler.toResource(user);

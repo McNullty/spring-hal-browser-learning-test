@@ -18,6 +18,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UserRepository userRepository;
 
+  /**
+   * Initializes UserService.
+   *
+   * @param userRepository UserRepository
+   */
   @Autowired
   public UserServiceImpl(final UserRepository userRepository) {
     Assert.notNull(userRepository, "Service can't work without repository");
@@ -28,10 +33,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userRepository.findByUsername(username);
-    if(user == null){
+    if (user == null) {
       throw new UsernameNotFoundException("Invalid username or password.");
     }
-    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority());
+    return new org.springframework.security.core.userdetails.User(
+            user.getUsername(), user.getPassword(), getAuthority());
   }
 
   private List<SimpleGrantedAuthority> getAuthority() {

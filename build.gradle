@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.0.RELEASE'
+        springBootVersion = '2.1.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -27,6 +27,7 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
+apply plugin: 'groovy'
 
 group = 'hr.mladen.cikara'
 version = '0.0.1-SNAPSHOT'
@@ -66,6 +67,8 @@ dependencies {
     testImplementation('org.springframework.restdocs:spring-restdocs-mockmvc')
     testImplementation('org.springframework.security:spring-security-test')
     testImplementation('org.assertj:assertj-core')
+    testImplementation('org.codehaus.groovy:groovy')
+    testImplementation('org.spockframework:spock-spring:1.2-groovy-2.5')
 
     annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
 
