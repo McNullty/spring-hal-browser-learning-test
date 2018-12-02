@@ -1,0 +1,18 @@
+= HAL Browser learning test User Guide
+Mladen Čikara;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+[[overview]]
+= Overview
+This document should get you up and running with this API.
+
+We will show usual operations that developer would use.
+
+This API is using OAuth2 for authentication and authorization, so for many commands in this guide you will need to be
+authorized. So first section will show how to register new user.
+
+You can get detail documentation about every endpoint discussed here by going to link:api-guide.html[API Documentation].

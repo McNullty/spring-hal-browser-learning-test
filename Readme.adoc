@@ -31,9 +31,28 @@ Now HAL Browser can be accessed at http://localhost:8080/browser/index.html
 
 NOTE:  We could probably extract static files and serve them with nginx, but for now this is good enough.
 
+= Running application
+
+First you need to build application with:
+[source,bash]
+----
+./gradlew clean build
+----
+Then you can star application with:
+[source,bash]
+----
+java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
+----
+
 == API Documentation
 
 API Documentation is created with Spring REST Docs library and it is packaged with application.
 
 When running application you can access API documentation at http://localhost:8080/docs/api-guide.html
+
+== User Guide
+
+User Guide is created with Spring REST Docs library and it is packaged with application.
+
+When running application you can access API documentation at http://localhost:8080/docs/user-guide.html
 
