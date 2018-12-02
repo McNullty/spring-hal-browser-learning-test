@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserController;
 import java.util.Collections;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -33,16 +34,20 @@ public class IndexController {
           final JsonBuilderFactory factory) {
 
     Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
+    Link userLink = ControllerLinkBuilder.linkTo(UserController.class).withSelfRel();
     Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
 
     return factory.createObjectBuilder()
             .add("books", factory.createObjectBuilder()
-                            .add("href", bookLink.getHref())
-                            .add("templated", bookLink.isTemplated())
-                    )
-                    .add("docs", factory.createObjectBuilder()
-                            .add("href", indexLink.getHref() + "/docs/api-guide.html")
-                    )
+                    .add("href", bookLink.getHref())
+                    .add("templated", bookLink.isTemplated())
+            )
+            .add("users", factory.createObjectBuilder()
+                    .add("href", userLink.getHref())
+                    .add("templated", userLink.isTemplated()))
+            .add("docs", factory.createObjectBuilder()
+                    .add("href", indexLink.getHref() + "/docs/api-guide.html")
+            )
             .build();
   }
 }
