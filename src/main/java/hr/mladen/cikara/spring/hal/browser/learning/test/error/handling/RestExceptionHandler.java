@@ -1,7 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookService;
-import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksControllerImpl;
+import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -21,16 +22,24 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(BookService.BookNotFoundException.class)
-  protected ResponseEntity<Object> handleEntityNotFound(BookService.BookNotFoundException ex) {
+  protected ResponseEntity<Object> handleBookNotFound(BookService.BookNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
     apiError.setMessage("Couldn't find book with id " + ex.getBookId());
 
     return buildResponseEntity(apiError);
   }
 
-  @ExceptionHandler({BooksControllerImpl.WrongMethodUsedForCreatingBookException.class})
+  @ExceptionHandler(UserService.UserNotFoundException.class)
+  protected ResponseEntity<Object> handleUserNotFound(UserService.UserNotFoundException ex) {
+    ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
+    apiError.setMessage("Couldn't find user with id " + ex.getUserId());
+
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler({BooksController.WrongMethodUsedForCreatingBookException.class})
   protected ResponseEntity<Object> handleWrongMethodUsedForCreatingBook(
-          BooksControllerImpl.WrongMethodUsedForCreatingBookException ex) {
+          BooksController.WrongMethodUsedForCreatingBookException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
     apiError.setMessage("Please use POST method for creating new record");
 

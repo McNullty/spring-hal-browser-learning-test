@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -12,6 +13,7 @@ public class BookServiceImpl implements BookService {
   private final BookRepository bookRepository;
 
   public BookServiceImpl(final BookRepository bookRepository) {
+    Assert.notNull(bookRepository, "Service can't work without repository");
     this.bookRepository = bookRepository;
   }
 

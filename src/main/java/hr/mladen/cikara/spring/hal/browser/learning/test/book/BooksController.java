@@ -1,12 +1,56 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
+import java.net.URI;
 import java.util.Map;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-public interface BooksController {
+@Slf4j
+@RestController
+@RequestMapping("/books")
+@ExposesResourceFor(Book.class)
+public class BooksController {
+
+  private final BookService bookService;
+  private final BookToBookResourceAssembler bookToBookResourceAssembler;
+
+  /**
+   * Constructor for BookController default implementation.
+   *
+   * @param bookService                 Book Service
+   * @param bookToBookResourceAssembler Assembler that creates BookResources
+   */
+  public BooksController(
+          final BookService bookService,
+          final BookToBookResourceAssembler bookToBookResourceAssembler) {
+    Assert.notNull(bookService, "Controller can't work without service");
+    Assert.notNull(
+            bookToBookResourceAssembler, "Controller can't work without resource assembler");
+
+    this.bookService = bookService;
+    this.bookToBookResourceAssembler = bookToBookResourceAssembler;
+  }
 
   /**
    * Endpoint for listing all books.
@@ -15,8 +59,18 @@ public interface BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books
    */
-  ResponseEntity<PagedResources<BookResource>> findAll(
-          Pageable pageable, PagedResourcesAssembler<Book> assembler);
+  @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<PagedResources<BookResource>> findAll(
+          final Pageable pageable,
+          final PagedResourcesAssembler<Book> assembler) {
+
+    Page<Book> books = bookService.findAll(pageable);
+
+    PagedResources<BookResource> booksPagedResources =
+            getPagedBookResourcesWithLinks(assembler, books);
+
+    return ResponseEntity.ok(booksPagedResources);
+  }
 
   /**
    * Searching for books that in titla have query string.
@@ -26,8 +80,20 @@ public interface BooksController {
    * @param assembler ResourcesAssembler object, injected by Spring
    * @return List of books that match query
    */
-  ResponseEntity<PagedResources<BookResource>> search(
-          String query, Pageable pageable, PagedResourcesAssembler<Book> assembler);
+  @GetMapping(
+          value = "/search/title-contains",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<PagedResources<BookResource>> search(
+          @RequestParam(name = "query") final String query,
+          final Pageable pageable, final PagedResourcesAssembler<Book> assembler) {
+
+    Page<Book> books = bookService.findByTitleContaining(query, pageable);
+
+    PagedResources<BookResource> booksPagedResources =
+            getPagedBookResourcesWithLinks(assembler, books);
+
+    return ResponseEntity.ok(booksPagedResources);
+  }
 
   /**
    * Endpoint for creating new Book.
@@ -35,7 +101,20 @@ public interface BooksController {
    * @param bookDto Book DTO
    * @return returns HTTP 201 Created
    */
-  ResponseEntity<?> createBook(BookDto bookDto);
+  @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
+    log.debug("Got book: {}", bookDto);
+
+    Book book = bookService.save(bookDto.getBook());
+
+    BookResource bookResource = bookToBookResourceAssembler.toResource(book);
+
+    return ResponseEntity.created(
+            URI.create(
+                    bookResource.getLink("self").getHref()))
+            .build();
+  }
 
   /**
    * Endpoint for getting book details.
@@ -43,7 +122,18 @@ public interface BooksController {
    * @param bookId Book Id
    * @return Book details
    */
-  ResponseEntity<BookResource> getBook(Long bookId) throws BookService.BookNotFoundException;
+  @GetMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId)
+          throws BookService.BookNotFoundException {
+    Book book = bookService.getBook(bookId);
+
+    BookResource bookResource = bookToBookResourceAssembler.toResource(book);
+
+    return ResponseEntity.ok(bookResource);
+
+  }
 
   /**
    * Endpoint for deleting book.
@@ -51,7 +141,15 @@ public interface BooksController {
    * @param bookId Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> deleteBook(Long bookId) throws BookService.BookNotFoundException;
+  @DeleteMapping(
+          value = "/{bookId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> deleteBook(
+          @PathVariable final Long bookId) throws BookService.BookNotFoundException {
+    bookService.deleteBook(bookId);
+
+    return ResponseEntity.noContent().build();
+  }
 
   /**
    * Endpoint for updating book data.
@@ -60,8 +158,19 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> updateBook(Map<String, Object> updates, Long bookId)
-          throws BookService.BookNotFoundException;
+  @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> updateBook(
+          @RequestBody final Map<String, Object> updates,
+          @PathVariable("bookId") final Long bookId) throws BookService.BookNotFoundException {
+    log.debug("Got map: {}", updates);
+
+    Book updatedBook = bookService.updateBook(bookId, updates);
+
+    BookResource bookResource = bookToBookResourceAssembler.toResource(updatedBook);
+
+    return ResponseEntity.ok(bookResource);
+  }
 
   /**
    * Endpoint for replacing books.
@@ -70,9 +179,51 @@ public interface BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  ResponseEntity<?> replaceBook(BookDto bookDto, Long bookId)
-          throws BooksController.WrongMethodUsedForCreatingBookException;
+  @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> replaceBook(
+          @Valid @RequestBody BookDto bookDto,
+          @PathVariable("bookId") final Long bookId)
+          throws WrongMethodUsedForCreatingBookException {
+    log.debug("Got book: {}", bookDto);
 
-  class WrongMethodUsedForCreatingBookException extends Exception {
+    try {
+      Book returnBook = bookService.replaceBook(bookId, bookDto);
+
+      BookResource bookResource = bookToBookResourceAssembler.toResource(returnBook);
+
+      return ResponseEntity.ok(bookResource);
+    } catch (BookService.BookNotFoundException e) {
+      throw new WrongMethodUsedForCreatingBookException();
+    }
+  }
+
+  private PagedResources<BookResource> getPagedBookResourcesWithLinks(
+          final PagedResourcesAssembler<Book> assembler, final Page<Book> books) {
+    Link self = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
+
+    PagedResources<BookResource> booksPagedResources =
+            assembler.toResource(books, bookToBookResourceAssembler, self);
+
+    addLinksToPagedResources(booksPagedResources);
+
+    return booksPagedResources;
+  }
+
+  /**
+   * Adds link for search.
+   *
+   * @param booksPagedResources Paged Resources
+   */
+  private void addLinksToPagedResources(final PagedResources<BookResource> booksPagedResources) {
+    booksPagedResources.add(
+            ControllerLinkBuilder.linkTo(
+                    ControllerLinkBuilder.methodOn(BooksController.class)
+                            .search(null, null,
+                                    new PagedResourcesAssembler<>(null, null)))
+                    .withRel("search"));
+  }
+
+  public class WrongMethodUsedForCreatingBookException extends Exception {
   }
 }
