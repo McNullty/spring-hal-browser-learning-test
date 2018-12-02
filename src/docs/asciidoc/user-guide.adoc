@@ -4,7 +4,7 @@ Mladen Čikara;
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 2
+:toclevels: 3
 
 [[overview]]
 = Overview
@@ -16,3 +16,9 @@ This API is using OAuth2 for authentication and authorization, so for many comma
 authorized. So first section will show how to register new user.
 
 You can get detail documentation about every endpoint discussed here by going to link:api-guide.html[API Documentation].
+
+[[index]]
+= Index (/)
+Index is first endpoint you will encounter. Here you will get list of all endpoints you can use in application.
+
+operation::index-example[snippets='response-fields,links,http-response']
