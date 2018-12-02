@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface UserService {
 
   /**
-   * Finds all Users in repository
+   * Finds all Users in repository.
    *
    * @param pageable Pagable object
    * @return Page with users

@@ -14,7 +14,7 @@ import lombok.Data;
 public class User {
 
   @Id
-  @GeneratedValue(strategy= GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
   @Column
@@ -25,7 +25,7 @@ public class User {
   private String password;
 
   /**
-   * For Hibernate
+   * For Hibernate.
    */
   User() {
   }
