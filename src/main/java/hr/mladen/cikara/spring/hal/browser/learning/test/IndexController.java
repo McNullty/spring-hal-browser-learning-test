@@ -45,8 +45,11 @@ public class IndexController {
             .add("users", factory.createObjectBuilder()
                     .add("href", userLink.getHref())
                     .add("templated", userLink.isTemplated()))
-            .add("docs", factory.createObjectBuilder()
+            .add("api-guide", factory.createObjectBuilder()
                     .add("href", indexLink.getHref() + "/docs/api-guide.html")
+            )
+            .add("user-guide", factory.createObjectBuilder()
+                    .add("href", indexLink.getHref() + "/docs/user-guide.html")
             )
             .build();
   }
