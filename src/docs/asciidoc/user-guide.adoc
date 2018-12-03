@@ -22,3 +22,9 @@ You can get detail documentation about every endpoint discussed here by going to
 Index is first endpoint you will encounter. Here you will get list of all endpoints you can use in application.
 
 operation::index-example[snippets='response-fields,links,http-response']
+
+[[register]]
+== Registration (/register)
+
+Most of the endpoints need authorization, so ou need to register.
+You can register by making POST request to /register
