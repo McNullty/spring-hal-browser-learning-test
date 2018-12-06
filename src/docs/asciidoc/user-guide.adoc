@@ -27,4 +27,6 @@ operation::index-example[snippets='response-fields,links,http-response']
 == Registration (/register)
 
 Most of the endpoints need authorization, so ou need to register.
-You can register by making POST request to /register
+You can register by making POST request to /register endpoint.
+
+operation::register-example[snippets='request-fields,http-request,http-response']

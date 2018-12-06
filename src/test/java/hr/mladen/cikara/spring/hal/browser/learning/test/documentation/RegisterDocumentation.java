@@ -21,7 +21,7 @@ class RegisterDocumentation extends AbstractDocumentation {
   private ObjectMapper objectMapper;
 
   @Test
-  @DisplayName("Documentation for index endpoint")
+  @DisplayName("Documentation for register endpoint")
   void registerExample() throws Exception {
 
     Map<String, Object> registerDto = new HashMap<>();
@@ -33,7 +33,7 @@ class RegisterDocumentation extends AbstractDocumentation {
             MockMvcRequestBuilders.post("/register")
                     .contentType(MediaTypes.HAL_JSON)
                     .content(this.objectMapper.writeValueAsString(registerDto)))
-            .andExpect(status().isCreated())
+            .andExpect(status().isNoContent())
             .andDo(document("register-example",
                     requestFields(
                             fieldWithPath("username").description("Username for registration"),
