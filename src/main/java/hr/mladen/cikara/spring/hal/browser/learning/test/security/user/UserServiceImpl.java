@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -61,5 +62,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     } catch (IllegalArgumentException e) {
       throw new UserNotFoundException(userId);
     }
+  }
+
+  @Override
+  public void register(final RegisterDto registerDto) {
+    User newUser = User.builder()
+            .username(registerDto.getUsername())
+            .password(registerDto.getPassword())
+            .build();
+
+    userRepository.save(newUser);
   }
 }

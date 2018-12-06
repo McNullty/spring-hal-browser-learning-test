@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,13 @@ public interface UserService {
    * @return User
    */
   User findById(Long userId) throws UserNotFoundException;
+
+  /**
+   * Saves new user to repository.
+   *
+   * @param registerDto DTO with user data for registration
+   */
+  void register(RegisterDto registerDto);
 
   @Value
   @EqualsAndHashCode(callSuper = false)
