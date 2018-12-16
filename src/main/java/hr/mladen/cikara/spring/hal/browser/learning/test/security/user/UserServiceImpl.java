@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
   }
 
+  @Override
   public Page<User> findAll(Pageable pageable) {
     return userRepository.findAll(pageable);
   }
