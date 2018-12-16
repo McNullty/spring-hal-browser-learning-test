@@ -46,6 +46,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return buildResponseEntity(apiError);
   }
 
+  @ExceptionHandler({UserService.UsernameAlreadyTakenException.class})
+  protected ResponseEntity<Object> handleUsernameAlreadyTakenException(
+          UserService.UsernameAlreadyTakenException ex) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+    apiError.setMessage("Username " + ex.getUsername() + " is already taken");
+
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler({UserService.PasswordsDontMatch.class})
+  protected ResponseEntity<Object> handlePasswordsDontMatch(
+          UserService.PasswordsDontMatch ex) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+    apiError.setMessage("Passwords dont match");
+
+    return buildResponseEntity(apiError);
+  }
+
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(
           NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

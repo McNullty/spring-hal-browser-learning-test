@@ -29,11 +29,20 @@ public interface UserService {
    *
    * @param registerDto DTO with user data for registration
    */
-  User register(RegisterDto registerDto);
+  User register(RegisterDto registerDto) throws UsernameAlreadyTakenException, PasswordsDontMatch;
 
   @Value
   @EqualsAndHashCode(callSuper = false)
   class UserNotFoundException extends Exception {
     private final Long userId;
+  }
+
+  @Value
+  @EqualsAndHashCode(callSuper = false)
+  class UsernameAlreadyTakenException extends Exception {
+    private final String username;
+  }
+
+  class PasswordsDontMatch extends Exception {
   }
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -67,12 +68,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   }
 
   @Override
-  public User register(final RegisterDto registerDto) {
-    User newUser = User.builder()
-            .username(registerDto.getUsername())
-            .password(registerDto.getPassword())
-            .build();
+  public User register(final RegisterDto registerDto)
+          throws UsernameAlreadyTakenException, PasswordsDontMatch {
+    try {
+      if (!registerDto.getPassword()
+              .equals(registerDto.getPasswordRepeated())) {
+        throw new PasswordsDontMatch();
+      }
 
-    return userRepository.save(newUser);
+      User newUser = User.builder()
+              .username(registerDto.getUsername())
+              .password(registerDto.getPassword())
+              .build();
+
+      return userRepository.save(newUser);
+    } catch (DataIntegrityViolationException e) {
+      throw new UsernameAlreadyTakenException(registerDto.getUsername());
+    }
   }
 }

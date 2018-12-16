@@ -36,7 +36,8 @@ public class RegisterController {
    */
   @PostMapping(path = "/register",
           consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
+  public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto)
+          throws UserService.UsernameAlreadyTakenException, UserService.PasswordsDontMatch {
     log.debug("Got RegisterDto: {}", registerDto);
 
     User user = userService.register(registerDto);
