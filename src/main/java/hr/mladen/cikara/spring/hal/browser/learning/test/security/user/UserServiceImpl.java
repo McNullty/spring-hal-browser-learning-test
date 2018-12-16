@@ -33,12 +33,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username);
-    if (user == null) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (!user.isPresent()) {
       throw new UsernameNotFoundException("Invalid username or password.");
     }
+
     return new org.springframework.security.core.userdetails.User(
-            user.getUsername(), user.getPassword(), getAuthority());
+            user.get().getUsername(), user.get().getPassword(), getAuthority());
   }
 
   private List<SimpleGrantedAuthority> getAuthority() {
