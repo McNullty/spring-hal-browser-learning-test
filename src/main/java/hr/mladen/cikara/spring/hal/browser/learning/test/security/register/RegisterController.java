@@ -1,6 +1,10 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.register;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.User;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserResource;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserToUserResourceAssembler;
+import java.net.URI;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.MediaTypes;
@@ -15,9 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterController {
 
   private final UserService userService;
+  private final UserToUserResourceAssembler userToUserResourceAssembler;
 
-  public RegisterController(final UserService userService) {
+  public RegisterController(
+          final UserService userService,
+          final UserToUserResourceAssembler userToUserResourceAssembler) {
     this.userService = userService;
+    this.userToUserResourceAssembler = userToUserResourceAssembler;
   }
 
   /**
@@ -31,8 +39,12 @@ public class RegisterController {
   public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
     log.debug("Got RegisterDto: {}", registerDto);
 
-    userService.register(registerDto);
+    User user = userService.register(registerDto);
 
-    return ResponseEntity.noContent().build();
+    UserResource userResource = userToUserResourceAssembler.toResource(user);
+
+    return ResponseEntity
+            .created(URI.create(userResource.getLink("self").getHref()))
+            .build();
   }
 }

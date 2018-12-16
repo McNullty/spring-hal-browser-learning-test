@@ -8,7 +8,7 @@ import org.springframework.hateoas.core.Relation;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Relation(value = "user", collectionRelation = "users")
-class UserResource extends ResourceSupport {
+public class UserResource extends ResourceSupport {
   private final String username;
 
   UserResource(User user) {

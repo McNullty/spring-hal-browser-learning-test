@@ -29,7 +29,7 @@ public interface UserService {
    *
    * @param registerDto DTO with user data for registration
    */
-  void register(RegisterDto registerDto);
+  User register(RegisterDto registerDto);
 
   @Value
   @EqualsAndHashCode(callSuper = false)

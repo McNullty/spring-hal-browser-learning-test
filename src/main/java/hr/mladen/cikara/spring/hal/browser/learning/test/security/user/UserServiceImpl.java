@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   }
 
   @Override
-  public void register(final RegisterDto registerDto) {
+  public User register(final RegisterDto registerDto) {
     User newUser = User.builder()
             .username(registerDto.getUsername())
             .password(registerDto.getPassword())
             .build();
 
-    userRepository.save(newUser);
+    return userRepository.save(newUser);
   }
 }

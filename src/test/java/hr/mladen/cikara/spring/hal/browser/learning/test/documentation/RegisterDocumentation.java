@@ -33,7 +33,7 @@ class RegisterDocumentation extends AbstractDocumentation {
             MockMvcRequestBuilders.post("/register")
                     .contentType(MediaTypes.HAL_JSON)
                     .content(this.objectMapper.writeValueAsString(registerDto)))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isCreated())
             .andDo(document("register-example",
                     requestFields(
                             fieldWithPath("username").description("Username for registration"),
