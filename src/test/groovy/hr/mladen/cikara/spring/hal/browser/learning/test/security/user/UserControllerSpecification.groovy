@@ -37,7 +37,7 @@ class UserControllerSpecification extends Specification {
                 .build()
     }
 
-    def 'Find all users endpoint (users/)'() {
+    def 'find all users endpoint (users/)'() {
         when: 'you perform get operation'
         def result = mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/users/")
