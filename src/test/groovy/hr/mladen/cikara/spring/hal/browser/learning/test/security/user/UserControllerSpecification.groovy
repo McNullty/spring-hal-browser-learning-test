@@ -1,7 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserRepository
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -13,7 +12,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import spock.lang.Unroll
-
 /**
  * Integration test for UserController.
  */
@@ -23,14 +21,14 @@ class UserControllerSpecification extends Specification {
 
     MockMvc mockMvc
 
-    @Autowired
-    ObjectMapper objectMapper
+//    @Autowired
+//    ObjectMapper objectMapper
 
     @Autowired
     WebApplicationContext webApplicationContext
 
-    @Autowired
-    UserRepository userRepository
+//    @Autowired
+//    UserRepository userRepository
 
     void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
@@ -48,5 +46,7 @@ class UserControllerSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isOk())
 
         and: 'result should have json with this fields'
+        //TODO: add tests
+//        result.andExpect()
     }
 }
