@@ -1,4 +1,4 @@
-package hr.mladen.cikara.spring.hal.browser.learning.test.user
+package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserRepository
@@ -14,9 +14,12 @@ import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import spock.lang.Unroll
 
+/**
+ * Integration test for UserController.
+ */
 @Unroll
 @SpringBootTest
-class UserControllerFindAllSpecification extends Specification {
+class UserControllerSpecification extends Specification {
 
     MockMvc mockMvc
 
@@ -34,7 +37,7 @@ class UserControllerFindAllSpecification extends Specification {
                 .build()
     }
 
-    def 'Simple get command'() {
+    def 'Find all users endpoint (users/)'() {
         when: 'you perform get operation'
         def result = mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/users/")
