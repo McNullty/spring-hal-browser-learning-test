@@ -25,8 +25,13 @@ operation::index-example[snippets='response-fields,links,http-response']
 
 [[register]]
 == Registration (/register)
-
 Most of the endpoints need authorization, so you need to register.
 You can register by making POST request to /register endpoint.
 
 operation::register-example[snippets='request-fields,http-request,http-response']
+
+[[authorization]]
+== Authorization (/oauth)
+Now that you have registered new user you can get authorization token by sending POST request to /oauth/token endpoint.
+
+operation::authorize-example[snippets='request-fields,http-request,http-response']
