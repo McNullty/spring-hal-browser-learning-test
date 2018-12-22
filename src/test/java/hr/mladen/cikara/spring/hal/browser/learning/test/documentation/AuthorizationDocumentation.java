@@ -9,6 +9,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
@@ -59,15 +60,13 @@ class AuthorizationDocumentation {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcRestDocumentation.document("authorize-example",
-//                    RequestDocumentation.pathParameters(
-//                            RequestDocumentation.parameterWithName("grant_type")
-//                                    .description("Authorization type"),
-//                            RequestDocumentation.parameterWithName("client_id")
-//                                    .description("Web Client Id"),
-//                            RequestDocumentation.parameterWithName("username")
-//                                    .description("Username"),
-//                            RequestDocumentation.parameterWithName("password")
-//                                    .description("Password")),
+                    RequestDocumentation.requestParameters(
+                            RequestDocumentation.parameterWithName("grant_type")
+                                    .description("Authorization type"),
+                            RequestDocumentation.parameterWithName("username")
+                                    .description("Username"),
+                            RequestDocumentation.parameterWithName("password")
+                                    .description("Password")),
                     PayloadDocumentation.responseFields(
                             PayloadDocumentation.fieldWithPath("access_token")
                                     .description("Access Token"),
