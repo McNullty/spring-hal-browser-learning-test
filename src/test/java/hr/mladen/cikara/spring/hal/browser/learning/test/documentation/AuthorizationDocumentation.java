@@ -70,7 +70,18 @@ class AuthorizationDocumentation {
 //                                    .description("Password")),
                     PayloadDocumentation.responseFields(
                             PayloadDocumentation.fieldWithPath("access_token")
-                                    .description("Access Token"))))
+                                    .description("Access Token"),
+                            PayloadDocumentation.fieldWithPath("token_type")
+                                    .description("Token type"),
+                            PayloadDocumentation.fieldWithPath("refresh_token")
+                                    .description("Refresh token"),
+                            PayloadDocumentation.fieldWithPath("expires_in")
+                                    .description("Time to expire token in seconds"),
+                            PayloadDocumentation.fieldWithPath("scope")
+                                    .description("List of scopes"),
+                            PayloadDocumentation.fieldWithPath("jti")
+                                    .description("JTI")
+                            )))
     ;
   }
 }
