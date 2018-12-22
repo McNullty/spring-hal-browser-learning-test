@@ -42,3 +42,9 @@ operation::authorize-example[snippets='http-request,http-response,request-header
 If you already have authorization token you can refresh it py sending POST request to same endpoint.
 
 operation::refresh-example[snippets='http-request,http-response,request-headers,request-parameters,response-body,response-fields']
+
+[[user]]
+== User management
+Once you are authorized you can check your user details by going to /users/me endpoint.
+
+operation::me-example[]
