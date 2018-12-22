@@ -24,8 +24,10 @@ class IndexDocumentation extends AbstractDocumentation {
                                     .description("The <<resources-books,Books resource>>"),
                             linkWithRel("users")
                                     .description("The <<resources-users,Users resource>>"),
-                            linkWithRel("docs")
-                                    .description("Link to documentation")),
+                            linkWithRel("api-guide")
+                                    .description("Link to API documentation"),
+                            linkWithRel("user-guide")
+                                    .description("Link to User guide")),
                     responseFields(
                             subsectionWithPath("_links")
                                     .description("<<resources-index-access_links,Links>> "

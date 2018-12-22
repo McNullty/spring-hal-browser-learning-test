@@ -1,9 +1,11 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,18 +34,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username);
-    if (user == null) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (!user.isPresent()) {
       throw new UsernameNotFoundException("Invalid username or password.");
     }
+
     return new org.springframework.security.core.userdetails.User(
-            user.getUsername(), user.getPassword(), getAuthority());
+            user.get().getUsername(), user.get().getPassword(), getAuthority());
   }
 
   private List<SimpleGrantedAuthority> getAuthority() {
     return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
   }
 
+  @Override
   public Page<User> findAll(Pageable pageable) {
     return userRepository.findAll(pageable);
   }
@@ -60,6 +64,26 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     } catch (IllegalArgumentException e) {
       throw new UserNotFoundException(userId);
+    }
+  }
+
+  @Override
+  public User register(final RegisterDto registerDto)
+          throws UsernameAlreadyTakenException, PasswordsDontMatch {
+    try {
+      if (!registerDto.getPassword()
+              .equals(registerDto.getPasswordRepeated())) {
+        throw new PasswordsDontMatch();
+      }
+
+      User newUser = User.builder()
+              .username(registerDto.getUsername())
+              .password(registerDto.getPassword())
+              .build();
+
+      return userRepository.save(newUser);
+    } catch (DataIntegrityViolationException e) {
+      throw new UsernameAlreadyTakenException(registerDto.getUsername());
     }
   }
 }

@@ -79,7 +79,7 @@ public class UserController {
   @GetMapping(
           value = "/{userId}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<UserResource> getBook(@PathVariable final Long userId)
+  public ResponseEntity<UserResource> getUser(@PathVariable final Long userId)
           throws UserService.UserNotFoundException {
     User user = userService.findById(userId);
 

@@ -101,8 +101,7 @@ public class BooksController {
    * @param bookDto Book DTO
    * @return returns HTTP 201 Created
    */
-  @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
-          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @PostMapping(consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
     log.debug("Got book: {}", bookDto);
 

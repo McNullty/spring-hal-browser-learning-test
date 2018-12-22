@@ -18,7 +18,27 @@ authorized. So first section will show how to register new user.
 You can get detail documentation about every endpoint discussed here by going to link:api-guide.html[API Documentation].
 
 [[index]]
-= Index (/)
+== Index (/)
 Index is first endpoint you will encounter. Here you will get list of all endpoints you can use in application.
 
 operation::index-example[snippets='response-fields,links,http-response']
+
+[[register]]
+== Registration (/register)
+Most of the endpoints need authorization, so you need to register.
+You can register by making POST request to /register endpoint.
+
+operation::register-example[snippets='request-fields,http-request,http-response']
+
+[[authorization]]
+== Authorization (/oauth)
+
+=== Getting authorization token
+Now that you have registered new user you can get authorization token by sending POST request to /oauth/token endpoint.
+
+operation::authorize-example[snippets='http-request,http-response,request-headers,request-parameters,response-body,response-fields']
+
+=== Refreshing authorization token
+If you already have authorization token you can refresh it py sending POST request to same endpoint.
+
+operation::refresh-example[snippets='http-request,http-response,request-headers,request-parameters,response-body,response-fields']
