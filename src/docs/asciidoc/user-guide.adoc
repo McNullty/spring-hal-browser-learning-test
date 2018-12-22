@@ -36,9 +36,9 @@ operation::register-example[snippets='request-fields,http-request,http-response'
 === Getting authorization token
 Now that you have registered new user you can get authorization token by sending POST request to /oauth/token endpoint.
 
-operation::authorize-example[]
+operation::authorize-example[snippets='http-request,http-response,request-headers,request-parameters,response-body,response-fields']
 
 === Refreshing authorization token
 If you already have authorization token you can refresh it py sending POST request to same endpoint.
 
-operation::refresh-example[]
+operation::refresh-example[snippets='http-request,http-response,request-headers,request-parameters,response-body,response-fields']
