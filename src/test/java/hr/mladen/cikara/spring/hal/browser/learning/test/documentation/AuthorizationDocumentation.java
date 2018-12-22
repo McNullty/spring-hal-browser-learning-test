@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
@@ -62,25 +63,42 @@ class AuthorizationDocumentation {
             .andDo(MockMvcRestDocumentation.document("authorize-example",
                     RequestDocumentation.requestParameters(
                             RequestDocumentation.parameterWithName("grant_type")
-                                    .description("Authorization type"),
+                                    .description("This tells the server we’re using the Password "
+                                            + "grant type."),
                             RequestDocumentation.parameterWithName("username")
-                                    .description("Username"),
+                                    .description("The user’s username that they entered in the "
+                                            + "application."),
                             RequestDocumentation.parameterWithName("password")
-                                    .description("Password")),
+                                    .description("The user’s password that they entered in the "
+                                            + "application.")),
+                    HeaderDocumentation.requestHeaders(
+                            HeaderDocumentation.headerWithName("Authorization")
+                                    .description("Basic auth credentials")),
                     PayloadDocumentation.responseFields(
                             PayloadDocumentation.fieldWithPath("access_token")
-                                    .description("Access Token"),
+                                    .description("The access token string as issued by the "
+                                            + "authorization server."),
                             PayloadDocumentation.fieldWithPath("token_type")
-                                    .description("Token type"),
-                            PayloadDocumentation.fieldWithPath("refresh_token")
-                                    .description("Refresh token"),
-                            PayloadDocumentation.fieldWithPath("expires_in")
-                                    .description("Time to expire token in seconds"),
-                            PayloadDocumentation.fieldWithPath("scope")
-                                    .description("List of scopes"),
+                                    .description("The type of token this is, typically just the "
+                                            + "string \"bearer\"."),
+                            PayloadDocumentation.fieldWithPath("refresh_token").optional()
+                                    .description(" If the access token will expire, then it is "
+                                            + "useful to return a refresh token which applications "
+                                            + "can use to obtain another access token. However, "
+                                            + "tokens issued with the implicit grant cannot be "
+                                            + "issued a refresh token."),
+                            PayloadDocumentation.fieldWithPath("expires_in").optional()
+                                    .description("If the access token expires, the server should "
+                                            + "reply with the duration of time the access token "
+                                            + "is granted for."),
+                            PayloadDocumentation.fieldWithPath("scope").optional()
+                                    .description("If the scope the user granted is identical to "
+                                            + "the scope the app requested, this parameter is "
+                                            + "optional. If the granted scope is different from "
+                                            + "the requested scope, such as if the user modified "
+                                            + "the scope, then this parameter is required."),
                             PayloadDocumentation.fieldWithPath("jti")
-                                    .description("JTI")
-                            )))
-    ;
+                                    .description("(JWT ID) claim provides a unique identifier for "
+                                            + "the JWT."))));
   }
 }

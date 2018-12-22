@@ -34,4 +34,4 @@ operation::register-example[snippets='request-fields,http-request,http-response'
 == Authorization (/oauth)
 Now that you have registered new user you can get authorization token by sending POST request to /oauth/token endpoint.
 
-operation::authorize-example[snippets='request-fields,http-request,http-response']
+operation::authorize-example[]
