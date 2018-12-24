@@ -59,3 +59,16 @@ When running application you can access API documentation at http://localhost:80
 == H2 Console
 
 When running in development mode H2 database is used and you can access with H2 Console http://localhost:8080/h2-console/
+
+== Development workflow
+
+When new endpoint is being developed you should add objects in this order.
+
+. ControllerSpecification (groovy)
+. Controller/Method (java)
+. ServiceSpecification - if needed (groovy)
+. Service - if needed (java)
+. RepositorySpecification - if needed (groovy)
+. Repository - if needed (java)
+. User Guide documentation (adoc)
+. Method Documentation (java)
