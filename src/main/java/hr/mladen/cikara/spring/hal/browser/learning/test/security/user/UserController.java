@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import java.security.Principal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -88,4 +89,16 @@ public class UserController {
     return ResponseEntity.ok(userResource);
   }
 
+  @GetMapping(
+          value = "/me",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<UserResource> getCurrentUser(Principal principal)
+          throws UserService.UserNotFoundException {
+    log.debug("Principal: {}", principal);
+    User user = userService.findByUsername(principal.getName());
+
+    UserResource userResource = userToUserResourceAssembler.toResource(user);
+
+    return ResponseEntity.ok(userResource);
+  }
 }

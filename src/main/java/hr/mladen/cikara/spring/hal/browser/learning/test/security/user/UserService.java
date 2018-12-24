@@ -21,6 +21,7 @@ public interface UserService {
    *
    * @param userId User id
    * @return User
+   * @throws UserNotFoundException User with given id is not found
    */
   User findById(Long userId) throws UserNotFoundException;
 
@@ -31,10 +32,29 @@ public interface UserService {
    */
   User register(RegisterDto registerDto) throws UsernameAlreadyTakenException, PasswordsDontMatch;
 
+  /**
+   * Get User by username
+   * @param username Username
+   * @return User
+   * @throws UserNotFoundException User with given username is not found
+   */
+  User findByUsername(String username) throws UserNotFoundException;
+
   @Value
   @EqualsAndHashCode(callSuper = false)
   class UserNotFoundException extends Exception {
     private final Long userId;
+    private final String username;
+
+    UserNotFoundException(final String username) {
+      this.username = username;
+      this.userId = null;
+    }
+
+    UserNotFoundException(final Long userId) {
+      this.username = null;
+      this.userId = userId;
+    }
   }
 
   @Value

@@ -86,4 +86,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
       throw new UsernameAlreadyTakenException(registerDto.getUsername());
     }
   }
+
+  @Override
+  public User findByUsername(final String username) throws UserNotFoundException {
+    try {
+      Optional<User> user = userRepository.findByUsername(username);
+      if (user.isPresent()) {
+        return user.get();
+      } else {
+        throw new UserNotFoundException(username);
+      }
+
+    } catch (IllegalArgumentException e) {
+      throw new UserNotFoundException(username);
+    }
+  }
 }
