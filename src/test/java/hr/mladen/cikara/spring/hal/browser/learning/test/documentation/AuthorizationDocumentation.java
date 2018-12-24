@@ -82,20 +82,7 @@ class AuthorizationDocumentation extends AbstractDocumentationWithSecurity {
   @Test
   void refreshAuthorizationExample() throws Exception {
 
-    MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
-    loginParams.add("grant_type", "password");
-    loginParams.add("username", "Alex123");
-    loginParams.add("password", "password");
-    
-    String jsonResponse = this.mockMvc.perform(
-            MockMvcRequestBuilders.post("/oauth/token")
-                    .params(loginParams)
-                    .with(SecurityMockMvcRequestPostProcessors.httpBasic(
-                            "application-client", "password"))
-                    .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print())
-            .andReturn().getResponse().getContentAsString();
+    String jsonResponse = getAuthorizationResponse();
 
     JSONObject jsonObject = new JSONObject(jsonResponse);
 
@@ -149,4 +136,6 @@ class AuthorizationDocumentation extends AbstractDocumentationWithSecurity {
                                     .description("(JWT ID) claim provides a unique identifier for "
                                             + "the JWT."))));
   }
+
+
 }
