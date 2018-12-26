@@ -60,6 +60,7 @@ dependencies {
     compileOnly('org.projectlombok:lombok')
 
     runtimeOnly('com.h2database:h2')
+    runtimeOnly('org.postgresql:postgresql')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-engine:5.1.1')
