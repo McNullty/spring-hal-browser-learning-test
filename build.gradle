@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.1.RELEASE'
+        springBootVersion = '2.1.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -44,7 +44,7 @@ repositories {
 
 ext {
     snippetsDir = file('build/generated-snippets')
-    springCloudVersion = 'Greenwich.M3'
+    springCloudVersion = 'Greenwich.RELEASE'
 }
 
 dependencies {
