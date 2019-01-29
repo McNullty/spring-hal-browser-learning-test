@@ -89,13 +89,26 @@ public class UserController {
     return ResponseEntity.ok(userResource);
   }
 
+  /**
+   * Returns currently authenticated user.
+   *
+   * @param principal Autowired principal
+   * @return UserResource
+   */
   @GetMapping(
           value = "/me",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<UserResource> getCurrentUser(Principal principal)
-          throws UserService.UserNotFoundException {
+  public ResponseEntity<UserResource> getCurrentUser(Principal principal) {
     log.debug("Principal: {}", principal);
-    User user = userService.findByUsername(principal.getName());
+
+    User user;
+    try {
+      user = userService.findByUsername(principal.getName());
+    } catch (UserService.UserNotFoundException e) {
+      log.error("This shuld never happen! Current user should always be found.");
+
+      throw new RuntimeException("Current user not foind!");
+    }
 
     UserResource userResource = userToUserResourceAssembler.toResource(user);
 

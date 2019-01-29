@@ -45,6 +45,8 @@ operation::refresh-example[snippets='http-request,http-response,request-headers,
 
 [[user]]
 == User management
+
+=== Currently authenticated user
 Once you are authorized you can check your user details by going to /users/me endpoint.
 
-operation::me-example[]
+operation::me-example[curl-request,http-request,response-body,response-fields]

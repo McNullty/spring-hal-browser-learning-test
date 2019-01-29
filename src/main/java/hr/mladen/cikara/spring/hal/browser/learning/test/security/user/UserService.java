@@ -33,7 +33,8 @@ public interface UserService {
   User register(RegisterDto registerDto) throws UsernameAlreadyTakenException, PasswordsDontMatch;
 
   /**
-   * Get User by username
+   * Get User by username.
+   *
    * @param username Username
    * @return User
    * @throws UserNotFoundException User with given username is not found
