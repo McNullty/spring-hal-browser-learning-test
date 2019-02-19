@@ -86,14 +86,10 @@ not create URIs themselves, instead they should use the above-described links to
 [[resources]]
 = Resources
 
-
-
 [[resources-index]]
 == Index
 
 The index provides the entry point into the service.
-
-
 
 [[resources-index-access]]
 === Accessing the index
@@ -101,6 +97,18 @@ The index provides the entry point into the service.
 A `GET` request is used to access the index
 
 operation::index-example[snippets='response-fields,http-response,links']
+
+[[authorization]]
+== Authorization
+
+This party covers registering new user and getting authorization token
+
+[[register]]
+=== Register
+
+You can make `POST` request to register new user.
+
+operation::register-example[snippets='request-fields,request-body,curl-request,http-response']
 
 [[resources-books]]
 == Books
@@ -123,7 +131,7 @@ operation::books-list-example[snippets='request-parameters,response-fields,curl-
 
 A `POST` request is used to create a booke.
 
-operation::books-create-example[snippets='request-fields,curl-request,http-response']
+operation::books-create-example[snippets='request-fields,request-body,curl-request,http-response']
 
 
 [[resources-book-search]]

@@ -59,7 +59,7 @@ public class IndexController {
                     .add("href", userLink.getHref())
                     .add("title", userLink.getTitle())
             )
-            .add("fx:token", factory.createObjectBuilder()
+            .add("fx:authorization", factory.createObjectBuilder()
                     .add("href", userLink.getHref() + "/oauth/token")
                     .add("title", "OAuth2 endpoint for obtaining authorization tokens")
             )

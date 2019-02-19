@@ -26,10 +26,10 @@ class IndexDocumentation extends AbstractDocumentation {
                                     .description("The <<resources-books,Books resource>>"),
                             linkWithRel("fx:resources-users")
                                     .description("The <<resources-users,Users resource>>"),
-                            linkWithRel("fx:token")
-                                    .description("The <<authorize-example,Authorisation>>"),
+                            linkWithRel("fx:authorization")
+                                    .description("The <<authorization,Authorisation>>"),
                             linkWithRel("fx:register")
-                                    .description("The <<register-example,Registration>>"),
+                                    .description("The <<register,Registration>>"),
                             linkWithRel("api-guide")
                                     .description("Link to API documentation"),
                             linkWithRel("user-guide")
