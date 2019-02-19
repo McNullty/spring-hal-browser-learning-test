@@ -110,6 +110,20 @@ You can make `POST` request to register new user.
 
 operation::register-example[snippets='request-fields,request-body,curl-request,http-response']
 
+[[authorize-example]]
+=== Authorization token
+
+You can make `GET` request to get authorization token that can be used to authorize requests.
+
+operation::authorize-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+
+[[refresh-example]]
+=== Refreshing authorization token
+
+You can refresh token with `POST` request
+
+operation::refresh-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+
 [[resources-users]]
 == Users
 
