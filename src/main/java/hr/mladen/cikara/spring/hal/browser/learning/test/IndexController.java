@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterController;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserController;
 import java.util.Collections;
 import javax.json.Json;
@@ -33,18 +34,39 @@ public class IndexController {
   private JsonObject createJsonObject(
           final JsonBuilderFactory factory) {
 
-    Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel();
-    Link userLink = ControllerLinkBuilder.linkTo(UserController.class).withSelfRel();
-    Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel();
+    Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel()
+            .withTitle("Link to books resources");
+    Link userLink = ControllerLinkBuilder.linkTo(UserController.class).withSelfRel()
+            .withTitle("Link to users resources");
+    Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel()
+            .withTitle("API index page");
+    Link registerLink = ControllerLinkBuilder.linkTo(RegisterController.class).withSelfRel()
+            .withTitle("Link for registering new users");
+
 
     return factory.createObjectBuilder()
-            .add("books", factory.createObjectBuilder()
+            .add("curies", factory.createArrayBuilder()
+                    .add(factory.createObjectBuilder()
+                            .add("name", "fx")
+                            .add("href", indexLink.getHref() + "/docs/api-guide.html#{rel}")
+                            .add("templated", Boolean.TRUE)
+                    ))
+            .add("fx:resources-books", factory.createObjectBuilder()
                     .add("href", bookLink.getHref())
-                    .add("templated", bookLink.isTemplated())
+                    .add("title", bookLink.getTitle())
             )
-            .add("users", factory.createObjectBuilder()
+            .add("fx:resources-users", factory.createObjectBuilder()
                     .add("href", userLink.getHref())
-                    .add("templated", userLink.isTemplated()))
+                    .add("title", userLink.getTitle())
+            )
+            .add("fx:token", factory.createObjectBuilder()
+                    .add("href", userLink.getHref() + "/oauth/token")
+                    .add("title", "OAuth2 endpoint for obtaining authorization tokens")
+            )
+            .add("fx:register", factory.createObjectBuilder()
+                    .add("href", registerLink.getHref())
+                    .add("title", registerLink.getTitle())
+            )
             .add("api-guide", factory.createObjectBuilder()
                     .add("href", indexLink.getHref() + "/docs/api-guide.html")
             )

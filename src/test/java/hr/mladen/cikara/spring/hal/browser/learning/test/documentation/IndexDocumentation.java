@@ -20,10 +20,16 @@ class IndexDocumentation extends AbstractDocumentation {
             .andExpect(status().isOk())
             .andDo(document("index-example",
                     links(
-                            linkWithRel("books")
+                            linkWithRel("curies")
+                                    .description("curies"),
+                            linkWithRel("fx:resources-books")
                                     .description("The <<resources-books,Books resource>>"),
-                            linkWithRel("users")
+                            linkWithRel("fx:resources-users")
                                     .description("The <<resources-users,Users resource>>"),
+                            linkWithRel("fx:token")
+                                    .description("The <<authorize-example,Authorisation>>"),
+                            linkWithRel("fx:register")
+                                    .description("The <<register-example,Registration>>"),
                             linkWithRel("api-guide")
                                     .description("Link to API documentation"),
                             linkWithRel("user-guide")
