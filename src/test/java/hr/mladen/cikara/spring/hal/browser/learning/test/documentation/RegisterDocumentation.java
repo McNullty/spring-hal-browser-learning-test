@@ -37,7 +37,7 @@ class RegisterDocumentation extends AbstractDocumentation {
             .andDo(document("register-example",
                     requestFields(
                             fieldWithPath("username").description("Username for registration"),
-                            fieldWithPath("password").description("Password for new user"),
+                            fieldWithPath("password").description("Password for new <<resources-users,user>>"),
                             fieldWithPath("passwordRepeated").description("Repeated password"))));
   }
 }

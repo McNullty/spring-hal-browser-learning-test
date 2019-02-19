@@ -110,12 +110,15 @@ You can make `POST` request to register new user.
 
 operation::register-example[snippets='request-fields,request-body,curl-request,http-response']
 
+[[resources-users]]
+== Users
+
+The users resources are used to create and list nd manipulate with application users.
+
 [[resources-books]]
 == Books
 
 The Books resources is used to create and list books
-
-
 
 [[resources-books-list]]
 === Listing books
@@ -124,15 +127,12 @@ A `GET` request will list all of the service's books.
 
 operation::books-list-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
 
-
-
 [[resources-books-create]]
 === Creating a book
 
 A `POST` request is used to create a booke.
 
 operation::books-create-example[snippets='request-fields,request-body,curl-request,http-response']
-
 
 [[resources-book-search]]
 === Searching books
@@ -141,20 +141,15 @@ A `GET` request will list all of the service's books that confirm to query.
 
 operation::books-search-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
 
-
 [[resources-book]]
 == Book
 
 The Book resource is used to retrieve, update, and delete individual books
 
-
-
 [[resources-book-links]]
 === Links
 
 include::{snippets}/book-get-example/links.adoc[]
-
-
 
 [[resources-book-retrieve]]
 === Retrieve a book
@@ -162,8 +157,6 @@ include::{snippets}/book-get-example/links.adoc[]
 A `GET` request will retrieve the details of a book.
 
 operation::book-get-example[snippets='path-parameters,response-fields,curl-request,http-response']
-
-
 
 [[resources-book-update]]
 === Update a book
@@ -183,7 +176,6 @@ include::{snippets}/book-update-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/book-update-example/http-response.adoc[]
-
 
 [[resources-book-replace]]
 === Replace a book
