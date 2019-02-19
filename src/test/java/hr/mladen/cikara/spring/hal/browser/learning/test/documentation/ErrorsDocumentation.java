@@ -34,11 +34,11 @@ class ErrorsDocumentation extends AbstractDocumentation {
                                             + "`Bad Request`"),
                             fieldWithPath("message")
                                     .description("A description of the cause of the error"),
-                            fieldWithPath("debugMessage")
+                            fieldWithPath("debugMessage").type("String")
                                     .description("Debug message"),
-                            fieldWithPath("subErrors")
+                            fieldWithPath("subErrors").type("String")
                                     .description("List of validation errors with descriptions"),
-                            fieldWithPath("timestamp")
+                            fieldWithPath("timestamp").type("Timestamp")
                                     .description("The time, in milliseconds with timezone, at "
                                             + "which the error occurred"))));
 
