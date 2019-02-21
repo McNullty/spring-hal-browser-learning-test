@@ -22,12 +22,13 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'jacoco'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'groovy'
+
+apply from: "$rootDir/gradle/jacoco.gradle"
 
 group = 'hr.mladen.cikara'
 version = '0.0.1-SNAPSHOT'
@@ -85,7 +86,6 @@ dependencyManagement {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
 }
 
 asciidoctor {
@@ -102,14 +102,6 @@ bootJar {
 
 checkstyle {
     toolVersion '8.13'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination file("${buildDir}/reports/jacocoHtml")
-    }
 }
 
 tasks.withType(Checkstyle) {
