@@ -4,7 +4,6 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -21,13 +20,14 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'jacoco'
-apply plugin: 'pmd'
-apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-apply plugin: 'jdepend'
 apply plugin: 'groovy'
+
+apply from: "$rootDir/gradle/jacoco.gradle"
+apply from: "$rootDir/gradle/pmd.gradle"
+apply from: "$rootDir/gradle/checkstyle.gradle"
+apply from: "$rootDir/gradle/findbugs.gradle"
+apply from: "$rootDir/gradle/jdepend.gradle"
+apply from: "$rootDir/gradle/asciidoctor.gradle"
 
 group = 'hr.mladen.cikara'
 version = '0.0.1-SNAPSHOT'
@@ -43,7 +43,6 @@ repositories {
 }
 
 ext {
-    snippetsDir = file('build/generated-snippets')
     springCloudVersion = 'Greenwich.RELEASE'
 }
 
@@ -72,8 +71,6 @@ dependencies {
     testImplementation('org.spockframework:spock-spring:1.2-groovy-2.5')
 
     annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
-
-    asciidoctor('org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.2.RELEASE')
 }
 
 dependencyManagement {
@@ -83,52 +80,5 @@ dependencyManagement {
 }
 
 test {
-    outputs.dir snippetsDir
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-asciidoctor {
-    dependsOn test
-    inputs.dir snippetsDir
-}
-
-bootJar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
-}
-
-checkstyle {
-    toolVersion '8.13'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination file("${buildDir}/reports/jacocoHtml")
-    }
-}
-
-tasks.withType(Checkstyle) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-tasks.withType(JDepend) {
-    reports {
-        xml.enabled = false
-        text.enabled = true
-    }
 }
