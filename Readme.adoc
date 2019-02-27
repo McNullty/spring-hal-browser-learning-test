@@ -75,7 +75,21 @@ When new endpoint is being developed you should add objects in this order.
 
 == Profiles
 
-There are two profiles. DEV profile is default profile that is using H2 database and PROD profile that is using
+There are two profiles. DEFAULT profile is default profile that is using H2 database and DEV profile that is using
 PostgreSQL database.
 
-PROD profile is using liquibase to version database and for DEV profile database is created by hibernate.
+DEV profile is using liquibase to version database and for DEFAULT profile database is created by hibernate.
+
+=== Default profile
+Building package:
+[source,bash]
+----
+./gradlew clean build
+----
+
+=== Dev profile
+Building package:
+[source,bash]
+----
+./gradlew -Penv=dev clean build
+----
