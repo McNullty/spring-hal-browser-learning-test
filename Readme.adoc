@@ -90,12 +90,24 @@ DEV profile is using liquibase to version database and for DEFAULT profile datab
 Building package:
 [source,bash]
 ----
-./gradlew clean build
+./gradlew build
 ----
 
 === Dev profile
 Building package:
 [source,bash]
 ----
-./gradlew -Penv=dev clean build
+./gradlew -Penv=dev build
+----
+
+Starting Postgres database docker:
+[source,bash]
+----
+docker run -it --rm --name hal-postgres -p 5432:5432 -e POSTGRES_USER=hal -e POSTGRES_PASSWORD=hal postgres
+----
+
+Running application:
+[source,bash]
+----
+java -jar -Dspring.profiles.active=dev build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
 ----
