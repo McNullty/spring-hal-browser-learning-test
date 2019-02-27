@@ -1,0 +1,12 @@
+dependencies {
+    implementation('org.flywaydb:flyway-core')
+
+    runtimeOnly('org.postgresql:postgresql')
+
+    testImplementation('com.h2database:h2')
+}
+
+bootJar {
+    exclude('application-default.properties')
+    rename('application-dev.properties', 'application-default.properties')
+}
