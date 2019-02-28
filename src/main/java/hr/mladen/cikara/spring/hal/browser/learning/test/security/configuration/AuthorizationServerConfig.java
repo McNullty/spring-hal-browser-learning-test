@@ -1,5 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.configuration;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+@Getter(AccessLevel.PRIVATE)
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig {

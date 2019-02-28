@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class IndexController {
 
+  private static final String HREF = "href";
+  private static final String TITLE = "title";
+
   @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
   ResponseEntity<?> index(final HttpServletRequest request) {
 
@@ -48,31 +51,31 @@ public class IndexController {
             .add("curies", factory.createArrayBuilder()
                     .add(factory.createObjectBuilder()
                             .add("name", "fx")
-                            .add("href", indexLink.getHref() + "/docs/api-guide.html#{rel}")
+                            .add(HREF, indexLink.getHref() + "/docs/api-guide.html#{rel}")
                             .add("templated", Boolean.TRUE)
                     )
             )
             .add("fx:resources-books", factory.createObjectBuilder()
-                    .add("href", bookLink.getHref())
-                    .add("title", bookLink.getTitle())
+                    .add(HREF, bookLink.getHref())
+                    .add(TITLE, bookLink.getTitle())
             )
             .add("fx:resources-users", factory.createObjectBuilder()
-                    .add("href", userLink.getHref())
-                    .add("title", userLink.getTitle())
+                    .add(HREF, userLink.getHref())
+                    .add(TITLE, userLink.getTitle())
             )
             .add("fx:authorization", factory.createObjectBuilder()
-                    .add("href", userLink.getHref() + "/oauth/token")
-                    .add("title", "OAuth2 endpoint for obtaining authorization tokens")
+                    .add(HREF, userLink.getHref() + "/oauth/token")
+                    .add(TITLE, "OAuth2 endpoint for obtaining authorization tokens")
             )
             .add("fx:register", factory.createObjectBuilder()
-                    .add("href", registerLink.getHref())
-                    .add("title", registerLink.getTitle())
+                    .add(HREF, registerLink.getHref())
+                    .add(TITLE, registerLink.getTitle())
             )
             .add("api-guide", factory.createObjectBuilder()
-                    .add("href", indexLink.getHref() + "/docs/api-guide.html")
+                    .add(HREF, indexLink.getHref() + "/docs/api-guide.html")
             )
             .add("user-guide", factory.createObjectBuilder()
-                    .add("href", indexLink.getHref() + "/docs/user-guide.html")
+                    .add(HREF, indexLink.getHref() + "/docs/user-guide.html")
             )
             .build();
   }

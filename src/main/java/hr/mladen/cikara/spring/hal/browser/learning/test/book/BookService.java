@@ -73,6 +73,8 @@ public interface BookService {
   @Value
   @EqualsAndHashCode(callSuper = false)
   class BookNotFoundException extends Exception {
+    private static final long serialVersionUID = 3492500995220533154L;
+
     private final Long bookId;
   }
 }
