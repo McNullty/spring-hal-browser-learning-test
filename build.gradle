@@ -26,7 +26,6 @@ apply plugin: 'groovy'
 apply from: 'gradle/jacoco.gradle'
 apply from: 'gradle/pmd.gradle'
 apply from: 'gradle/checkstyle.gradle'
-apply from: 'gradle/findbugs.gradle'
 apply from: 'gradle/spotbugs.gradle'
 apply from: 'gradle/asciidoctor.gradle'
 
