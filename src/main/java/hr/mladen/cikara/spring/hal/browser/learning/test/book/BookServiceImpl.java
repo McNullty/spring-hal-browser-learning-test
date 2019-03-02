@@ -1,6 +1,5 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -103,26 +102,22 @@ public class BookServiceImpl implements BookService {
             .blurb(book.getBlurb())
             .pages(book.getPages());
 
-    for (Map.Entry<String, Object> entry : updates.entrySet()) {
-      switch (entry.getKey().toLowerCase(Locale.getDefault())) {
-        case "title":
-          builder.title((String) entry.getValue());
-          break;
-        case "author":
-          builder.author((String) entry.getValue());
-          break;
-        case "blurb":
-          builder.blurb((String) entry.getValue());
-          break;
-        case "pages":
-          builder.pages((Integer) entry.getValue());
-          break;
-        default:
-          break;
-      }
+    if (updates.containsKey("title")) {
+      builder.title((String) updates.get("title"));
+    }
+
+    if (updates.containsKey("author")) {
+      builder.author((String) updates.get("author"));
+    }
+
+    if (updates.containsKey("blurb")) {
+      builder.blurb((String) updates.get("blurb"));
+    }
+
+    if (updates.containsKey("pages")) {
+      builder.pages((Integer) updates.get("pages"));
     }
 
     return builder.build();
-
   }
 }
