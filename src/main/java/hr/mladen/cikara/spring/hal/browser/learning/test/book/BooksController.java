@@ -3,6 +3,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 import java.net.URI;
 import java.util.Map;
 import javax.validation.Valid;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,11 +29,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@Getter(AccessLevel.PRIVATE)
 @RestController
 @RequestMapping("/books")
 @ExposesResourceFor(Book.class)
 public class BooksController {
 
+  public static final String BOOK_ID_PARAMETER = "/{bookId}";
   private final BookService bookService;
   private final BookToBookResourceAssembler bookToBookResourceAssembler;
 
@@ -122,7 +126,7 @@ public class BooksController {
    * @return Book details
    */
   @GetMapping(
-          value = "/{bookId}",
+          value = BOOK_ID_PARAMETER,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<BookResource> getBook(@PathVariable final Long bookId)
           throws BookService.BookNotFoundException {
@@ -141,7 +145,7 @@ public class BooksController {
    * @return Returns HTTP 204
    */
   @DeleteMapping(
-          value = "/{bookId}",
+          value = BOOK_ID_PARAMETER,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> deleteBook(
           @PathVariable final Long bookId) throws BookService.BookNotFoundException {
@@ -157,7 +161,7 @@ public class BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  @PatchMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+  @PatchMapping(value = BOOK_ID_PARAMETER, consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> updateBook(
           @RequestBody final Map<String, Object> updates,
@@ -178,7 +182,7 @@ public class BooksController {
    * @param bookId  Book Id
    * @return Returns HTTP 204
    */
-  @PutMapping(value = "/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+  @PutMapping(value = BOOK_ID_PARAMETER, consumes = MediaType.APPLICATION_JSON_VALUE,
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> replaceBook(
           @Valid @RequestBody BookDto bookDto,
@@ -224,5 +228,6 @@ public class BooksController {
   }
 
   public static class WrongMethodUsedForCreatingBookException extends Exception {
+    private static final long serialVersionUID = -6938801727304697360L;
   }
 }

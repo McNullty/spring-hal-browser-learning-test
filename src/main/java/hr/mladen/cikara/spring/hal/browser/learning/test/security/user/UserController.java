@@ -1,6 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import java.security.Principal;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@Getter(AccessLevel.PRIVATE)
 @RestController
 @RequestMapping("/users")
 @ExposesResourceFor(User.class)
@@ -101,17 +104,16 @@ public class UserController {
   public ResponseEntity<UserResource> getCurrentUser(Principal principal) {
     log.debug("Principal: {}", principal);
 
-    User user;
     try {
-      user = userService.findByUsername(principal.getName());
+      User user = userService.findByUsername(principal.getName());
+
+      UserResource userResource = userToUserResourceAssembler.toResource(user);
+
+      return ResponseEntity.ok(userResource);
     } catch (UserService.UserNotFoundException e) {
       log.error("This shuld never happen! Current user should always be found.");
 
       throw new RuntimeException("Current user not foind!");
     }
-
-    UserResource userResource = userToUserResourceAssembler.toResource(user);
-
-    return ResponseEntity.ok(userResource);
   }
 }

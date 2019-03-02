@@ -2,12 +2,15 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import java.util.Map;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
+@Getter(AccessLevel.PRIVATE)
 public class BookServiceImpl implements BookService {
 
   private final BookRepository bookRepository;
@@ -99,26 +102,22 @@ public class BookServiceImpl implements BookService {
             .blurb(book.getBlurb())
             .pages(book.getPages());
 
-    for (Map.Entry<String, Object> entry : updates.entrySet()) {
-      switch (entry.getKey().toLowerCase()) {
-        case "title":
-          builder.title((String) entry.getValue());
-          break;
-        case "author":
-          builder.author((String) entry.getValue());
-          break;
-        case "blurb":
-          builder.blurb((String) entry.getValue());
-          break;
-        case "pages":
-          builder.pages((Integer) entry.getValue());
-          break;
-        default:
-          break;
-      }
+    if (updates.containsKey("title")) {
+      builder.title((String) updates.get("title"));
+    }
+
+    if (updates.containsKey("author")) {
+      builder.author((String) updates.get("author"));
+    }
+
+    if (updates.containsKey("blurb")) {
+      builder.blurb((String) updates.get("blurb"));
+    }
+
+    if (updates.containsKey("pages")) {
+      builder.pages((Integer) updates.get("pages"));
     }
 
     return builder.build();
-
   }
 }

@@ -3,6 +3,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+@Getter(AccessLevel.PRIVATE)
 @SpringBootTest
 abstract class AbstractBookControllerSpecification {
 

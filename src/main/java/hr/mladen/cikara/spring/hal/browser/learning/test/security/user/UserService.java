@@ -1,7 +1,9 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,19 +43,19 @@ public interface UserService {
    */
   User findByUsername(String username) throws UserNotFoundException;
 
-  @Value
+  @Getter(AccessLevel.PUBLIC)
   @EqualsAndHashCode(callSuper = false)
   class UserNotFoundException extends Exception {
-    private final Long userId;
-    private final String username;
+    private static final long serialVersionUID = 1832746950175216234L;
+
+    private Long userId = null;
+    private String username = null;
 
     UserNotFoundException(final String username) {
       this.username = username;
-      this.userId = null;
     }
 
     UserNotFoundException(final Long userId) {
-      this.username = null;
       this.userId = userId;
     }
   }
@@ -61,9 +63,12 @@ public interface UserService {
   @Value
   @EqualsAndHashCode(callSuper = false)
   class UsernameAlreadyTakenException extends Exception {
+    private static final long serialVersionUID = -3784779833611983483L;
+
     private final String username;
   }
 
   class PasswordsDontMatch extends Exception {
+    private static final long serialVersionUID = -5232027232632055140L;
   }
 }

@@ -86,14 +86,10 @@ not create URIs themselves, instead they should use the above-described links to
 [[resources]]
 = Resources
 
-
-
 [[resources-index]]
 == Index
 
 The index provides the entry point into the service.
-
-
 
 [[resources-index-access]]
 === Accessing the index
@@ -102,12 +98,41 @@ A `GET` request is used to access the index
 
 operation::index-example[snippets='response-fields,http-response,links']
 
+[[authorization]]
+== Authorization
+
+This party covers registering new user and getting authorization token
+
+[[register]]
+=== Register
+
+You can make `POST` request to register new user.
+
+operation::register-example[snippets='request-fields,request-body,curl-request,http-response']
+
+[[authorize-example]]
+=== Authorization token
+
+You can make `GET` request to get authorization token that can be used to authorize requests.
+
+operation::authorize-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+
+[[refresh-example]]
+=== Refreshing authorization token
+
+You can refresh token with `POST` request
+
+operation::refresh-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+
+[[resources-users]]
+== Users
+
+The users resources are used to create and list nd manipulate with application users.
+
 [[resources-books]]
 == Books
 
 The Books resources is used to create and list books
-
-
 
 [[resources-books-list]]
 === Listing books
@@ -116,15 +141,12 @@ A `GET` request will list all of the service's books.
 
 operation::books-list-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
 
-
-
 [[resources-books-create]]
 === Creating a book
 
 A `POST` request is used to create a booke.
 
-operation::books-create-example[snippets='request-fields,curl-request,http-response']
-
+operation::books-create-example[snippets='request-fields,request-body,curl-request,http-response']
 
 [[resources-book-search]]
 === Searching books
@@ -133,20 +155,15 @@ A `GET` request will list all of the service's books that confirm to query.
 
 operation::books-search-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
 
-
 [[resources-book]]
 == Book
 
 The Book resource is used to retrieve, update, and delete individual books
 
-
-
 [[resources-book-links]]
 === Links
 
 include::{snippets}/book-get-example/links.adoc[]
-
-
 
 [[resources-book-retrieve]]
 === Retrieve a book
@@ -154,8 +171,6 @@ include::{snippets}/book-get-example/links.adoc[]
 A `GET` request will retrieve the details of a book.
 
 operation::book-get-example[snippets='path-parameters,response-fields,curl-request,http-response']
-
-
 
 [[resources-book-update]]
 === Update a book
@@ -175,7 +190,6 @@ include::{snippets}/book-update-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/book-update-example/http-response.adoc[]
-
 
 [[resources-book-replace]]
 === Replace a book

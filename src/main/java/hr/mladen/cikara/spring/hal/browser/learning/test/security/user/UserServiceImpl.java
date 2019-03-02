@@ -4,6 +4,8 @@ import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.Regis
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+@Getter(AccessLevel.PRIVATE)
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
 

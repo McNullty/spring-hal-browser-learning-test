@@ -1,5 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.Link;
 
+@Getter(AccessLevel.PRIVATE)
 @DisplayName("Given Spring Context and example book")
 @SpringBootTest
 class BookToBookResourceAssemblerSpecification {
@@ -18,7 +21,7 @@ class BookToBookResourceAssemblerSpecification {
   private Book book;
 
   @BeforeEach
-  void setup() {
+  void setUp() {
     book = Book.builder()
             .id(1L)
             .author("Test Author")

@@ -1,9 +1,12 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
+@Getter(AccessLevel.PRIVATE)
 @Component
 public class BookToBookResourceAssembler implements ResourceAssembler<Book, BookResource> {
 

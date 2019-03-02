@@ -1,9 +1,12 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
+@Getter(AccessLevel.PRIVATE)
 @Component
 public class UserToUserResourceAssembler implements ResourceAssembler<User, UserResource> {
   private final EntityLinks entityLinks;

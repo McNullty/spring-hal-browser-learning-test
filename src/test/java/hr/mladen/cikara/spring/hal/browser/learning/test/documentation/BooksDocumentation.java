@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +38,30 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+@Getter(AccessLevel.PRIVATE)
 @DisplayName("Documentation for /books endpoint")
 class BooksDocumentation extends AbstractDocumentation {
+
+  public static final String AUTHOR = "author";
+  public static final String AUTHOR_DESCRIPTION = "Author of the book";
+  public static final String AUTHOR_VALUE = "Martin Fowler";
+  public static final String BLURB = "blurb";
+  public static final String BLURB_DESCRIPTION = "Short blurb for a book";
+  public static final String BLURB_VALUE = "Any fool can write code that a computer can "
+          + "understand. Good programmers write code that humans can understand.";
+  public static final String BOOKS_URL = "/books";
+  public static final String LINKS = "_links";
+  public static final String LINKS_SELF_HREF = "_links.self.href";
+  public static final String LOCATION = "Location";
+  public static final String PAGE = "page";
+  public static final String PAGES = "pages";
+  public static final String PAGES_DESCRIPTION = "Number of pages of a book";
+  public static final String SELF = "self";
+  public static final String TITLE = "title";
+  public static final String TITLE_DESCRIPTION = "The title of the book";
+  public static final String TITLE_VALUE = "Refactoring: Improving the Design of Existing Code";
+  public static final String TO_OTHER_RESOURCES = "to other resources";
+  public static final String BOOK_IS_NOT_CREATED_ERROR_MESSAGE = "Book is not created";
 
   @Autowired
   private BookRepository bookRepository;
@@ -58,7 +82,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(status().isOk())
             .andDo(document("books-list-example",
                     links(halLinks(),
-                            linkWithRel("self").description("Canonical link for this resource"),
+                            linkWithRel(SELF).description("Canonical link for this resource"),
                             linkWithRel("next")
                                     .description("Next page with list of books").optional(),
                             linkWithRel("last")
@@ -71,19 +95,19 @@ class BooksDocumentation extends AbstractDocumentation {
                                     .description(
                                             "Link for creating custom search on this resource")),
                     requestParameters(
-                            parameterWithName("page")
+                            parameterWithName(PAGE)
                                     .description("The page to retrieve").optional(),
                             parameterWithName("size")
                                     .description("Number of entries per page").optional(),
                             parameterWithName("sort")
                                     .description("Order of entries").optional()),
                     responseFields(
-                            subsectionWithPath("_links")
+                            subsectionWithPath(LINKS)
                                     .description("<<resources-books-list_links,Links>> "
-                                            + "to other resources"),
+                                            + TO_OTHER_RESOURCES),
                             subsectionWithPath("_embedded.books")
                                     .description("An array of <<resources-book, Book resources>>"),
-                            subsectionWithPath("page").description("Information about paging data"))
+                            subsectionWithPath(PAGE).description("Information about paging data"))
             ));
   }
 
@@ -98,7 +122,7 @@ class BooksDocumentation extends AbstractDocumentation {
             .andExpect(status().isOk())
             .andDo(document("books-search-example",
                     links(halLinks(),
-                            linkWithRel("self")
+                            linkWithRel(SELF)
                                     .description("Canonical link for this resource"),
                             linkWithRel("next")
                                     .description("Next page with list of books").optional(),
@@ -114,19 +138,19 @@ class BooksDocumentation extends AbstractDocumentation {
                     requestParameters(
                             parameterWithName("query")
                                     .description("Query that book title must have"),
-                            parameterWithName("page")
+                            parameterWithName(PAGE)
                                     .description("The page to retrieve").optional(),
                             parameterWithName("size")
                                     .description("Number of entries per page").optional(),
                             parameterWithName("sort")
                                     .description("Order of entries").optional()),
                     responseFields(
-                            subsectionWithPath("_links")
+                            subsectionWithPath(LINKS)
                                     .description("<<resources-books-list_links,Links>> "
-                                            + "to other resources"),
+                                            + TO_OTHER_RESOURCES),
                             subsectionWithPath("_embedded.books")
                                     .description("An array of <<resources-book, Book resources>>"),
-                            subsectionWithPath("page").description("Information about paging data"))
+                            subsectionWithPath(PAGE).description("Information about paging data"))
             ));
   }
 
@@ -137,24 +161,23 @@ class BooksDocumentation extends AbstractDocumentation {
     // GIVEN:
 
     Map<String, Object> book = new HashMap<>();
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("author", "Martin Fowler");
-    book.put("blurb", "Any fool can write code that a computer can understand. "
-            + "Good programmers write code that humans can understand.");
-    book.put("pages", 448);
+    book.put(TITLE, TITLE_VALUE);
+    book.put(AUTHOR, AUTHOR_VALUE);
+    book.put(BLURB, BLURB_VALUE);
+    book.put(PAGES, 448);
 
     // WHEN:
     this.mockMvc.perform(
-            post("/books").contentType(MediaTypes.HAL_JSON).content(
+            post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
                     this.objectMapper.writeValueAsString(book)))
             // THEN:
             .andExpect(status().isCreated())
             .andDo(document("books-create-example",
                     requestFields(
-                            fieldWithPath("title").description("The title of the book"),
-                            fieldWithPath("author").description("Author of the book"),
-                            fieldWithPath("blurb").description("Short blurb for a book"),
-                            fieldWithPath("pages").description("Number of pages of a book"))));
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION),
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION),
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION),
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION))));
   }
 
   @Test
@@ -163,22 +186,21 @@ class BooksDocumentation extends AbstractDocumentation {
 
     // GIVEN:
     Map<String, Object> book = new HashMap<>();
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("author", "Martin Fowler");
-    book.put("blurb", "Any fool can write code that a computer can understand. "
-            + "Good programmers write code that  humans can understand.");
-    book.put("pages", 448);
+    book.put(TITLE, TITLE_VALUE);
+    book.put(AUTHOR, AUTHOR_VALUE);
+    book.put(BLURB, BLURB_VALUE);
+    book.put(PAGES, 448);
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON).content(
+                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
             .andDo(print())
-            .andReturn().getResponse().getHeader("Location");
+            .andReturn().getResponse().getHeader(LOCATION);
 
     if (bookLocation == null) {
-      Assert.fail("Book is not created");
+      Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
     String bookId = getBookIdFromLocation(bookLocation);
@@ -187,26 +209,26 @@ class BooksDocumentation extends AbstractDocumentation {
     this.mockMvc.perform(get("/books/{bookId}", Long.parseLong(bookId)))
             // THEN:
             .andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(book.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)))
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)))
             .andDo(print())
             .andDo(document("book-get-example",
                     links(
-                            linkWithRel("self")
+                            linkWithRel(SELF)
                                     .description("Canonical link for this <<resources-book,book>>")
                     ),
                     pathParameters(parameterWithName("bookId").description("Id of a book")),
                     responseFields(
-                            fieldWithPath("title").description("The title of the book"),
-                            fieldWithPath("author").description("Author of the book"),
-                            fieldWithPath("blurb").description("Short blurb for a book"),
-                            fieldWithPath("pages").description("Number of pages of a book"),
-                            subsectionWithPath("_links")
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION),
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION),
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION),
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION),
+                            subsectionWithPath(LINKS)
                                     .description("<<resources-book-links,Links>> "
-                                            + "to other resources"))));
+                                            + TO_OTHER_RESOURCES))));
   }
 
   @Test
@@ -216,71 +238,70 @@ class BooksDocumentation extends AbstractDocumentation {
     // GIVEN:
 
     Map<String, Object> book = new HashMap<>();
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("author", "Martin Fowler");
-    book.put("pages", 448);
+    book.put(TITLE, TITLE_VALUE);
+    book.put(AUTHOR, AUTHOR_VALUE);
+    book.put(PAGES, 448);
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON).content(
+                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated()).andDo(print())
-            .andReturn().getResponse().getHeader("Location");
+            .andReturn().getResponse().getHeader(LOCATION);
 
     if (bookLocation == null) {
-      Assert.fail("Book is not created");
+      Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(book.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)));
 
 
     Map<String, Object> bookUpdate = new HashMap<>();
-    bookUpdate.put("blurb", "Any fool can write code that a computer can understand. "
-            + "Good programmers write code that humans can understand.");
+    bookUpdate.put(BLURB, BLURB_VALUE);
 
     this.mockMvc.perform(
             patch(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE)
                     .accept(MediaType.ALL_VALUE).content(
                     this.objectMapper.writeValueAsString(bookUpdate)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(bookUpdate.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)))
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(bookUpdate.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)))
             .andDo(document("book-update-example",
                     requestFields(
-                            fieldWithPath("title").description("The title of the book")
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("author").description("Author of the book")
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("blurb").description("Short blurb for a book")
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("pages").description("Number of pages of a book")
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION)
                                     .type(JsonFieldType.NUMBER).optional()),
                     responseFields(
-                            fieldWithPath("title").description("The title of the book"),
-                            fieldWithPath("author").description("Author of the book"),
-                            fieldWithPath("blurb").description("Short blurb for a book"),
-                            fieldWithPath("pages").description("Number of pages of a book"),
-                            subsectionWithPath("_links")
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION),
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION),
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION),
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION),
+                            subsectionWithPath(LINKS)
                                     .description("<<resources-book-links,Links>> "
-                                            + "to other resources"))));
+                                            + TO_OTHER_RESOURCES))));
 
     // WHEN:
     this.mockMvc.perform(get(bookLocation))
             // THEN:
             .andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(bookUpdate.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(bookUpdate.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)));
   }
 
   @Test
@@ -288,65 +309,64 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookReplaceExample() throws Exception {
 
     Map<String, Object> book = new HashMap<>();
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("author", "Martin Fowler");
-    book.put("pages", 448);
+    book.put(TITLE, TITLE_VALUE);
+    book.put(AUTHOR, AUTHOR_VALUE);
+    book.put(PAGES, 448);
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON)
+                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON)
                             .accept(MediaType.ALL_VALUE)
                             .content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated()).andDo(print())
-            .andReturn().getResponse().getHeader("Location");
+            .andReturn().getResponse().getHeader(LOCATION);
 
     if (bookLocation == null) {
-      Assert.fail("Book is not created");
+      Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(book.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)));
 
 
     Map<String, Object> bookReplace = new HashMap<>();
-    bookReplace.put("title", "Refactoring: Improving the Design of Existing Code");
-    bookReplace.put("author", "Martin Fowler");
-    bookReplace.put("blurb", "Any fool can write code that a computer can understand. "
-            + "Good programmers write code that humans can understand.");
-    bookReplace.put("pages", 448);
+    bookReplace.put(TITLE, TITLE_VALUE);
+    bookReplace.put(AUTHOR, AUTHOR_VALUE);
+    bookReplace.put(BLURB, BLURB_VALUE);
+    bookReplace.put(PAGES, 448);
 
     this.mockMvc.perform(
             put(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE).content(
                     this.objectMapper.writeValueAsString(bookReplace)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(bookReplace.get("title"))))
-            .andExpect(jsonPath("author", is(bookReplace.get("author"))))
-            .andExpect(jsonPath("blurb", is(bookReplace.get("blurb"))))
-            .andExpect(jsonPath("pages", is(bookReplace.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)))
+            .andExpect(jsonPath(TITLE, is(bookReplace.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(bookReplace.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(bookReplace.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(bookReplace.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)))
             .andDo(document("book-replace-example",
                     requestFields(
-                            fieldWithPath("title").description("The title of the book")
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("author").description("Author of the book")
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("blurb").description("Short blurb for a book")
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION)
                                     .type(JsonFieldType.STRING).optional(),
-                            fieldWithPath("pages").description("Number of pages of a book")
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION)
                                     .type(JsonFieldType.NUMBER).optional()),
                     responseFields(
-                            fieldWithPath("title").description("The title of the book"),
-                            fieldWithPath("author").description("Author of the book"),
-                            fieldWithPath("blurb").description("Short blurb for a book"),
-                            fieldWithPath("pages").description("Number of pages of a book"),
-                            subsectionWithPath("_links")
+                            fieldWithPath(TITLE).description(TITLE_DESCRIPTION),
+                            fieldWithPath(AUTHOR).description(AUTHOR_DESCRIPTION),
+                            fieldWithPath(BLURB).description(BLURB_DESCRIPTION),
+                            fieldWithPath(PAGES).description(PAGES_DESCRIPTION),
+                            subsectionWithPath(LINKS)
                                     .description("<<resources-book-links,Links>> "
-                                            + "to other resources"))));
+                                            + TO_OTHER_RESOURCES))));
   }
 
   @Test
@@ -356,28 +376,28 @@ class BooksDocumentation extends AbstractDocumentation {
     // GIVEN:
 
     Map<String, Object> book = new HashMap<>();
-    book.put("title", "Refactoring: Improving the Design of Existing Code");
-    book.put("author", "Martin Fowler");
-    book.put("pages", 448);
+    book.put(TITLE, TITLE_VALUE);
+    book.put(AUTHOR, AUTHOR_VALUE);
+    book.put(PAGES, 448);
 
     String bookLocation = this.mockMvc
             .perform(
-                    post("/books").contentType(MediaTypes.HAL_JSON)
+                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON)
                             .accept(MediaType.ALL_VALUE)
                             .content(this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
-            .andReturn().getResponse().getHeader("Location");
+            .andReturn().getResponse().getHeader(LOCATION);
 
     if (bookLocation == null) {
-      Assert.fail("Book is not created");
+      Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
     this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
-            .andExpect(jsonPath("title", is(book.get("title"))))
-            .andExpect(jsonPath("author", is(book.get("author"))))
-            .andExpect(jsonPath("blurb", is(book.get("blurb"))))
-            .andExpect(jsonPath("pages", is(book.get("pages"))))
-            .andExpect(jsonPath("_links.self.href", is(bookLocation)));
+            .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
+            .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
+            .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
+            .andExpect(jsonPath(PAGES, is(book.get(PAGES))))
+            .andExpect(jsonPath(LINKS_SELF_HREF, is(bookLocation)));
 
     String bookId = getBookIdFromLocation(bookLocation);
 
@@ -401,7 +421,7 @@ class BooksDocumentation extends AbstractDocumentation {
 
   private void createTestData() {
     createBook("Patterns of Enterprise Application Architecture",
-            "Martin Fowler", "The practice of enterprise application development "
+            AUTHOR_VALUE, "The practice of enterprise application development "
                     + "has benefited from the emergence of many new enabling technologies. "
                     + "Multi-tiered object-oriented platforms, such as Java and .NET, have "
                     + "become commonplace. These new tools and technologies are capable of "

@@ -18,11 +18,11 @@ public class HalController {
   /**
    * Redirects to the actual {@code index.html}.
    *
-   * @return
+   * @return View with redirect
    */
-  @RequestMapping(value = "/browser", method = RequestMethod.GET)
-  public View browser(final HttpServletRequest request) {
-    return getRedirectView(request, request.getRequestURI().endsWith("/browser"));
+  @RequestMapping(value = BROWSER, method = RequestMethod.GET)
+  public View browserView(final HttpServletRequest request) {
+    return getRedirectView(request, request.getRequestURI().endsWith(BROWSER));
   }
 
   /**
@@ -30,7 +30,7 @@ public class HalController {
    *
    * @param request         must not be {@literal null}.
    * @param browserRelative is relative path or not
-   * @return
+   * @return View with redirect
    */
   private View getRedirectView(final HttpServletRequest request, boolean browserRelative) {
 
@@ -44,7 +44,7 @@ public class HalController {
     }
 
     builder.path(INDEX);
-    builder.fragment(browserRelative ? path.substring(0, path.lastIndexOf("/browser")) : path);
+    builder.fragment(browserRelative ? path.substring(0, path.lastIndexOf(BROWSER)) : path);
 
     return new RedirectView(builder.build().toUriString());
   }
