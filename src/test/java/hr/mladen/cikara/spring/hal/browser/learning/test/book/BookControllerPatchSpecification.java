@@ -19,6 +19,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DisplayName("Given BookController")
 class BookControllerPatchSpecification extends AbstractBookControllerSpecification {
 
+  public static final String TEST_AUTHOR_STRING = "Test author";
+  public static final String TEST_TITLE_STRING = "Test title";
+  public static final String TEST_BLURB_STRING = "Test blurb";
+  public static final String AUTHOR = "author";
+  public static final String TITLE = "title";
+  public static final String BLURB = "blurb";
+  public static final String PAGES = "pages";
+  public static final String BOOKS_URL = "/books/";
+  public static final int PAGES_INTEGER = 190;
   @Autowired
   BookRepository bookRepository;
 
@@ -36,17 +45,17 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     void testPatchingBookValidBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
-      book.remove("author");
+      book.remove(AUTHOR);
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.patch(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -54,16 +63,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(savedBook.getAuthor())))
+                              AUTHOR, Matchers.is(savedBook.getAuthor())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(book.get("title"))))
+                              TITLE, Matchers.is(book.get(TITLE))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(book.get("blurb"))))
+                              BLURB, Matchers.is(book.get(BLURB))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(book.get("pages"))));
+                              PAGES, Matchers.is(book.get(PAGES))));
     }
 
     @DisplayName(
@@ -73,16 +82,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     void testPatchingBookValidBodyAllFields() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.patch(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -90,16 +99,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(book.get("author"))))
+                              AUTHOR, Matchers.is(book.get(AUTHOR))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(book.get("title"))))
+                              TITLE, Matchers.is(book.get(TITLE))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(book.get("blurb"))))
+                              BLURB, Matchers.is(book.get(BLURB))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(book.get("pages"))));
+                              PAGES, Matchers.is(book.get(PAGES))));
     }
 
     @DisplayName(
@@ -109,17 +118,17 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     void testPatchingBookNotExistingField() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = new HashMap<>();
       book.put("not-existing", "test");
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.patch(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -127,16 +136,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(savedBook.getAuthor())))
+                              AUTHOR, Matchers.is(savedBook.getAuthor())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(savedBook.getTitle())))
+                              TITLE, Matchers.is(savedBook.getTitle())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(savedBook.getBlurb())))
+                              BLURB, Matchers.is(savedBook.getBlurb())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(savedBook.getPages())));
+                              PAGES, Matchers.is(savedBook.getPages())));
     }
 
     @DisplayName(
@@ -146,16 +155,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     void testPatchingBookEmptyBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = new HashMap<>();
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.patch(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -163,16 +172,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(savedBook.getAuthor())))
+                              AUTHOR, Matchers.is(savedBook.getAuthor())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(savedBook.getTitle())))
+                              TITLE, Matchers.is(savedBook.getTitle())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(savedBook.getBlurb())))
+                              BLURB, Matchers.is(savedBook.getBlurb())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(savedBook.getPages())));
+                              PAGES, Matchers.is(savedBook.getPages())));
     }
 
     @DisplayName(
@@ -182,17 +191,17 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     void testPatchBookSetBlurbToNull() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = new HashMap<>();
-      book.put("blurb", null);
+      book.put(BLURB, null);
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.patch("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.patch(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -200,16 +209,16 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(savedBook.getAuthor())))
+                              AUTHOR, Matchers.is(savedBook.getAuthor())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(savedBook.getTitle())))
+                              TITLE, Matchers.is(savedBook.getTitle())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(Matchers.nullValue())))
+                              BLURB, Matchers.is(Matchers.nullValue())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(savedBook.getPages())));
+                              PAGES, Matchers.is(savedBook.getPages())));
     }
   }
 
@@ -221,7 +230,7 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
     @Test
     void testPatchingBook() throws Exception {
       Map<String, Object> book = createMapWithBookData();
-      book.remove("author");
+      book.remove(AUTHOR);
 
       mockMvc.perform(
               RestDocumentationRequestBuilders.patch("/books/99999")

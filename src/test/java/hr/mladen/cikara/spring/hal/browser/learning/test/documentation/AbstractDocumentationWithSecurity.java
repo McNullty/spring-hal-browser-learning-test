@@ -24,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith({RestDocumentationExtension.class})
 @SpringBootTest
 class AbstractDocumentationWithSecurity {
+  public static final String PASSWORD_STRING = "password";
   MockMvc mockMvc;
 
   /**
@@ -49,15 +50,15 @@ class AbstractDocumentationWithSecurity {
    */
   String getAuthorizationResponse() throws Exception {
     MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
-    loginParams.add("grant_type", "password");
+    loginParams.add("grant_type", PASSWORD_STRING);
     loginParams.add("username", "Alex123");
-    loginParams.add("password", "password");
+    loginParams.add(PASSWORD_STRING, PASSWORD_STRING);
 
     return this.mockMvc.perform(
             MockMvcRequestBuilders.post("/oauth/token")
                     .params(loginParams)
                     .with(SecurityMockMvcRequestPostProcessors.httpBasic(
-                            "application-client", "password"))
+                            "application-client", PASSWORD_STRING))
                     .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print())

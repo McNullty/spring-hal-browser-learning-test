@@ -21,7 +21,7 @@ class BookToBookResourceAssemblerSpecification {
   private Book book;
 
   @BeforeEach
-  void setup() {
+  void setUp() {
     book = Book.builder()
             .id(1L)
             .author("Test Author")

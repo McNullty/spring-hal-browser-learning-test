@@ -18,6 +18,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Getter(AccessLevel.PRIVATE)
 @DisplayName("Given BookController")
 class BookControllerPutSpecification extends AbstractBookControllerSpecification {
+  public static final String TEST_AUTHOR_STRING = "Test author";
+  public static final String TEST_TITLE_STRING = "Test title";
+  public static final String TEST_BLURB_STRING = "Test blurb";
+  public static final int PAGES_INTEGER = 190;
+  public static final String BOOKS_URL = "/books/";
+  public static final String AUTHOR = "author";
+  public static final String TITLE = "title";
+  public static final String BLURB = "blurb";
+  public static final String PAGES = "pages";
+
   @Autowired
   BookRepository bookRepository;
 
@@ -35,16 +45,16 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
     void testPutValidBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.put(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -52,16 +62,16 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(book.get("author"))))
+                              AUTHOR, Matchers.is(book.get(AUTHOR))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(book.get("title"))))
+                              TITLE, Matchers.is(book.get(TITLE))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(book.get("blurb"))))
+                              BLURB, Matchers.is(book.get(BLURB))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(book.get("pages"))));
+                              PAGES, Matchers.is(book.get(PAGES))));
     }
 
     @DisplayName(
@@ -71,17 +81,17 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
     void testPutExtraField() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
       book.put("not-existing", "test");
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.put(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -89,16 +99,16 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(book.get("author"))))
+                              AUTHOR, Matchers.is(book.get(AUTHOR))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(book.get("title"))))
+                              TITLE, Matchers.is(book.get(TITLE))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(book.get("blurb"))))
+                              BLURB, Matchers.is(book.get(BLURB))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(book.get("pages"))));
+                              PAGES, Matchers.is(book.get(PAGES))));
     }
 
     @DisplayName(
@@ -109,17 +119,17 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
     void testPutInvalidBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
-      book.remove("author");
+      book.remove(AUTHOR);
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.put(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -135,16 +145,16 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
     void testPutEmptyBody() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = new HashMap<>();
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.put(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -159,17 +169,17 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
     void testPutValidBodyWithNullBlurb() throws Exception {
       Book savedBook = bookRepository.save(
               new Book.BookBuilder()
-                      .author("Test author")
-                      .title("Test title")
-                      .blurb("Test blurb")
-                      .pages(190)
+                      .author(TEST_AUTHOR_STRING)
+                      .title(TEST_TITLE_STRING)
+                      .blurb(TEST_BLURB_STRING)
+                      .pages(PAGES_INTEGER)
                       .build());
 
       Map<String, Object> book = createMapWithBookData();
-      book.put("blurb", null);
+      book.put(BLURB, null);
 
       mockMvc.perform(
-              RestDocumentationRequestBuilders.put("/books/" + savedBook.getId())
+              RestDocumentationRequestBuilders.put(BOOKS_URL + savedBook.getId())
                       .content(objectMapper.writeValueAsString(book))
                       .accept(MediaType.APPLICATION_JSON_VALUE)
                       .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -177,16 +187,16 @@ class BookControllerPutSpecification extends AbstractBookControllerSpecification
               .andExpect(MockMvcResultMatchers.status().isOk())
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "author", Matchers.is(book.get("author"))))
+                              AUTHOR, Matchers.is(book.get(AUTHOR))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "title", Matchers.is(book.get("title"))))
+                              TITLE, Matchers.is(book.get(TITLE))))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "blurb", Matchers.is(Matchers.nullValue())))
+                              BLURB, Matchers.is(Matchers.nullValue())))
               .andExpect(
                       MockMvcResultMatchers.jsonPath(
-                              "pages", Matchers.is(book.get("pages"))));
+                              PAGES, Matchers.is(book.get(PAGES))));
     }
   }
 
