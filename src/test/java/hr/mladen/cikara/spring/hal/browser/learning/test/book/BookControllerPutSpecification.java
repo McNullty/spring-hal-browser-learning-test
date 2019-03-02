@@ -3,6 +3,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +15,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@Getter(AccessLevel.PRIVATE)
 @DisplayName("Given BookController")
 class BookControllerPutSpecification extends AbstractBookControllerSpecification {
   @Autowired

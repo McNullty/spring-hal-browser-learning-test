@@ -2,6 +2,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.book;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DisplayName("Given BookController")
 class BookControllerPostSpecification extends AbstractBookControllerSpecification {
 
+  @Getter(AccessLevel.PRIVATE)
   @DisplayName("and invalid payload with missing author")
   @Nested
   class InvalidPayload {
@@ -42,6 +45,7 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
     }
   }
 
+  @Getter(AccessLevel.PRIVATE)
   @DisplayName("and payload with field that is not any of DTO fields (\"test\": \"bad\")")
   @Nested
   class PayloadWithFieldThatCanNotBeMapped {
@@ -67,6 +71,7 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
     }
   }
 
+  @Getter(AccessLevel.PRIVATE)
   @DisplayName("and valid payload")
   @Nested
   class NormalPayload {
@@ -122,6 +127,7 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
     }
   }
 
+  @Getter(AccessLevel.PRIVATE)
   @DisplayName("and unsupported ContentType")
   @Nested
   class WrongContentType {
@@ -146,6 +152,7 @@ class BookControllerPostSpecification extends AbstractBookControllerSpecificatio
     }
   }
 
+  @Getter(AccessLevel.PRIVATE)
   @DisplayName("and empty payload")
   @Nested
   class EmptyPayload {

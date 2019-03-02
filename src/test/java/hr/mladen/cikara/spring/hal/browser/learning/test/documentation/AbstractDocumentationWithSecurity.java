@@ -1,5 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
+@Getter(AccessLevel.PRIVATE)
 @ExtendWith({RestDocumentationExtension.class})
 @SpringBootTest
 class AbstractDocumentationWithSecurity {

@@ -8,12 +8,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+@Getter(AccessLevel.PRIVATE)
 @DisplayName("Documentation for /register endpoint")
 class RegisterDocumentation extends AbstractDocumentation {
 
