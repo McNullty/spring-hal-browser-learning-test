@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'org.asciidoctor.convert' version '1.5.3'
+    id 'com.github.spotbugs' version '1.6.10'
 }
 
 apply plugin: 'java'
@@ -26,6 +27,7 @@ apply from: 'gradle/jacoco.gradle'
 apply from: 'gradle/pmd.gradle'
 apply from: 'gradle/checkstyle.gradle'
 apply from: 'gradle/findbugs.gradle'
+apply from: 'gradle/spotbugs.gradle'
 apply from: 'gradle/asciidoctor.gradle'
 
 if (project.hasProperty('env') &&  project.findProperty('env') == 'dev') {
@@ -83,4 +85,11 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        html.enabled = true
+        xml.enabled = false
+    }
 }
