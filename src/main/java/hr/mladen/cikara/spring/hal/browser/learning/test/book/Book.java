@@ -6,10 +6,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
 @Builder
 @Entity
 public class Book {
@@ -32,20 +39,4 @@ public class Book {
 
   private Integer pages;
 
-  /**
-   * For Hibernate.
-   */
-  Book() {
-  }
-
-  /**
-   * For Hibernate.
-   */
-  Book(Long id, String title, String author, String blurb, Integer pages) {
-    this.id = id;
-    this.author = author;
-    this.title = title;
-    this.blurb = blurb;
-    this.pages = pages;
-  }
 }
