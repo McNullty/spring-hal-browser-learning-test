@@ -7,12 +7,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
+@Builder
 @Entity
 @Table(name = "oauth2_user")
-@Data
 public class User {
 
   @Id
@@ -27,15 +35,4 @@ public class User {
   @JsonIgnore
   private String password;
 
-  /**
-   * For Hibernate.
-   */
-  User() {
-  }
-
-  @Builder
-  User(final String username, final String password) {
-    this.username = username;
-    this.password = password;
-  }
 }
