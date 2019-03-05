@@ -1,3 +1,5 @@
+import com.github.spotbugs.SpotBugsTask
+
 buildscript {
     ext {
         springBootVersion = '2.1.2.RELEASE'
@@ -23,6 +25,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
 
+apply from: 'gradle/integration-test.gradle'
 apply from: 'gradle/jacoco.gradle'
 apply from: 'gradle/pmd.gradle'
 apply from: 'gradle/checkstyle.gradle'
@@ -86,7 +89,7 @@ test {
     useJUnitPlatform()
 }
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+tasks.withType(SpotBugsTask) {
     reports {
         html.enabled = true
         xml.enabled = false
