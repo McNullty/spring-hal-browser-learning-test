@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DisplayName("Given BookController")
 class BookControllerPostSpecification extends AbstractBookControllerSpecification {
 
-  public static final String BOOKS_URL = "/books";
+  private static final String BOOKS_URL = "/books";
 
   @Getter(AccessLevel.PRIVATE)
   @DisplayName("and invalid payload with missing author, when creating new book")
