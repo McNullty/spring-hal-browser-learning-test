@@ -16,9 +16,9 @@ import org.springframework.util.MultiValueMap;
 
 class AuthorizationDocumentation extends AbstractDocumentationWithSecurity {
 
-  public static final String GRANT_TYPE = "grant_type";
-  public static final String PASSWORD = "password";
-  public static final String REFRESH_TOKEN = "refresh_token";
+  private static final String GRANT_TYPE = "grant_type";
+  private static final String PASSWORD = "password";
+  private static final String REFRESH_TOKEN = "refresh_token";
 
   @Test
   void authorizationExample() throws Exception {
