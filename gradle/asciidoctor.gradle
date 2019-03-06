@@ -18,12 +18,12 @@ dependencies {
     asciidoctor('org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.2.RELEASE')
 }
 
-test {
+integrationTest {
     outputs.dir snippetsDir
 }
 
 asciidoctor {
-    dependsOn test
+    dependsOn integrationTest
     inputs.dir snippetsDir
 }
 
