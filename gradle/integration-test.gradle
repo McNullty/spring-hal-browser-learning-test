@@ -2,18 +2,22 @@ sourceSets {
     integrationTest {
         java {
             srcDir file('src/integration-test/java')
-            compileClasspath += main.output + main.compileClasspath + test.compileClasspath
-            runtimeClasspath += main.output + main.runtimeClasspath + test.runtimeClasspath
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
         }
         resources.srcDir file('src/integration-test/resources')
     }
 }
 
+//Configures the compile and runtime configurations for our integration tests
+//and includes the dependencies of the test task.
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestCompileOnly.extendsFrom testCompileOnly
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
-
 
 task integrationTest(type: Test) {
     description = 'Runs the integration tests.'
@@ -25,3 +29,4 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
+
