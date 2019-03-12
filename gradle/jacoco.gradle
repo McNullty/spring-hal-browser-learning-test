@@ -26,13 +26,13 @@ task jacocoIntegrationTestReport(type: JacocoReport) {
     }
 }
 
-task jacocoAllTestReport(type: JacocoReport) {
+task jacocoUnitTestReport(type: JacocoReport) {
     description 'Generate coverage report of unit tests'
     group = 'verification'
 
     dependsOn test
     sourceSets sourceSets.main
-    executionData(test, integrationTest)
+    executionData(test)
 
     reports {
         xml.enabled = false
@@ -42,10 +42,12 @@ task jacocoAllTestReport(type: JacocoReport) {
     }
 }
 
+jacocoTestReport.dependsOn test
+jacocoTestReport.dependsOn integrationTest
+
 check.dependsOn jacocoTestReport
 check.dependsOn jacocoIntegrationTestReport
-check.dependsOn jacocoAllTestReport
-
+check.dependsOn jacocoUnitTestReport
 
 
 jacocoTestCoverageVerification {
