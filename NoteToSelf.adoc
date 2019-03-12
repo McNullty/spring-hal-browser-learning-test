@@ -1,8 +1,0 @@
-= Note to self
-
-This feature is done but Postman has problem when getting Authorization token on unsigned certificate.
-
-So one way is to wait for Postman to fix this issue (https://github.com/postmanlabs/postman-app-support/issues/5819).
-And other way would be to figure out how to add certificate to postman. I have tried it to do it blindly but I failed.
-
-I should learn how keystores and certificates work and get back to it, but for now I will skip this feature.
