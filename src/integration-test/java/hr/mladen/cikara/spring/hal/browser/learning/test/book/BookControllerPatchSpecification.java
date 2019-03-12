@@ -28,6 +28,7 @@ class BookControllerPatchSpecification extends AbstractBookControllerSpecificati
   public static final String PAGES = "pages";
   public static final String BOOKS_URL = "/books/";
   public static final int PAGES_INTEGER = 190;
+
   @Autowired
   BookRepository bookRepository;
 
