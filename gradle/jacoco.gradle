@@ -1,14 +1,60 @@
-
 apply plugin: 'jacoco'
-
-test {
-    finalizedBy jacocoTestReport
-}
 
 jacocoTestReport {
     reports {
         xml.enabled = false
         csv.enabled = false
-        html.destination file("${buildDir}/reports/jacocoHtml")
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacocoAllTestHtml")
     }
+    executionData(test, integrationTest)
+}
+
+task jacocoIntegrationTestReport(type: JacocoReport) {
+    description 'Generate coverage report of integration tests'
+    group = 'verification'
+
+    dependsOn integrationTest
+    sourceSets sourceSets.main
+    executionData(integrationTest)
+
+    reports {
+        xml.enabled = false
+        csv.enabled = false
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacocoIntegrationTestHtml")
+    }
+}
+
+task jacocoAllTestReport(type: JacocoReport) {
+    description 'Generate coverage report of unit tests'
+    group = 'verification'
+
+    dependsOn test
+    sourceSets sourceSets.main
+    executionData(test, integrationTest)
+
+    reports {
+        xml.enabled = false
+        csv.enabled = false
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacocoUnitTestHtml")
+    }
+}
+
+check.dependsOn jacocoTestReport
+check.dependsOn jacocoIntegrationTestReport
+check.dependsOn jacocoAllTestReport
+
+
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.8
+            }
+        }
+    }
+    executionData(test, integrationTest)
 }
