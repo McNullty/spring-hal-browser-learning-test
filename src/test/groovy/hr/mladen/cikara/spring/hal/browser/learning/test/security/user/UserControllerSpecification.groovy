@@ -2,6 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.json.JacksonJsonParser
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -17,6 +18,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import spock.lang.Unroll
+
 /**
  * Integration test for UserController.
  */
@@ -45,6 +47,7 @@ class UserControllerSpecification extends Specification {
         when: 'you perform get operation'
         def result = mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/users/")
+                        .header("Authorization", "Bearer " + getAuthorizationResponse())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -75,7 +78,7 @@ class UserControllerSpecification extends Specification {
         loginParams.add("username", "Alex123")
         loginParams.add("password", "password")
 
-        return this.mockMvc.perform(
+        String resultString = this.mockMvc.perform(
                 MockMvcRequestBuilders.post("/oauth/token")
                         .params(loginParams)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(
@@ -84,5 +87,8 @@ class UserControllerSpecification extends Specification {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn().getResponse().getContentAsString()
+
+        JacksonJsonParser jsonParser = new JacksonJsonParser()
+        return jsonParser.parseMap(resultString).get("access_token").toString()
     }
 }
