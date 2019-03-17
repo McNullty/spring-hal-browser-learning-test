@@ -1,21 +1,9 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
-    }
-}
-
-apply plugin: 'org.asciidoctor.convert'
-
 ext {
     snippetsDir = file('build/generated-snippets')
 }
 
 dependencies {
-    asciidoctor('org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.2.RELEASE')
+    asciidoctor('org.springframework.restdocs:spring-restdocs-asciidoctor')
 }
 
 integrationTest {
