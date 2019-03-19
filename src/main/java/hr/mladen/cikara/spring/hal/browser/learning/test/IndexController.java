@@ -4,6 +4,7 @@ import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterController;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
 import java.util.Collections;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,15 +33,21 @@ public class IndexController {
   ResponseEntity<?> index(final HttpServletRequest request) {
 
     JsonBuilderFactory factory = Json.createBuilderFactory(Collections.emptyMap());
-    JsonObject object = factory.createObjectBuilder()
-            .add("_links", createJsonObject(factory))
-            .build();
+    try {
+      JsonObject object = factory.createObjectBuilder()
+          .add("_links", createJsonObject(factory))
+          .build();
 
-    return ResponseEntity.ok(object.toString());
+      return ResponseEntity.ok(object.toString());
+    } catch (UserService.UsernameAlreadyTakenException | UserService.PasswordsDontMatch e) {
+      log.error("Exception thrown while creating link for registering new user");
+
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
   }
 
-  private JsonObject createJsonObject(
-          final JsonBuilderFactory factory) {
+  private JsonObject createJsonObject(final JsonBuilderFactory factory)
+      throws UserService.UsernameAlreadyTakenException, UserService.PasswordsDontMatch {
 
     Link bookLink = ControllerLinkBuilder.linkTo(BooksController.class).withSelfRel()
             .withTitle("Link to books resources");
@@ -48,15 +56,10 @@ public class IndexController {
     Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel()
             .withTitle("API index page");
 
-    Link registerLink = null;
-    try {
-      registerLink = ControllerLinkBuilder.linkTo(
-          ControllerLinkBuilder.methodOn(RegisterController.class).register(RegisterDto.builder().build())).withSelfRel()
+    Link registerLink = ControllerLinkBuilder.linkTo(
+        ControllerLinkBuilder.methodOn(RegisterController.class)
+            .register(RegisterDto.builder().build())).withSelfRel()
           .withTitle("Link for registering new users");
-    } catch (Exception e) {
-      log.warn("Building link for register controller thrown exception");
-    }
-
 
     return factory.createObjectBuilder()
             .add("curies", factory.createArrayBuilder()
