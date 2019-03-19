@@ -15,5 +15,5 @@ public class RegisterDto {
   private final String passwordRepeated;
 
   @JsonPOJOBuilder(withPrefix = "")
-  static final class RegisterDtoBuilder{}
+  public static final class RegisterDtoBuilder{}
 }

@@ -2,12 +2,15 @@ package hr.mladen.cikara.spring.hal.browser.learning.test;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserController;
 import java.util.Collections;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/")
 public class IndexController {
@@ -43,8 +47,15 @@ public class IndexController {
             .withTitle("Link to users resources");
     Link indexLink = ControllerLinkBuilder.linkTo(IndexController.class).withSelfRel()
             .withTitle("API index page");
-    Link registerLink = ControllerLinkBuilder.linkTo(RegisterController.class).withSelfRel()
-            .withTitle("Link for registering new users");
+
+    Link registerLink = null;
+    try {
+      registerLink = ControllerLinkBuilder.linkTo(
+          ControllerLinkBuilder.methodOn(RegisterController.class).register(RegisterDto.builder().build())).withSelfRel()
+          .withTitle("Link for registering new users");
+    } catch (Exception e) {
+      log.warn("Building link for register controller thrown exception");
+    }
 
 
     return factory.createObjectBuilder()
@@ -68,8 +79,8 @@ public class IndexController {
                     .add(TITLE, "OAuth2 endpoint for obtaining authorization tokens")
             )
             .add("fx:register", factory.createObjectBuilder()
-                    .add(HREF, registerLink.getHref())
-                    .add(TITLE, registerLink.getTitle())
+                    .add(HREF, registerLink != null ? registerLink.getHref() : "")
+                    .add(TITLE, registerLink != null ? registerLink.getTitle() : "")
             )
             .add("api-guide", factory.createObjectBuilder()
                     .add(HREF, indexLink.getHref() + "/docs/api-guide.html")
