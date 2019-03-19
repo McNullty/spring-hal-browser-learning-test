@@ -1,6 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.IndexController;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@Getter(AccessLevel.PRIVATE)
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = IndexController.class, secure = false)
 class IndexControllerJavaUnitSpecification {
