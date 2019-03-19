@@ -9,7 +9,6 @@ import java.util.Collections;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
@@ -29,7 +28,7 @@ public class IndexController {
   private static final String TITLE = "title";
 
   @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
-  ResponseEntity<?> index(final HttpServletRequest request)
+  ResponseEntity<?> index()
       throws UserService.UsernameAlreadyTakenException, UserService.PasswordsDontMatch {
 
     JsonBuilderFactory factory = Json.createBuilderFactory(Collections.emptyMap());
@@ -57,35 +56,33 @@ public class IndexController {
           .withTitle("Link for registering new users");
 
     return factory.createObjectBuilder()
-            .add("curies", factory.createArrayBuilder()
-                    .add(factory.createObjectBuilder()
-                            .add("name", "fx")
-                            .add(HREF, indexLink.getHref() + "/docs/api-guide.html#{rel}")
-                            .add("templated", Boolean.TRUE)
-                    )
-            )
-            .add("fx:resources-books", factory.createObjectBuilder()
-                    .add(HREF, bookLink.getHref())
-                    .add(TITLE, bookLink.getTitle())
-            )
-            .add("fx:resources-users", factory.createObjectBuilder()
-                    .add(HREF, userLink.getHref())
-                    .add(TITLE, userLink.getTitle())
-            )
-            .add("fx:authorization", factory.createObjectBuilder()
-                    .add(HREF, userLink.getHref() + "/oauth/token")
-                    .add(TITLE, "OAuth2 endpoint for obtaining authorization tokens")
-            )
-            .add("fx:register", factory.createObjectBuilder()
-                    .add(HREF, registerLink.getHref())
-                    .add(TITLE, registerLink.getTitle())
-            )
-            .add("api-guide", factory.createObjectBuilder()
-                    .add(HREF, indexLink.getHref() + "/docs/api-guide.html")
-            )
-            .add("user-guide", factory.createObjectBuilder()
-                    .add(HREF, indexLink.getHref() + "/docs/user-guide.html")
-            )
-            .build();
+        .add("curies", factory.createArrayBuilder()
+            .add(factory.createObjectBuilder()
+                .add("name", "fx")
+                .add(HREF, indexLink.getHref() + "/docs/api-guide.html#{rel}")
+                .add("templated", Boolean.TRUE)))
+        .add("fx:register", factory.createObjectBuilder()
+            .add(HREF, registerLink.getHref())
+            .add(TITLE, registerLink.getTitle())
+        )
+        .add("fx:authorization", factory.createObjectBuilder()
+            .add(HREF, userLink.getHref() + "/oauth/token")
+            .add(TITLE, "OAuth2 endpoint for obtaining authorization tokens")
+        )
+        .add("fx:resources-users", factory.createObjectBuilder()
+            .add(HREF, userLink.getHref())
+            .add(TITLE, userLink.getTitle())
+        )
+        .add("fx:resources-books", factory.createObjectBuilder()
+            .add(HREF, bookLink.getHref())
+            .add(TITLE, bookLink.getTitle())
+        )
+        .add("api-guide", factory.createObjectBuilder()
+            .add(HREF, indexLink.getHref() + "/docs/api-guide.html")
+        )
+        .add("user-guide", factory.createObjectBuilder()
+            .add(HREF, indexLink.getHref() + "/docs/user-guide.html")
+        )
+        .build();
   }
 }
