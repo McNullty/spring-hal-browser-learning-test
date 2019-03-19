@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,20 +29,16 @@ public class IndexController {
   private static final String TITLE = "title";
 
   @RequestMapping(method = RequestMethod.GET, produces = {MediaTypes.HAL_JSON_VALUE})
-  ResponseEntity<?> index(final HttpServletRequest request) {
+  ResponseEntity<?> index(final HttpServletRequest request)
+      throws UserService.UsernameAlreadyTakenException, UserService.PasswordsDontMatch {
 
     JsonBuilderFactory factory = Json.createBuilderFactory(Collections.emptyMap());
-    try {
-      JsonObject object = factory.createObjectBuilder()
-          .add("_links", createJsonObject(factory))
-          .build();
 
-      return ResponseEntity.ok(object.toString());
-    } catch (UserService.UsernameAlreadyTakenException | UserService.PasswordsDontMatch e) {
-      log.error("Exception thrown while creating link for registering new user");
+    JsonObject object = factory.createObjectBuilder()
+        .add("_links", createJsonObject(factory))
+        .build();
 
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
+    return ResponseEntity.ok(object.toString());
   }
 
   private JsonObject createJsonObject(final JsonBuilderFactory factory)
@@ -82,8 +77,8 @@ public class IndexController {
                     .add(TITLE, "OAuth2 endpoint for obtaining authorization tokens")
             )
             .add("fx:register", factory.createObjectBuilder()
-                    .add(HREF, registerLink != null ? registerLink.getHref() : "")
-                    .add(TITLE, registerLink != null ? registerLink.getTitle() : "")
+                    .add(HREF, registerLink.getHref())
+                    .add(TITLE, registerLink.getTitle())
             )
             .add("api-guide", factory.createObjectBuilder()
                     .add(HREF, indexLink.getHref() + "/docs/api-guide.html")
