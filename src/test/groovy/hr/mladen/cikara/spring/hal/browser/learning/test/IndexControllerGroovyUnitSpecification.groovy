@@ -21,7 +21,6 @@ class IndexControllerGroovyUnitSpecification extends Specification {
     @Autowired
     private MockMvc mockMvc
 
-
     def 'Index controller returns list of links to resources'() {
         when: 'preforming get operation'
         def result = mockMvc.perform(
