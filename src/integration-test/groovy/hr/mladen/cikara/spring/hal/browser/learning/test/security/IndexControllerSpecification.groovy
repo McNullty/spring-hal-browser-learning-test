@@ -2,10 +2,12 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security
 
 import org.hamcrest.Matchers
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.hateoas.MediaTypes
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -15,22 +17,16 @@ import spock.lang.Unroll
 
 @Unroll
 @SpringBootTest
+@AutoConfigureMockMvc
 class IndexControllerSpecification extends Specification {
 
-    MockMvc mockMvc
-
     @Autowired
-    WebApplicationContext webApplicationContext
-
-    void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-                .build()
-    }
+    MockMvc mockMvc
 
     def 'Index controller returns list of links to resources'() {
         when: 'preforming get operation'
         def result = mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/")
+                MockMvcRequestBuilders.get("/")
                         .accept(MediaTypes.HAL_JSON_VALUE))
                 .andDo(MockMvcResultHandlers.print())
 
