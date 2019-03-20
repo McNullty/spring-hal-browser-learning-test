@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+@Slf4j
 @Getter(AccessLevel.PRIVATE)
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder =
-          PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
   /**
    * Initializes UserService.
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     return new org.springframework.security.core.userdetails.User(
-            user.get().getUsername(), user.get().getPassword(), getAuthority());
+        user.get().getUsername(), user.get().getPassword(), getAuthority());
   }
 
   private List<SimpleGrantedAuthority> getAuthority() {
@@ -76,21 +78,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   @Override
   public User register(final RegisterDto registerDto)
-          throws UsernameAlreadyTakenException, PasswordsDontMatch {
+      throws UsernameAlreadyTakenException, PasswordsDontMatch {
+
+    if (!registerDto.getPassword()
+        .equals(registerDto.getPasswordRepeated())) {
+      throw new PasswordsDontMatch();
+    }
+
+    Optional<User> existingUserWithSameUsername =
+        userRepository.findByUsername(registerDto.getUsername());
+    if (existingUserWithSameUsername.isPresent()) {
+      throw new UsernameAlreadyTakenException(registerDto.getUsername());
+    }
+
+    User newUser = User.builder()
+        .username(registerDto.getUsername())
+        .password(passwordEncoder.encode(registerDto.getPassword()))
+        .build();
+
     try {
-      if (!registerDto.getPassword()
-              .equals(registerDto.getPasswordRepeated())) {
-        throw new PasswordsDontMatch();
-      }
-
-      User newUser = User.builder()
-              .username(registerDto.getUsername())
-              .password(passwordEncoder.encode(registerDto.getPassword()))
-              .build();
-
       return userRepository.save(newUser);
     } catch (DataIntegrityViolationException e) {
-      throw new UsernameAlreadyTakenException(registerDto.getUsername());
+      log.error("Unexpected error while saving new user!");
+
+      throw e;
     }
   }
 
