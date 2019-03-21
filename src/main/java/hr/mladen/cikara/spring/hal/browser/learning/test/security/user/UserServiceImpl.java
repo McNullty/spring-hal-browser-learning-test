@@ -121,17 +121,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   }
 
   @Override
-  public void changePassword(String username, ChangePasswordDto changePasswordDto) {
+  public void changePassword(
+          String username, ChangePasswordDto changePasswordDto)
+          throws PasswordsDontMatch, UserNotFoundException {
+
+    if (!changePasswordDto.getPassword()
+            .equals(changePasswordDto.getPasswordRepeated())) {
+      throw new PasswordsDontMatch();
+    }
+
     Optional<User> user = userRepository.findByUsername(username);
 
     if (!user.isPresent()) {
       log.error("User with username {} not found", username);
-      // TODO: add meaningful exception
-      return;
+
+      throw new UserNotFoundException(username);
     }
 
     User userForChange = user.get();
-    userForChange.setPassword(changePasswordDto.getPassword());
+    userForChange.setPassword(passwordEncoder.encode(changePasswordDto.getPassword()));
 
     userRepository.save(userForChange);
   }
