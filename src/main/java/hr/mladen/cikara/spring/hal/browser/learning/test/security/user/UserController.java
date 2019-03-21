@@ -37,12 +37,12 @@ public class UserController {
   /**
    * Controller for displaying user resources.
    *
-   * @param userService UserService
+   * @param userService                 UserService
    * @param userToUserResourceAssembler Assembler to convert form Zser to UserResource
    */
   public UserController(
-      final UserService userService,
-      final UserToUserResourceAssembler userToUserResourceAssembler) {
+          final UserService userService,
+          final UserToUserResourceAssembler userToUserResourceAssembler) {
     Assert.notNull(userService, "Controller can't work without user service");
     Assert.notNull(userToUserResourceAssembler, "Controller can't work without resource assembler");
 
@@ -53,14 +53,14 @@ public class UserController {
   /**
    * Returns all users.
    *
-   * @param pageable Pageable object
+   * @param pageable  Pageable object
    * @param assembler Assembler to convert form Zser to UserResource
    * @return Page with UserResources
    */
   @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<PagedResources<UserResource>> findAll(
-      final Pageable pageable,
-      final PagedResourcesAssembler<User> assembler) {
+          final Pageable pageable,
+          final PagedResourcesAssembler<User> assembler) {
 
     Page<User> users = userService.findAll(pageable);
 
@@ -71,7 +71,7 @@ public class UserController {
   }
 
   private PagedResources<UserResource> getPagedUserResourcesWithLinks(
-      final PagedResourcesAssembler<User> assembler, final Page<User> users) {
+          final PagedResourcesAssembler<User> assembler, final Page<User> users) {
     Link self = ControllerLinkBuilder.linkTo(UserController.class).withSelfRel();
 
     return assembler.toResource(users, userToUserResourceAssembler, self);
@@ -85,10 +85,10 @@ public class UserController {
    * @throws UserService.UserNotFoundException when user with give ID is not found
    */
   @GetMapping(
-      value = "/{userId}",
-      produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+          value = "/{userId}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<UserResource> getUser(@PathVariable final Long userId)
-      throws UserService.UserNotFoundException {
+          throws UserService.UserNotFoundException {
     User user = userService.findById(userId);
 
     UserResource userResource = userToUserResourceAssembler.toResource(user);
@@ -103,8 +103,8 @@ public class UserController {
    * @return UserResource
    */
   @GetMapping(
-      value = "/me",
-      produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+          value = "/me",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<UserResource> getCurrentUser(Principal principal) {
     log.debug("Principal: {}", principal);
 
@@ -125,32 +125,26 @@ public class UserController {
    * Endpoint for changing user password. User can change password for himself.
    *
    * @param changePasswordDto DTO with new password
-   * @param userId User ID for user whose password is changed
-   * @param principal Logged in principal
+   * @param userId            User ID for user whose password is changed
+   * @param principal         Logged in principal
    * @return HTTP status No Content
    */
   @PutMapping(
-      value = "/{userId}/change-password",
-      consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+          value = "/{userId}/change-password",
+          consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> changePassword(
-      @Valid @RequestBody ChangePasswordDto changePasswordDto,
-      @PathVariable final Long userId, Principal principal) {
+          @Valid @RequestBody ChangePasswordDto changePasswordDto,
+          @PathVariable final Long userId, Principal principal)
+          throws UserService.PasswordsDontMatch, UserService.UserNotFoundException {
 
-    try {
-      User user = userService.findById(userId);
+    User user = userService.findById(userId);
 
-      if (!user.getUsername().equals(principal.getName())) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-      }
-
-      userService.changePassword(principal.getName(), changePasswordDto);
-
-      return ResponseEntity.noContent().build();
-
-    } catch (UserService.UserNotFoundException e) {
-      log.warn("User with id {} is not found.", userId);
-
-      return ResponseEntity.notFound().build();
+    if (!user.getUsername().equals(principal.getName())) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    userService.changePassword(principal.getName(), changePasswordDto);
+
+    return ResponseEntity.noContent().build();
   }
 }
