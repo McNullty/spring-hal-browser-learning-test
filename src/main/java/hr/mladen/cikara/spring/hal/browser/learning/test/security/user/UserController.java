@@ -13,6 +13,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -135,8 +136,21 @@ public class UserController {
       @Valid @RequestBody ChangePasswordDto changePasswordDto,
       @PathVariable final Long userId, Principal principal) {
 
-    userService.changePassword(principal.getName(), changePasswordDto);
+    try {
+      User user = userService.findById(userId);
 
-    return ResponseEntity.noContent().build();
+      if (!user.getUsername().equals(principal.getName())) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      }
+
+      userService.changePassword(principal.getName(), changePasswordDto);
+
+      return ResponseEntity.noContent().build();
+
+    } catch (UserService.UserNotFoundException e) {
+      log.warn("User with id {} is not found.", userId);
+
+      return ResponseEntity.notFound().build();
+    }
   }
 }
