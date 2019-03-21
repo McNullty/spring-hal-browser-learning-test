@@ -106,7 +106,7 @@ class UserControllerSpecification extends Specification {
         and: 'test user from repository'
         def testUser =  userRepository.findByUsername(TEST_USER).get()
 
-        and: 'user id for some otger user '
+        and: 'user id for some other user '
         def testUserId = testUser.getId() + 1
         log.debug("User ID: {}", testUserId)
 
@@ -125,6 +125,28 @@ class UserControllerSpecification extends Specification {
 
         then: 'UNAUTHORIZED is returned'
         result.andExpect(MockMvcResultMatchers.status().isUnauthorized())
+    }
+
+    def 'changing password for nonexistent user'() {
+        given: 'valid authorization token'
+        def authorization = getAuthorizationResponse()
+        log.debug("Authorization: {}", authorization)
+
+        and: 'request body with same password and repeated password'
+        def requestBody = new HashMap<String, Object>()
+        requestBody.put("password", "newPassword")
+        requestBody.put("passwordRepeated", "newPassword")
+
+        when: '/change-password endpoint is called'
+        def result = mockMvc.perform(
+                RestDocumentationRequestBuilders.put("/users/" + 5000L + "/change-password")
+                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'NOT_FOUND is returned'
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
     }
 
     /**
