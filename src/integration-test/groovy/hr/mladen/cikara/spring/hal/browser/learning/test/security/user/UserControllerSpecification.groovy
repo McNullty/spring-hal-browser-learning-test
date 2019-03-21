@@ -2,6 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
+import org.hamcrest.Matchers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.json.JacksonJsonParser
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -149,7 +150,8 @@ class UserControllerSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
 
         and: 'error message contains explanation'
-        //TODO: Validate error message
+        result.andExpect(MockMvcResultMatchers.jsonPath(
+                '$.message', Matchers.is("Couldn't find user with id 5000")))
     }
 
     def 'Changing password for self with invalid data'() {
@@ -181,7 +183,8 @@ class UserControllerSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isBadRequest())
 
         and: 'error message contains explanation'
-        //TODO: Validate error message
+        result.andExpect(MockMvcResultMatchers.jsonPath(
+                '$.message', Matchers.is("Passwords dont match")))
     }
 
     /**
