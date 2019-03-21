@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     if (!user.isPresent()) {
       log.error("User with username {} not found", username);
-      // TODO: add meaningfull exception
+      // TODO: add meaningful exception
       return;
     }
 
