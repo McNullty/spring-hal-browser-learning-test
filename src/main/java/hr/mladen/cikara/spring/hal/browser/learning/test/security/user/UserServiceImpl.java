@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   public void changePassword(String username, ChangePasswordDto changePasswordDto) {
     Optional<User> user = userRepository.findByUsername(username);
 
-    if(!user.isPresent()) {
+    if (!user.isPresent()) {
       log.error("User with username {} not found", username);
       // TODO: add meaningfull exception
       return;

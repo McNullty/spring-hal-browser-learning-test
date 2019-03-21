@@ -44,7 +44,7 @@ public interface UserService {
   User findByUsername(String username) throws UserNotFoundException;
 
   /**
-   * Changes password for user with given userId
+   * Changes password for user with given userId.
    *
    * @param username Username for user that will have his password changed
    * @param changePasswordDto DTO with new password
