@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import spock.lang.Specification
 import spock.lang.Unroll
+
 /**
  * Integration test for UserController.
  */
