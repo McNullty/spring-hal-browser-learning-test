@@ -9,18 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
-import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import spock.lang.Unroll
-
 /**
  * Integration test for UserController.
  */
@@ -63,7 +59,7 @@ class UserControllerSpecification extends Specification {
         and: 'user resource is returned'
     }
 
-    def 'changing password for user'() {
+    def 'changing password for self'() {
         given: 'valid authorization token'
         def authorization = getAuthorizationResponse()
         log.debug("Authorization: {}", authorization)
@@ -92,7 +88,7 @@ class UserControllerSpecification extends Specification {
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
 
-        then: 'ACCEPTED is returned'
+        then: 'NO_CONTENT is returned'
         result.andExpect(MockMvcResultMatchers.status().isNoContent())
 
         and: 'new password is saved in repository'
@@ -100,6 +96,35 @@ class UserControllerSpecification extends Specification {
         log.debug("New password: {}", newTestUser.getPassword())
 
         newTestUser.getPassword() != oldPassword
+    }
+
+    def 'changing password for some other user'() {
+        given: 'valid authorization token'
+        def authorization = getAuthorizationResponse()
+        log.debug("Authorization: {}", authorization)
+
+        and: 'test user from repository'
+        def testUser =  userRepository.findByUsername(TEST_USER).get()
+
+        and: 'user id for some otger user '
+        def testUserId = testUser.getId() + 1
+        log.debug("User ID: {}", testUserId)
+
+        and: 'request body with same password and repeated password'
+        def requestBody = new HashMap<String, Object>()
+        requestBody.put("password", "newPassword")
+        requestBody.put("passwordRepeated", "newPassword")
+
+        when: '/change-password endpoint is called'
+        def result = mockMvc.perform(
+                RestDocumentationRequestBuilders.put("/users/" + testUserId + "/change-password")
+                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'UNAUTHORIZED is returned'
+        result.andExpect(MockMvcResultMatchers.status().isUnauthorized())
     }
 
     /**
