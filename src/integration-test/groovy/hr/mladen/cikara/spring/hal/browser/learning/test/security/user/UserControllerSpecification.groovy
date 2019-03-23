@@ -2,22 +2,18 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
+import hr.mladen.cikara.spring.hal.browser.learning.test.AuthorizationUtil
 import org.hamcrest.Matchers
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.json.JacksonJsonParser
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
 import spock.lang.Specification
 import spock.lang.Unroll
-
 /**
  * Integration test for UserController.
  */
@@ -28,6 +24,7 @@ import spock.lang.Unroll
 class UserControllerSpecification extends Specification {
 
     public static final String TEST_USER = "Alex123"
+
     @Autowired
     MockMvc mockMvc
 
@@ -41,7 +38,9 @@ class UserControllerSpecification extends Specification {
         when: 'you perform get operation'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/")
-                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .header("Authorization",
+                        "Bearer " + AuthorizationUtil.getAuthorizationResponse(
+                                mockMvc, TEST_USER, "password"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -62,7 +61,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for self'() {
         given: 'valid authorization token'
-        def authorization = getAuthorizationResponse()
+        def authorization = AuthorizationUtil.getAuthorizationResponse(
+                mockMvc, TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'
@@ -84,7 +84,7 @@ class UserControllerSpecification extends Specification {
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
-                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
@@ -101,7 +101,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for some other user'() {
         given: 'valid authorization token'
-        def authorization = getAuthorizationResponse()
+        def authorization = AuthorizationUtil.getAuthorizationResponse(
+                mockMvc, TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'
@@ -119,7 +120,7 @@ class UserControllerSpecification extends Specification {
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
-                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
@@ -130,7 +131,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for nonexistent user'() {
         given: 'valid authorization token'
-        def authorization = getAuthorizationResponse()
+        def authorization = AuthorizationUtil.getAuthorizationResponse(
+                mockMvc, TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'request body with same password and repeated password'
@@ -141,7 +143,7 @@ class UserControllerSpecification extends Specification {
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + 5000L + "/change-password")
-                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
@@ -156,7 +158,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for self with invalid data'() {
         given: 'valid authorization token'
-        def authorization = getAuthorizationResponse()
+        def authorization = AuthorizationUtil.getAuthorizationResponse(
+                mockMvc, TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'
@@ -174,7 +177,7 @@ class UserControllerSpecification extends Specification {
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
-                        .header("Authorization", "Bearer " + getAuthorizationResponse())
+                        .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
@@ -185,31 +188,5 @@ class UserControllerSpecification extends Specification {
         and: 'error message contains explanation'
         result.andExpect(MockMvcResultMatchers.jsonPath(
                 '$.message', Matchers.is("Passwords dont match")))
-    }
-
-    /**
-     * Sends authorization data and returns response from oauth2 server.
-     *
-     * @return Authorization response
-     * @throws Exception mockMvc can return exception
-     */
-    String getAuthorizationResponse() throws Exception {
-        MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>()
-        loginParams.add("grant_type", "password")
-        loginParams.add("username", TEST_USER)
-        loginParams.add("password", "password")
-
-        String resultString = this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/oauth/token")
-                        .params(loginParams)
-                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(
-                        "application-client", "password"))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn().getResponse().getContentAsString()
-
-        JacksonJsonParser jsonParser = new JacksonJsonParser()
-        return jsonParser.parseMap(resultString).get("access_token").toString()
     }
 }
