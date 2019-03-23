@@ -50,3 +50,8 @@ operation::refresh-example[snippets='http-request,http-response,request-headers,
 Once you are authorized you can check your user details by going to /users/me endpoint.
 
 operation::me-example[curl-request,http-request,response-body,response-fields]
+
+=== Changing password
+When you are authorized you can change your password by sending POST to /users/me/change-password
+
+operation::change-password-example[request-headers,request-fields,request-body,curl-request,http-request,http-response]
