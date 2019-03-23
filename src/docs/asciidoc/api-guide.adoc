@@ -18,6 +18,8 @@ Mladen Čikara;
 HAL Browser learning test tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.
 
+
+[cols="2,8"]
 |===
 | Verb | Usage
 
