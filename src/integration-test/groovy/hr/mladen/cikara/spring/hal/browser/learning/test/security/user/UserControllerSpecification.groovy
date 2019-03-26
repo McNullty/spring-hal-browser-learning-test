@@ -26,21 +26,27 @@ class UserControllerSpecification extends Specification {
     public static final String TEST_USER = "Alex123"
 
     @Autowired
-    MockMvc mockMvc
+    private MockMvc mockMvc
 
     @Autowired
-    UserRepository userRepository
+    private UserRepository userRepository
 
     @Autowired
     private ObjectMapper objectMapper
+
+    private AuthorizationUtil authorizationUtil
+
+    def setup() {
+        authorizationUtil = new AuthorizationUtil(this.mockMvc)
+    }
 
     def 'Find all users endpoint (users/)'() {
         when: 'you perform get operation'
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/")
                         .header("Authorization",
-                        "Bearer " + AuthorizationUtil.getAuthorizationResponse(
-                                mockMvc, TEST_USER, "password"))
+                        "Bearer " + authorizationUtil.getAuthorizationResponse(
+                                TEST_USER, "password"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -61,8 +67,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for self'() {
         given: 'valid authorization token'
-        def authorization = AuthorizationUtil.getAuthorizationResponse(
-                mockMvc, TEST_USER, "password")
+        def authorization = authorizationUtil.getAuthorizationResponse(
+                TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'
@@ -101,8 +107,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for some other user'() {
         given: 'valid authorization token'
-        def authorization = AuthorizationUtil.getAuthorizationResponse(
-                mockMvc, TEST_USER, "password")
+        def authorization = authorizationUtil.getAuthorizationResponse(
+                TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'
@@ -131,8 +137,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for nonexistent user'() {
         given: 'valid authorization token'
-        def authorization = AuthorizationUtil.getAuthorizationResponse(
-                mockMvc, TEST_USER, "password")
+        def authorization = authorizationUtil.getAuthorizationResponse(
+                TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'request body with same password and repeated password'
@@ -158,8 +164,8 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password for self with invalid data'() {
         given: 'valid authorization token'
-        def authorization = AuthorizationUtil.getAuthorizationResponse(
-                mockMvc, TEST_USER, "password")
+        def authorization = authorizationUtil.getAuthorizationResponse(
+                TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
         and: 'test user from repository'

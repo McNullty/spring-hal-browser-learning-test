@@ -15,25 +15,28 @@ import org.springframework.util.MultiValueMap;
  */
 public class AuthorizationUtil {
 
-  // TODO: Autowire MockMvc on initialization if possible
+  private final MockMvc mockMvc;
+
+  public AuthorizationUtil(final MockMvc mockMvc) {
+    this.mockMvc = mockMvc;
+  }
 
   /**
    * Sends authorization data and returns response from oauth2 server.
    *
-   * @param mockMvc MockMvc object that is passed form test
    * @param username Username for authorisation
    * @param password Passord for user
    * @return Authorization response
    * @throws Exception mockMvc can return exception
    */
-  public static String getAuthorizationResponse(
-          MockMvc mockMvc, String username, String password) throws Exception {
+  public String getAuthorizationResponse(
+          String username, String password) throws Exception {
     MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
     loginParams.add("grant_type", "password");
     loginParams.add("username", username);
     loginParams.add("password", password);
 
-    String resultString = mockMvc.perform(
+    String resultString = this.mockMvc.perform(
             MockMvcRequestBuilders.post("/oauth/token")
                     .params(loginParams)
                     .with(SecurityMockMvcRequestPostProcessors.httpBasic(
