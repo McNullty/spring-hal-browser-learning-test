@@ -65,6 +65,7 @@ class UserControllerSpecification extends Specification {
         and: 'user resource is returned'
     }
 
+    // TODO: Refactor so password is reset before every test
     def 'Changing password'() {
         given: 'valid authorization token'
         def authorization = authorizationUtil.getAuthorizationResponse(
