@@ -1,0 +1,6 @@
+pitest {
+// This can add integration test to pitest plugin, but only unit tests should be used for now
+//    testSourceSets = [sourceSets.test, sourceSets.integrationTest]
+}
+
+check.dependsOn 'pitest'

@@ -8,6 +8,7 @@ plugins {
     id 'groovy'
     id 'idea'
     id 'org.asciidoctor.convert' version '1.5.3'
+    id 'info.solidsoft.pitest' version '1.4.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -19,6 +20,7 @@ apply from: 'gradle/pmd.gradle'
 apply from: 'gradle/checkstyle.gradle'
 apply from: 'gradle/spotbugs.gradle'
 apply from: 'gradle/asciidoctor.gradle'
+apply from: 'gradle/pitest.gradle'
 
 if (project.hasProperty('env') &&  project.findProperty('env') == 'dev') {
     apply from: 'gradle/profile_dev.gradle'
