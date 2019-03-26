@@ -1,5 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -13,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 /**
  * Utility class for getting authorization string.
  */
+@Getter(AccessLevel.PRIVATE)
 public class AuthorizationUtil {
 
   private final MockMvc mockMvc;
