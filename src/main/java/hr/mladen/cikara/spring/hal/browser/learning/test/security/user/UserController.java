@@ -13,7 +13,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -115,9 +114,9 @@ public class UserController {
 
       return ResponseEntity.ok(userResource);
     } catch (UserService.UserNotFoundException e) {
-      log.error("This shuld never happen! Current user should always be found.");
+      log.error("This should never happen! Current user should always be found.");
 
-      throw new RuntimeException("Current user not foind!");
+      throw new RuntimeException("Current user not found!");
     }
   }
 
@@ -125,23 +124,15 @@ public class UserController {
    * Endpoint for changing user password. User can change password for himself.
    *
    * @param changePasswordDto DTO with new password
-   * @param userId            User ID for user whose password is changed
    * @param principal         Logged in principal
    * @return HTTP status No Content
    */
   @PutMapping(
-          value = "/{userId}/change-password",
+          value = "/me/change-password",
           consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> changePassword(
-          @Valid @RequestBody ChangePasswordDto changePasswordDto,
-          @PathVariable final Long userId, Principal principal)
+          @Valid @RequestBody ChangePasswordDto changePasswordDto, Principal principal)
           throws UserService.PasswordsDontMatch, UserService.UserNotFoundException {
-
-    User user = userService.findById(userId);
-
-    if (!user.getUsername().equals(principal.getName())) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
 
     userService.changePassword(principal.getName(), changePasswordDto);
 

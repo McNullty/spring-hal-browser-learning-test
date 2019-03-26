@@ -65,7 +65,7 @@ class UserControllerSpecification extends Specification {
         and: 'user resource is returned'
     }
 
-    def 'Changing password for self'() {
+    def 'Changing password'() {
         given: 'valid authorization token'
         def authorization = authorizationUtil.getAuthorizationResponse(
                 TEST_USER, "password")
@@ -73,10 +73,6 @@ class UserControllerSpecification extends Specification {
 
         and: 'test user from repository'
         def testUser =  userRepository.findByUsername(TEST_USER).get()
-
-        and: 'user id for test user'
-        def testUserId = testUser.getId()
-        log.debug("User ID: {}", testUserId)
 
         and: 'old password is fetched from repository'
         def oldPassword = testUser.getPassword()
@@ -89,7 +85,7 @@ class UserControllerSpecification extends Specification {
 
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
+                MockMvcRequestBuilders.put("/users/me/change-password")
                         .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
@@ -105,75 +101,11 @@ class UserControllerSpecification extends Specification {
         newTestUser.getPassword() != oldPassword
     }
 
-    def 'Changing password for some other user'() {
+    def 'Changing password with invalid data'() {
         given: 'valid authorization token'
         def authorization = authorizationUtil.getAuthorizationResponse(
                 TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
-
-        and: 'test user from repository'
-        def testUser =  userRepository.findByUsername(TEST_USER).get()
-
-        and: 'user id for some other user '
-        def testUserId = testUser.getId() + 1
-        log.debug("User ID: {}", testUserId)
-
-        and: 'request body with same password and repeated password'
-        def requestBody = new HashMap<String, Object>()
-        requestBody.put("password", "password")
-        requestBody.put("passwordRepeated", "password")
-
-        when: '/change-password endpoint is called'
-        def result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
-                        .header("Authorization", "Bearer " + authorization)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody)))
-                .andDo(MockMvcResultHandlers.print())
-
-        then: 'UNAUTHORIZED is returned'
-        result.andExpect(MockMvcResultMatchers.status().isUnauthorized())
-    }
-
-    def 'Changing password for nonexistent user'() {
-        given: 'valid authorization token'
-        def authorization = authorizationUtil.getAuthorizationResponse(
-                TEST_USER, "password")
-        log.debug("Authorization: {}", authorization)
-
-        and: 'request body with same password and repeated password'
-        def requestBody = new HashMap<String, Object>()
-        requestBody.put("password", "password")
-        requestBody.put("passwordRepeated", "password")
-
-        when: '/change-password endpoint is called'
-        def result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/users/" + 5000L + "/change-password")
-                        .header("Authorization", "Bearer " + authorization)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody)))
-                .andDo(MockMvcResultHandlers.print())
-
-        then: 'NOT_FOUND is returned'
-        result.andExpect(MockMvcResultMatchers.status().isNotFound())
-
-        and: 'error message contains explanation'
-        result.andExpect(MockMvcResultMatchers.jsonPath(
-                '$.message', Matchers.is("Couldn't find user with id 5000")))
-    }
-
-    def 'Changing password for self with invalid data'() {
-        given: 'valid authorization token'
-        def authorization = authorizationUtil.getAuthorizationResponse(
-                TEST_USER, "password")
-        log.debug("Authorization: {}", authorization)
-
-        and: 'test user from repository'
-        def testUser =  userRepository.findByUsername(TEST_USER).get()
-
-        and: 'user id for test user'
-        def testUserId = testUser.getId()
-        log.debug("User ID: {}", testUserId)
 
         and: 'request body with same password and repeated password'
         def requestBody = new HashMap<String, Object>()
@@ -182,7 +114,7 @@ class UserControllerSpecification extends Specification {
 
         when: '/change-password endpoint is called'
         def result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/users/" + testUserId + "/change-password")
+                MockMvcRequestBuilders.put("/users/me/change-password")
                         .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
