@@ -1,9 +1,11 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.util.SpringSecurityWebAuxTestConfig
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.hateoas.MediaTypes
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -15,7 +17,8 @@ import spock.lang.Unroll
 
 @Unroll
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = IndexController.class, secure = false)
+@WebMvcTest(controllers = IndexController.class)
+@Import(SpringSecurityWebAuxTestConfig.class)
 class IndexControllerGroovyUnitSpecification extends Specification {
 
     @Autowired
