@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.IndexController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.util.SpringSecurityWebAuxTestConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.hamcrest.Matchers;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,9 +17,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * This specification is duplicated in groovy.
+ */
 @Getter(AccessLevel.PRIVATE)
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = IndexController.class, secure = false)
+@WebMvcTest(controllers = IndexController.class)
+@Import(SpringSecurityWebAuxTestConfig.class)
 class IndexControllerJavaUnitSpecification {
 
   @Autowired
