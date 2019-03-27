@@ -2,6 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.documentation;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
+import hr.mladen.cikara.spring.hal.browser.learning.test.AuthorizationUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,8 @@ class AbstractDocumentation {
 
   MockMvc mockMvc;
 
+  AuthorizationUtil authorizationUtil;
+
   @Autowired
   private FilterChainProxy springSecurityFilterChain;
 
@@ -38,5 +41,7 @@ class AbstractDocumentation {
             .addFilter(this.springSecurityFilterChain)
             .apply(documentationConfiguration(restDocumentation))
             .build();
+
+    this.authorizationUtil = new AuthorizationUtil(this.mockMvc);
   }
 }
