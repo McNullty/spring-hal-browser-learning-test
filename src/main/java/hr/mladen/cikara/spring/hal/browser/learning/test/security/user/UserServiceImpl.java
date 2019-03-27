@@ -7,7 +7,6 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +33,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
    *
    * @param userRepository UserRepository
    */
-  @Autowired
   public UserServiceImpl(final UserRepository userRepository) {
     Assert.notNull(userRepository, "Service can't work without repository");
 
