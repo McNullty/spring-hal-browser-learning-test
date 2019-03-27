@@ -18,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 @Getter(AccessLevel.PRIVATE)
 public class AuthorizationUtil {
 
+  public static final String PASSWORD_LITERAL = "password";
   private final MockMvc mockMvc;
 
   public AuthorizationUtil(final MockMvc mockMvc) {
@@ -35,15 +36,15 @@ public class AuthorizationUtil {
   public String getAccessTokenFromAuthorizationResponse(
           String username, String password) throws Exception {
     MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
-    loginParams.add("grant_type", "password");
+    loginParams.add("grant_type", PASSWORD_LITERAL);
     loginParams.add("username", username);
-    loginParams.add("password", password);
+    loginParams.add(PASSWORD_LITERAL, password);
 
     String resultString = this.mockMvc.perform(
             MockMvcRequestBuilders.post("/oauth/token")
                     .params(loginParams)
                     .with(SecurityMockMvcRequestPostProcessors.httpBasic(
-                            "application-client", "password"))
+                            "application-client", PASSWORD_LITERAL))
                     .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print())
@@ -64,15 +65,15 @@ public class AuthorizationUtil {
   public String getAuthorizationResponse(
           String username, String password) throws Exception {
     MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
-    loginParams.add("grant_type", "password");
+    loginParams.add("grant_type", PASSWORD_LITERAL);
     loginParams.add("username", username);
-    loginParams.add("password", password);
+    loginParams.add(PASSWORD_LITERAL, password);
 
     return this.mockMvc.perform(
             MockMvcRequestBuilders.post("/oauth/token")
                     .params(loginParams)
                     .with(SecurityMockMvcRequestPostProcessors.httpBasic(
-                            "application-client", "password"))
+                            "application-client", PASSWORD_LITERAL))
                     .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print())

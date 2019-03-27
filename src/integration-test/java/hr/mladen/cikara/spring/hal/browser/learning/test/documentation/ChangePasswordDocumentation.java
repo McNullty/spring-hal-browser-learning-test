@@ -22,24 +22,25 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @DisplayName("Documentation for /users/me/change-password endpoint")
 class ChangePasswordDocumentation extends AbstractDocumentation {
 
+  public static final String PASSWORD_LITERAL = "password";
   @Autowired
   private ObjectMapper objectMapper;
 
   private AuthorizationUtil authorizationUtil;
 
   @BeforeEach
-  void setup() {
+  void setUp() {
     authorizationUtil = new AuthorizationUtil(this.mockMvc);
   }
 
   @Test
   void changePasswordExample() throws Exception {
     Map<String, Object> changePasswordDto = new HashMap<>();
-    changePasswordDto.put("password", "password");
-    changePasswordDto.put("passwordRepeated", "password");
+    changePasswordDto.put(PASSWORD_LITERAL, PASSWORD_LITERAL);
+    changePasswordDto.put("passwordRepeated", PASSWORD_LITERAL);
 
     String authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
-            "Alex123", "password");
+            "Alex123", PASSWORD_LITERAL);
 
     this.mockMvc.perform(
             MockMvcRequestBuilders.put("/users/me/change-password")
@@ -49,7 +50,7 @@ class ChangePasswordDocumentation extends AbstractDocumentation {
             .andExpect(status().isNoContent())
             .andDo(document("change-password-example",
                     requestFields(
-                            fieldWithPath("password")
+                            fieldWithPath(PASSWORD_LITERAL)
                                     .description("Password for new <<resources-users,user>>"),
                             fieldWithPath("passwordRepeated").description("Repeated password"))));
   }
