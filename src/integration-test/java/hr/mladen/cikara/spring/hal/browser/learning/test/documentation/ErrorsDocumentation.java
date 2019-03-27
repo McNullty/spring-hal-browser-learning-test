@@ -20,12 +20,18 @@ class ErrorsDocumentation extends AbstractDocumentation {
     this.mockMvc
             .perform(RestDocumentationRequestBuilders.get("/books/700")
                     .header("Authorization", "Bearer " + authorization))
-            .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound())
-            .andExpect(MockMvcResultMatchers.jsonPath("status", Matchers.is("NOT_FOUND")))
-            .andExpect(MockMvcResultMatchers.jsonPath("timestamp", Matchers.is(Matchers.notNullValue())))
-            .andExpect(MockMvcResultMatchers.jsonPath("message", Matchers.is("Couldn't find book with id 700")))
-            .andExpect(MockMvcResultMatchers.jsonPath("debugMessage", Matchers.is(Matchers.nullValue())))
-            .andExpect(MockMvcResultMatchers.jsonPath("subErrors", Matchers.is(Matchers.nullValue())))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                            "status", Matchers.is("NOT_FOUND")))
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                    "timestamp", Matchers.is(Matchers.notNullValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                    "message", Matchers.is("Couldn't find book with id 700")))
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                    "debugMessage", Matchers.is(Matchers.nullValue())))
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                    "subErrors", Matchers.is(Matchers.nullValue())))
             .andDo(MockMvcRestDocumentation.document("error-example",
                     PayloadDocumentation.responseFields(
                             PayloadDocumentation.fieldWithPath("status")

@@ -166,15 +166,15 @@ class BooksDocumentation extends AbstractDocumentation {
   void booksCreateExample() throws Exception {
 
     // GIVEN:
-    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
-            "Alex123", "password");
-
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
     book.put(AUTHOR, AUTHOR_VALUE);
     book.put(BLURB, BLURB_VALUE);
     book.put(PAGES, 448);
 
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            "Alex123", "password");
+    
     // WHEN:
     this.mockMvc.perform(
             post(BOOKS_URL)

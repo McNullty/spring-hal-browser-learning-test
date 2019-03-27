@@ -49,7 +49,8 @@ public interface UserService {
    * @param username Username for user that will have his password changed
    * @param changePasswordDto DTO with new password
    */
-  void changePassword(String username, ChangePasswordDto changePasswordDto) throws PasswordsDontMatch, UserNotFoundException;
+  void changePassword(String username, ChangePasswordDto changePasswordDto)
+          throws PasswordsDontMatch, UserNotFoundException;
 
   @Getter(AccessLevel.PUBLIC)
   @EqualsAndHashCode(callSuper = false)
