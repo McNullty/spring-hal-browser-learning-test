@@ -1,6 +1,9 @@
 pitest {
 // This can add integration test to pitest plugin, but only unit tests should be used for now
 //    testSourceSets = [sourceSets.test, sourceSets.integrationTest]
+
+    // PITest will run only JUnit4/Spock tests
+    pitestVersion = '1.4.6'
 }
 
 check.dependsOn 'pitest'
