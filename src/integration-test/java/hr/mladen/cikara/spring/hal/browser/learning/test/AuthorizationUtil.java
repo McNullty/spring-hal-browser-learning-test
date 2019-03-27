@@ -28,11 +28,11 @@ public class AuthorizationUtil {
    * Sends authorization data and returns response from oauth2 server.
    *
    * @param username Username for authorisation
-   * @param password Passord for user
+   * @param password Password for user
    * @return Authorization response
    * @throws Exception mockMvc can return exception
    */
-  public String getAuthorizationResponse(
+  public String getAccessTokenFromAuthorizationResponse(
           String username, String password) throws Exception {
     MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
     loginParams.add("grant_type", "password");
@@ -51,5 +51,31 @@ public class AuthorizationUtil {
 
     JacksonJsonParser jsonParser = new JacksonJsonParser();
     return jsonParser.parseMap(resultString).get("access_token").toString();
+  }
+
+  /**
+   * Sends authorization data and returns response from oauth2 server.
+   *
+   * @param username Username for authorisation
+   * @param password Password for user
+   * @return Authorization response
+   * @throws Exception mockMvc can return exception
+   */
+  public String getAuthorizationResponse(
+          String username, String password) throws Exception {
+    MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
+    loginParams.add("grant_type", "password");
+    loginParams.add("username", username);
+    loginParams.add("password", password);
+
+    return this.mockMvc.perform(
+            MockMvcRequestBuilders.post("/oauth/token")
+                    .params(loginParams)
+                    .with(SecurityMockMvcRequestPostProcessors.httpBasic(
+                            "application-client", "password"))
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andDo(MockMvcResultHandlers.print())
+            .andReturn().getResponse().getContentAsString();
   }
 }

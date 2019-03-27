@@ -45,7 +45,7 @@ class UserControllerSpecification extends Specification {
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/")
                         .header("Authorization",
-                        "Bearer " + authorizationUtil.getAuthorizationResponse(
+                        "Bearer " + authorizationUtil.getAccessTokenFromAuthorizationResponse(
                                 TEST_USER, "password"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
@@ -68,7 +68,7 @@ class UserControllerSpecification extends Specification {
     // TODO: Refactor so password is reset before every test
     def 'Changing password'() {
         given: 'valid authorization token'
-        def authorization = authorizationUtil.getAuthorizationResponse(
+        def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
                 TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 
@@ -104,7 +104,7 @@ class UserControllerSpecification extends Specification {
 
     def 'Changing password with invalid data'() {
         given: 'valid authorization token'
-        def authorization = authorizationUtil.getAuthorizationResponse(
+        def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
                 TEST_USER, "password")
         log.debug("Authorization: {}", authorization)
 

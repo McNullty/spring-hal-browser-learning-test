@@ -75,7 +75,7 @@ class BooksDocumentation extends AbstractDocumentation {
 
     // GIVEN:
     createTestData();
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     //WHEN:
@@ -118,7 +118,7 @@ class BooksDocumentation extends AbstractDocumentation {
   @DisplayName("Documentation for searching books")
   void booksSearchExample() throws Exception {
     // GIVEN:
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     // WHEN:
@@ -166,7 +166,7 @@ class BooksDocumentation extends AbstractDocumentation {
   void booksCreateExample() throws Exception {
 
     // GIVEN:
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     Map<String, Object> book = new HashMap<>();
@@ -196,7 +196,7 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookGetExample() throws Exception {
 
     // GIVEN:
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     Map<String, Object> book = new HashMap<>();
@@ -253,7 +253,7 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookUpdateExample() throws Exception {
 
     // GIVEN:
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     Map<String, Object> book = new HashMap<>();
@@ -334,7 +334,7 @@ class BooksDocumentation extends AbstractDocumentation {
   @DisplayName("Documentation for replacing a book")
   void bookReplaceExample() throws Exception {
 
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     Map<String, Object> book = new HashMap<>();
@@ -408,7 +408,7 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookDeleteExample() throws Exception {
 
     // GIVEN:
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     Map<String, Object> book = new HashMap<>();

@@ -35,10 +35,10 @@ class ChangePasswordDocumentation extends AbstractDocumentation {
   @Test
   void changePasswordExample() throws Exception {
     Map<String, Object> changePasswordDto = new HashMap<>();
-    changePasswordDto.put("password", "TestPassword123");
-    changePasswordDto.put("passwordRepeated", "TestPassword123");
+    changePasswordDto.put("password", "password");
+    changePasswordDto.put("passwordRepeated", "password");
 
-    String authorization = authorizationUtil.getAuthorizationResponse(
+    String authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     this.mockMvc.perform(

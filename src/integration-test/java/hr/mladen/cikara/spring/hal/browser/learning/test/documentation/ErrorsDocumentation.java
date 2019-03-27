@@ -14,7 +14,7 @@ class ErrorsDocumentation extends AbstractDocumentation {
   @Test
   @DisplayName("Documentation for error message")
   void errorExample() throws Exception {
-    String authorization = this.authorizationUtil.getAuthorizationResponse(
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
             "Alex123", "password");
 
     this.mockMvc
