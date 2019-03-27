@@ -45,4 +45,41 @@ class UserServiceSpecification extends Specification {
         then: 'result is page with two entities'
         result.content.size() == 2
     }
+
+    def 'when instantiating UserService without registry exception is thrown'() {
+        when: 'new UserService with null registry is created'
+        def test = new UserServiceImpl(null)
+
+        then: 'assertion exception is thrown'
+        thrown IllegalArgumentException
+    }
+
+    def 'findByUsername with existing username will return UserDetails'() {
+        given: 'repository with user'
+        final User adam = User.builder()
+                .username("adam")
+                .password("adamsPassword")
+                .build()
+
+        Mockito.when(userRepository.findByUsername(Mockito.anyString()))
+                .thenReturn(Optional.of(adam))
+
+        when: 'loadUserByUsername service is called'
+        def result = userService.findByUsername("adam")
+
+        then: 'result is not null'
+        result != null
+    }
+
+    def 'findByUsername with non existing username will return exception'() {
+        given: 'repository with no users'
+        Mockito.when(userRepository.findByUsername(Mockito.anyString()))
+                .thenReturn(Optional.empty())
+
+        when: 'loadUserByUsername service is called'
+        def result = userService.findByUsername("adam")
+
+        then: 'result is not null'
+        thrown UserService.UserNotFoundException
+    }
 }

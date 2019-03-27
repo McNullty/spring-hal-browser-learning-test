@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
       } else {
         throw new UserNotFoundException(userId);
       }
-
     } catch (IllegalArgumentException e) {
       throw new UserNotFoundException(userId);
     }
@@ -105,15 +104,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
   @Override
   public User findByUsername(final String username) throws UserNotFoundException {
-    try {
-      Optional<User> user = userRepository.findByUsername(username);
-      if (user.isPresent()) {
-        return user.get();
-      } else {
-        throw new UserNotFoundException(username);
-      }
-
-    } catch (IllegalArgumentException e) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (user.isPresent()) {
+      return user.get();
+    } else {
       throw new UserNotFoundException(username);
     }
   }
