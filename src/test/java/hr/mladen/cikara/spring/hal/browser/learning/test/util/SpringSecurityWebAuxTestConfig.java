@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+/**
+ * Test configuration for spring security.S
+ */
 @TestConfiguration
 public class SpringSecurityWebAuxTestConfig {
 
