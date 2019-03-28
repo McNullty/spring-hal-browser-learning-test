@@ -140,3 +140,30 @@ Running application:
 ----
 java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
 ----
+
+== Testing
+In this project I have created both java unit tests with Junit5 and groovy unit tests with Spock. Integration tests are
+also done with Groovy and Junit5, and they are separated in separate directory. Jacoco makes reports for both separate
+and one report for both.
+
+=== Mutation testing with PITest
+They can work with both JUnit4 (default) and with JUnit5 (configuration via plugin), but not with both at the same time.
+
+Also Integration tests can be included but then runtime is considerable longer and much more timeout errors are
+recorded.
+
+=== Conclusions
+I have made sliced Unit tests. And they are grate for testing repository classes, especially custom methods that are
+created by naming conventions.
+
+Unit tests for services should also use @DataJpaTest with TestEntityManager, otherwise there is lot of mocking
+repository responses so in my opinion that makes tests brittle, and it is questionable can TDD be done that way.
+
+Unit test for controllers can also be done with @WebMvcTest and @MockBean and test configuration for spring security,
+but after that much mocking doesen't that test become too brittle?
+
+For now I will focus on Integration tests, they are order of magnitude or two slower then unit tests but they give
+good overview of how good is project, and for small scale it is not too slow. I will revisit this conclusion after
+reading Michael Feathers - Working Effectively with Legacy Code.
+
+I shuld also try to add new functionality just by TDD and Unit tests.
