@@ -7,7 +7,6 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -93,13 +92,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         .password(passwordEncoder.encode(registerDto.getPassword()))
         .build();
 
-    try {
-      return userRepository.save(newUser);
-    } catch (DataIntegrityViolationException e) {
-      log.error("Unexpected error while saving new user!");
-
-      throw e;
-    }
+    return userRepository.save(newUser);
   }
 
   @Override
