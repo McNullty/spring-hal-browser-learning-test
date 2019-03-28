@@ -15,6 +15,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @TestConfiguration
 public class SpringSecurityWebAuxTestConfig {
 
+  /**
+   *
+   * @return Mocked UserService
+   */
   @Bean
   @Primary
   public UserDetailsService userService() {
