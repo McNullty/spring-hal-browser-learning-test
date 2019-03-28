@@ -113,30 +113,6 @@ class UserServiceSpecification extends Specification {
         thrown UsernameNotFoundException
     }
 
-    def 'registering user'() {
-        given: 'valid registerDto'
-        def registerDto = RegisterDto.builder()
-                .username("username")
-                .password("password")
-                .passwordRepeated("password")
-                .build()
-
-        and: 'user registry is mocked'
-        Mockito.when(userRepository.findByUsername(Mockito.anyString()))
-                .thenReturn(Optional.empty())
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
-                .thenAnswer({i -> i.getArguments()[0]})
-
-        when: 'register service is called'
-        def result = userService.register(registerDto)
-
-        then: 'new user is returned'
-        result != null
-
-        and: 'password is encrypted'
-        result.password != "password"
-    }
-
     def 'registering user mismatching passwords'() {
         given: 'invalid registerDto with mismatching passwords'
         def registerDto = RegisterDto.builder()

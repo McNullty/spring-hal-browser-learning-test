@@ -57,6 +57,34 @@ class UserServiceJpaTestSpecification extends Specification {
         user.get().getPassword() != "adamsPassword"
     }
 
+    def 'changing password for non existing user'() {
+        given: 'valid changePasswordsDto'
+        def changePasswordDto = ChangePasswordDto.builder()
+                .password("newPassword")
+                .passwordRepeated("newPassword")
+                .build()
+
+        when: 'changePassword service is called for non existing user'
+        userService.changePassword("test", changePasswordDto)
+
+        then: 'exception is thrown'
+        thrown UserService.UserNotFoundException
+    }
+
+    def 'changing password with invalid dto'() {
+        given: 'valid changePasswordsDto'
+        def changePasswordDto = ChangePasswordDto.builder()
+                .password("newPassword")
+                .passwordRepeated("wrongPassword")
+                .build()
+
+        when: 'changePassword service is called for non existing user'
+        userService.changePassword("Adam", changePasswordDto)
+
+        then: 'exception is thrown'
+        thrown UserService.PasswordsDontMatch
+    }
+
     def 'when findAll is called page with two user is returned'() {
         when: 'findAll service is called with Pageable object is passed'
         Pageable pageable = new PageRequest(0,10)
@@ -153,5 +181,24 @@ class UserServiceJpaTestSpecification extends Specification {
 
         then: 'Exception is thrown'
         thrown UserService.UsernameAlreadyTakenException
+    }
+
+    def 'testing find by id'() {
+        given: 'existing user'
+        def user = userRepository.findByUsername("Adam").get()
+
+        when: 'findById is called'
+        def secondUser = userService.findById(user.getId())
+
+        then: 'user is found'
+        secondUser != null
+    }
+
+    def 'testing find by id with non existing id'() {
+        when: 'findById is called for non existing id'
+        userService.findById(999)
+
+        then: 'exception is thrown'
+        thrown UserService.UserNotFoundException
     }
 }
