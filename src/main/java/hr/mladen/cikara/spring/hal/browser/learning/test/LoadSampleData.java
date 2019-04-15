@@ -2,6 +2,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.Authority;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.AuthorityRepository;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.User;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserRepository;
 import java.util.Random;
@@ -23,30 +25,35 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
 
   private final BookRepository bookRepository;
   private final UserRepository userRepository;
+  private final AuthorityRepository authorityRepository;
 
   private final Random rand = new Random();
 
   public LoadSampleData(final BookRepository bookRepository,
-                        final UserRepository userRepository) {
+                        final UserRepository userRepository,
+                        final AuthorityRepository authorityRepository) {
     this.bookRepository = bookRepository;
     this.userRepository = userRepository;
+    this.authorityRepository = authorityRepository;
   }
 
   @Override
   public void onApplicationEvent(final ContextRefreshedEvent event) {
     log.info("Creating sample data");
-    for (int i = 0; i < 100; i++) {
+    insertBookSampleData();
 
-      Book book = Book.builder()
-              .author("Test author " + i)
-              .title("Test title " + i)
-              .blurb("Test blurb " + i)
-              .pages(rand.nextInt(500))
-              .build();
+    insertAuthorities();
 
-      bookRepository.save(book);
-    }
+    insertSampleUserData();
+  }
 
+  private void insertAuthorities() {
+    authorityRepository.save(Authority.builder().authority("ROLE_USER").build());
+    authorityRepository.save(Authority.builder().authority("ROLE_ADMIN").build());
+    authorityRepository.save(Authority.builder().authority("ROLE_USER_MANAGER").build());
+  }
+
+  private void insertSampleUserData() {
     final PasswordEncoder passwordEncoder =
             PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
@@ -71,5 +78,19 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
 
 
     userRepository.save(adam);
+  }
+
+  private void insertBookSampleData() {
+    for (int i = 0; i < 100; i++) {
+
+      Book book = Book.builder()
+              .author("Test author " + i)
+              .title("Test title " + i)
+              .blurb("Test blurb " + i)
+              .pages(rand.nextInt(500))
+              .build();
+
+      bookRepository.save(book);
+    }
   }
 }
