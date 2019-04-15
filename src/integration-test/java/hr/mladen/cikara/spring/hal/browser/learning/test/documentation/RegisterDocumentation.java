@@ -17,7 +17,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Getter(AccessLevel.PRIVATE)
-@DisplayName("Documentation for /register endpoint")
+@DisplayName("Documentation for /users/register endpoint")
 class RegisterDocumentation extends AbstractDocumentation {
 
   @Autowired
@@ -33,7 +33,7 @@ class RegisterDocumentation extends AbstractDocumentation {
     registerDto.put("passwordRepeated", "TestPassword123");
 
     this.mockMvc.perform(
-            MockMvcRequestBuilders.post("/register")
+            MockMvcRequestBuilders.post("/users/register")
                     .contentType(MediaTypes.HAL_JSON)
                     .content(this.objectMapper.writeValueAsString(registerDto)))
             .andExpect(status().isCreated())

@@ -44,7 +44,7 @@ class RegisterControllerSpecification extends Specification {
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/register")
+                RestDocumentationRequestBuilders.post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(user)))
                 .andDo(MockMvcResultHandlers.print())
@@ -70,7 +70,7 @@ class RegisterControllerSpecification extends Specification {
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/register")
+                RestDocumentationRequestBuilders.post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(user)))
                 .andDo(MockMvcResultHandlers.print())
@@ -92,7 +92,7 @@ class RegisterControllerSpecification extends Specification {
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/register")
+                RestDocumentationRequestBuilders.post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(user)))
                 .andDo(MockMvcResultHandlers.print())

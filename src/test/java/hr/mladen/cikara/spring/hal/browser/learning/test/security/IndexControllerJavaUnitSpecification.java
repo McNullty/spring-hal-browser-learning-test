@@ -43,7 +43,7 @@ class IndexControllerJavaUnitSpecification {
         .andExpect(MockMvcResultMatchers.jsonPath(
             "$._links.fx:authorization.href", Matchers.is("http://localhost/users/oauth/token")))
         .andExpect(MockMvcResultMatchers.jsonPath(
-            "$._links.fx:register.href", Matchers.is("http://localhost/register")))
+            "$._links.fx:register.href", Matchers.is("http://localhost/users/register")))
         .andExpect(MockMvcResultMatchers.jsonPath(
             "$._links.api-guide.href", Matchers.is("http://localhost/docs/api-guide.html")))
         .andExpect(MockMvcResultMatchers.jsonPath(

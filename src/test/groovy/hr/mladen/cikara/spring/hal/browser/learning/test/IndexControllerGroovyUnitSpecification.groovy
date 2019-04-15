@@ -48,7 +48,7 @@ class IndexControllerGroovyUnitSpecification extends Specification {
 
         and: 'Link for registering is returned'
         result.andExpect(MockMvcResultMatchers.jsonPath(
-                '$._links.fx:register.href', Matchers.is('http://localhost/register')))
+                '$._links.fx:register.href', Matchers.is('http://localhost/users/register')))
 
         and: 'Link for api guide is returned'
         result.andExpect(MockMvcResultMatchers.jsonPath(
