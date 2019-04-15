@@ -10,12 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
- * Test configuration for spring security.S
+ * Test configuration for spring security.
  */
 @TestConfiguration
 public class SpringSecurityWebAuxTestConfig {
 
   /**
+   * Wires spring security UserDetailsService.
    *
    * @return Mocked UserService
    */
