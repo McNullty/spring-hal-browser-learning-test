@@ -1,15 +1,12 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,12 +42,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
       throw new UsernameNotFoundException("Invalid username or password.");
     }
 
-    return new org.springframework.security.core.userdetails.User(
-        user.get().getUsername(), user.get().getPassword(), getAuthority());
-  }
-
-  private List<SimpleGrantedAuthority> getAuthority() {
-    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    return user.get();
   }
 
   @Override

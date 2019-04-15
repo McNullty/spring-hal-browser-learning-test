@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,9 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "oauth2_authority")
-public class UserAuthority {
+public class UserAuthority implements Serializable {
+
+  public static final long serialVersionUID = 2271127023203810103L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
