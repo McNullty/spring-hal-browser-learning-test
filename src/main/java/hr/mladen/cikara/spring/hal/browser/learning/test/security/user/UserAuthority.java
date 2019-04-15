@@ -20,7 +20,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "oauth2_authority")
-public class Authority {
+public class UserAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

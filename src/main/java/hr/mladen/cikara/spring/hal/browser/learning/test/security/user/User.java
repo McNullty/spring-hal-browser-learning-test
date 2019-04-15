@@ -47,5 +47,5 @@ public class User {
           inverseJoinColumns = @JoinColumn(name = "authority_id")
   )
   @JsonIgnore
-  private Set<Authority> authorities;
+  private Set<UserAuthority> authorities;
 }

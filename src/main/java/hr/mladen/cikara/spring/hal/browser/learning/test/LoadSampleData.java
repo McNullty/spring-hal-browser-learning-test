@@ -2,7 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.Book;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookRepository;
-import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.Authority;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserAuthority;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.AuthorityRepository;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.User;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserRepository;
@@ -29,6 +29,13 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
 
   private final Random rand = new Random();
 
+  /**
+   * Loading sample data for development.
+   *
+   * @param bookRepository Book Repository
+   * @param userRepository User Repository
+   * @param authorityRepository UserAuthority Repository
+   */
   public LoadSampleData(final BookRepository bookRepository,
                         final UserRepository userRepository,
                         final AuthorityRepository authorityRepository) {
@@ -48,9 +55,9 @@ public class LoadSampleData implements ApplicationListener<ContextRefreshedEvent
   }
 
   private void insertAuthorities() {
-    authorityRepository.save(Authority.builder().authority("ROLE_USER").build());
-    authorityRepository.save(Authority.builder().authority("ROLE_ADMIN").build());
-    authorityRepository.save(Authority.builder().authority("ROLE_USER_MANAGER").build());
+    authorityRepository.save(UserAuthority.builder().authority("ROLE_USER").build());
+    authorityRepository.save(UserAuthority.builder().authority("ROLE_ADMIN").build());
+    authorityRepository.save(UserAuthority.builder().authority("ROLE_USER_MANAGER").build());
   }
 
   private void insertSampleUserData() {
