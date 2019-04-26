@@ -13,5 +13,9 @@ public class RegisterDto {
   private final String password;
   @NotBlank
   private final String passwordRepeated;
+  @NotBlank
+  private final String firstName;
+  @NotBlank
+  private final String lastName;
 
 }

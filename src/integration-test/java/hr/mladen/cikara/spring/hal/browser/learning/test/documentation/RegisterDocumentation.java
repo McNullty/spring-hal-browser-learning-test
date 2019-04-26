@@ -31,6 +31,8 @@ class RegisterDocumentation extends AbstractDocumentation {
     registerDto.put("username", "TestUser");
     registerDto.put("password", "TestPassword123");
     registerDto.put("passwordRepeated", "TestPassword123");
+    registerDto.put("firstName", "TestFirstName");
+    registerDto.put("lastName", "TestLastName");
 
     this.mockMvc.perform(
             MockMvcRequestBuilders.post("/users/register")
@@ -42,6 +44,9 @@ class RegisterDocumentation extends AbstractDocumentation {
                             fieldWithPath("username").description("Username for registration"),
                             fieldWithPath("password")
                                     .description("Password for new <<resources-users,user>>"),
-                            fieldWithPath("passwordRepeated").description("Repeated password"))));
+                            fieldWithPath("passwordRepeated").description("Repeated password"),
+                            fieldWithPath("firstName").description("Users first name"),
+                            fieldWithPath("lastName").description("Users last name")
+                    )));
   }
 }

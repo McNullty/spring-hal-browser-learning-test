@@ -48,6 +48,12 @@ public class User implements UserDetails {
   @JsonIgnore
   private String password;
 
+  @Column(name = "first_name")
+  private String firstName;
+
+  @Column(name = "last_name")
+  private String lastName;
+
   @Setter(AccessLevel.NONE)
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(

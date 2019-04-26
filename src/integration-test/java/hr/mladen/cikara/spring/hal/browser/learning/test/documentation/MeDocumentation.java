@@ -26,6 +26,8 @@ class MeDocumentation extends AbstractDocumentation {
             .andDo(document("me-example",
                     responseFields(
                             fieldWithPath("username").description("Currently authenticated user."),
+                            fieldWithPath("firstName").description("Users first name"),
+                            fieldWithPath("lastName").description("Users last name"),
                             subsectionWithPath("_links")
                                     .description("The <<resources-users,Users resource>> "
                                             + "to other resources"))))

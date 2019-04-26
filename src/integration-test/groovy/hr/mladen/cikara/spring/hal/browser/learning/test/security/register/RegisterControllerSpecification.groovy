@@ -41,6 +41,8 @@ class RegisterControllerSpecification extends Specification {
         user.put("username", "adam")
         user.put("password", "testPassword")
         user.put("passwordRepeated", "testPassword")
+        user.put("firstName", "Adam")
+        user.put("lastName", "Last")
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
@@ -59,6 +61,8 @@ class RegisterControllerSpecification extends Specification {
         User adam = User.builder()
                 .username("bob")
                 .password("pass")
+                .firstName("Robert")
+                .lastName("Blank")
                 .build()
         userRepository.saveAndFlush(adam)
 
@@ -67,6 +71,8 @@ class RegisterControllerSpecification extends Specification {
         user.put("username", "bob")
         user.put("password", "testPassword")
         user.put("passwordRepeated", "testPassword")
+        user.put("firstName", "Bob")
+        user.put("lastName", "Other")
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
@@ -89,6 +95,8 @@ class RegisterControllerSpecification extends Specification {
         user.put("username", "charlie")
         user.put("password", "testPassword")
         user.put("passwordRepeated", "notMatching")
+        user.put("firstName", "Charlie")
+        user.put("lastName", "Other")
 
         when: 'register endpoint is called'
         def result = mockMvc.perform(
