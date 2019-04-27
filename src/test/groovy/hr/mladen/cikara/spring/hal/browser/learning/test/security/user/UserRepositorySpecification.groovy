@@ -46,7 +46,7 @@ class UserRepositorySpecification extends Specification {
         !user.isPresent()
     }
 
-    def 'if there is  no existing username in repository new user will be saved' () {
+    def 'if there is no existing username in repository new user will be saved' () {
         given: 'that username is not already in repository'
         def adamsName = "Adam"
         final Optional<User> user = userRepository.findByUsername(adamsName)
@@ -59,7 +59,7 @@ class UserRepositorySpecification extends Specification {
                 .build()
         def storedUser = userRepository.save(adam)
 
-        then: 'user is dtored in database'
+        then: 'user is stored in database'
         storedUser.id != null
     }
 

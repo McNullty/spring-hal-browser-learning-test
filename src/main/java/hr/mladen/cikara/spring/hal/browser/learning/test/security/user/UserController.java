@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import java.security.Principal;
+import javax.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +36,7 @@ public class UserController {
   /**
    * Controller for displaying user resources.
    *
-   * @param userService UserService
+   * @param userService                 UserService
    * @param userToUserResourceAssembler Assembler to convert form Zser to UserResource
    */
   public UserController(
@@ -49,7 +52,7 @@ public class UserController {
   /**
    * Returns all users.
    *
-   * @param pageable Pageable object
+   * @param pageable  Pageable object
    * @param assembler Assembler to convert form Zser to UserResource
    * @return Page with UserResources
    */
@@ -111,9 +114,28 @@ public class UserController {
 
       return ResponseEntity.ok(userResource);
     } catch (UserService.UserNotFoundException e) {
-      log.error("This shuld never happen! Current user should always be found.");
+      log.error("This should never happen! Current user should always be found.");
 
-      throw new RuntimeException("Current user not foind!");
+      throw new RuntimeException("Current user not found!");
     }
+  }
+
+  /**
+   * Endpoint for changing user password. User can change password for himself.
+   *
+   * @param changePasswordDto DTO with new password
+   * @param principal         Logged in principal
+   * @return HTTP status No Content
+   */
+  @PutMapping(
+          value = "/me/change-password",
+          consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> changePassword(
+          @Valid @RequestBody ChangePasswordDto changePasswordDto, Principal principal)
+          throws UserService.PasswordsDontMatch, UserService.UserNotFoundException {
+
+    userService.changePassword(principal.getName(), changePasswordDto);
+
+    return ResponseEntity.noContent().build();
   }
 }

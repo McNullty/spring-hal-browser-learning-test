@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-class AuthorizationDocumentation extends AbstractDocumentationWithSecurity {
+class AuthorizationDocumentation extends AbstractDocumentation {
 
   private static final String GRANT_TYPE = "grant_type";
   private static final String PASSWORD = "password";
@@ -80,7 +80,8 @@ class AuthorizationDocumentation extends AbstractDocumentationWithSecurity {
   @Test
   void refreshAuthorizationExample() throws Exception {
 
-    String jsonResponse = getAuthorizationResponse();
+    String jsonResponse =
+            authorizationUtil.getAuthorizationResponse("Alex123", "password");
 
     JSONObject jsonObject = new JSONObject(jsonResponse);
 

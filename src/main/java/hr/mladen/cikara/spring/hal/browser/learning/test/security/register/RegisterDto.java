@@ -1,19 +1,21 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.register;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-@JsonDeserialize(builder = RegisterDto.RegisterDtoBuilder.class)
 public class RegisterDto {
-
+  @NotBlank
   private final String username;
+  @NotBlank
   private final String password;
+  @NotBlank
   private final String passwordRepeated;
+  @NotBlank
+  private final String firstName;
+  @NotBlank
+  private final String lastName;
 
-  @JsonPOJOBuilder(withPrefix = "")
-  static final class RegisterDtoBuilder{}
 }

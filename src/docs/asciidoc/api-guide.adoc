@@ -18,6 +18,8 @@ Mladen Čikara;
 HAL Browser learning test tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.
 
+
+[cols="2,8"]
 |===
 | Verb | Usage
 
@@ -96,7 +98,7 @@ The index provides the entry point into the service.
 
 A `GET` request is used to access the index
 
-operation::index-example[snippets='response-fields,http-response,links']
+operation::index-example[snippets='response-fields,links,http-response']
 
 [[authorization]]
 == Authorization
@@ -115,14 +117,14 @@ operation::register-example[snippets='request-fields,request-body,curl-request,h
 
 You can make `GET` request to get authorization token that can be used to authorize requests.
 
-operation::authorize-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+operation::authorize-example[snippets='request-headers,request-parameters,curl-request,http-request,http-response,response-body,response-fields']
 
 [[refresh-example]]
 === Refreshing authorization token
 
 You can refresh token with `POST` request
 
-operation::refresh-example[snippets='request-parameters,request-headers,http-request,curl-request,http-response,response-body,response-fields']
+operation::refresh-example[snippets='request-headers,request-parameters,response-fields,curl-request,http-request,http-response,response-body']
 
 [[resources-users]]
 == Users
@@ -139,7 +141,7 @@ The Books resources is used to create and list books
 
 A `GET` request will list all of the service's books.
 
-operation::books-list-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
+operation::books-list-example[snippets='request-parameters,response-fields,links,curl-request,http-response']
 
 [[resources-books-create]]
 === Creating a book
@@ -153,7 +155,7 @@ operation::books-create-example[snippets='request-fields,request-body,curl-reque
 
 A `GET` request will list all of the service's books that confirm to query.
 
-operation::books-search-example[snippets='request-parameters,response-fields,curl-request,http-response,links']
+operation::books-search-example[snippets='request-parameters,response-fields,links,curl-request,http-response']
 
 [[resources-book]]
 == Book

@@ -62,6 +62,10 @@ class BooksDocumentation extends AbstractDocumentation {
   public static final String TITLE_VALUE = "Refactoring: Improving the Design of Existing Code";
   public static final String TO_OTHER_RESOURCES = "to other resources";
   public static final String BOOK_IS_NOT_CREATED_ERROR_MESSAGE = "Book is not created";
+  public static final String USERNAME = "Alex123";
+  public static final String PASSWORD = "password";
+  public static final String AUTHORIZATION = "Authorization";
+  public static final String BEARER = "Bearer ";
 
   @Autowired
   private BookRepository bookRepository;
@@ -75,9 +79,12 @@ class BooksDocumentation extends AbstractDocumentation {
 
     // GIVEN:
     createTestData();
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
 
     //WHEN:
-    this.mockMvc.perform(get("/books?page=1&size=4&sort=pages,desc&sort=title,asc"))
+    this.mockMvc.perform(get("/books?page=1&size=4&sort=pages,desc&sort=title,asc")
+            .header(AUTHORIZATION, BEARER + authorization))
             // THEN:
             .andExpect(status().isOk())
             .andDo(document("books-list-example",
@@ -115,9 +122,13 @@ class BooksDocumentation extends AbstractDocumentation {
   @DisplayName("Documentation for searching books")
   void booksSearchExample() throws Exception {
     // GIVEN:
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
+
     // WHEN:
     this.mockMvc.perform(
-            get("/books/search/title-contains?query=1&page=2&size=4&sort=pages,desc&sort=title"))
+            get("/books/search/title-contains?query=1&page=2&size=4&sort=pages,desc&sort=title")
+                    .header(AUTHORIZATION, BEARER + authorization))
             // THEN:
             .andExpect(status().isOk())
             .andDo(document("books-search-example",
@@ -159,16 +170,20 @@ class BooksDocumentation extends AbstractDocumentation {
   void booksCreateExample() throws Exception {
 
     // GIVEN:
-
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
     book.put(AUTHOR, AUTHOR_VALUE);
     book.put(BLURB, BLURB_VALUE);
     book.put(PAGES, 448);
 
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
+    
     // WHEN:
     this.mockMvc.perform(
-            post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
+            post(BOOKS_URL)
+                    .header(AUTHORIZATION, BEARER + authorization)
+                    .contentType(MediaTypes.HAL_JSON).content(
                     this.objectMapper.writeValueAsString(book)))
             // THEN:
             .andExpect(status().isCreated())
@@ -185,6 +200,9 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookGetExample() throws Exception {
 
     // GIVEN:
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
+
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
     book.put(AUTHOR, AUTHOR_VALUE);
@@ -193,7 +211,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
+                    post(BOOKS_URL)
+                            .header(AUTHORIZATION, BEARER + authorization)
+                            .contentType(MediaTypes.HAL_JSON).content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
             .andDo(print())
@@ -206,7 +226,8 @@ class BooksDocumentation extends AbstractDocumentation {
     String bookId = getBookIdFromLocation(bookLocation);
 
     // WHEN:
-    this.mockMvc.perform(get("/books/{bookId}", Long.parseLong(bookId)))
+    this.mockMvc.perform(get("/books/{bookId}", Long.parseLong(bookId))
+            .header(AUTHORIZATION, BEARER + authorization))
             // THEN:
             .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
@@ -236,6 +257,8 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookUpdateExample() throws Exception {
 
     // GIVEN:
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
 
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
@@ -244,7 +267,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON).content(
+                    post(BOOKS_URL)
+                            .header(AUTHORIZATION, BEARER + authorization)
+                            .contentType(MediaTypes.HAL_JSON).content(
                             this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated()).andDo(print())
             .andReturn().getResponse().getHeader(LOCATION);
@@ -253,7 +278,9 @@ class BooksDocumentation extends AbstractDocumentation {
       Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
-    this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+    this.mockMvc.perform(get(bookLocation)
+            .header(AUTHORIZATION, BEARER + authorization))
+            .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
             .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
             .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
@@ -265,7 +292,9 @@ class BooksDocumentation extends AbstractDocumentation {
     bookUpdate.put(BLURB, BLURB_VALUE);
 
     this.mockMvc.perform(
-            patch(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE)
+            patch(bookLocation)
+                    .header(AUTHORIZATION, BEARER + authorization)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .accept(MediaType.ALL_VALUE).content(
                     this.objectMapper.writeValueAsString(bookUpdate)))
             .andExpect(status().isOk())
@@ -294,7 +323,8 @@ class BooksDocumentation extends AbstractDocumentation {
                                             + TO_OTHER_RESOURCES))));
 
     // WHEN:
-    this.mockMvc.perform(get(bookLocation))
+    this.mockMvc.perform(get(bookLocation)
+            .header(AUTHORIZATION, BEARER + authorization))
             // THEN:
             .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
@@ -308,6 +338,9 @@ class BooksDocumentation extends AbstractDocumentation {
   @DisplayName("Documentation for replacing a book")
   void bookReplaceExample() throws Exception {
 
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
+
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
     book.put(AUTHOR, AUTHOR_VALUE);
@@ -315,7 +348,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON)
+                    post(BOOKS_URL)
+                            .header(AUTHORIZATION, BEARER + authorization)
+                            .contentType(MediaTypes.HAL_JSON)
                             .accept(MediaType.ALL_VALUE)
                             .content(
                             this.objectMapper.writeValueAsString(book)))
@@ -326,7 +361,9 @@ class BooksDocumentation extends AbstractDocumentation {
       Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
-    this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+    this.mockMvc.perform(get(bookLocation)
+            .header(AUTHORIZATION, BEARER + authorization))
+            .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
             .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
             .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
@@ -341,7 +378,8 @@ class BooksDocumentation extends AbstractDocumentation {
     bookReplace.put(PAGES, 448);
 
     this.mockMvc.perform(
-            put(bookLocation).contentType(MediaType.APPLICATION_JSON_VALUE).content(
+            put(bookLocation).header(AUTHORIZATION, BEARER + authorization)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE).content(
                     this.objectMapper.writeValueAsString(bookReplace)))
             .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(bookReplace.get(TITLE))))
@@ -374,6 +412,8 @@ class BooksDocumentation extends AbstractDocumentation {
   void bookDeleteExample() throws Exception {
 
     // GIVEN:
+    String authorization = this.authorizationUtil.getAccessTokenFromAuthorizationResponse(
+            USERNAME, PASSWORD);
 
     Map<String, Object> book = new HashMap<>();
     book.put(TITLE, TITLE_VALUE);
@@ -382,7 +422,9 @@ class BooksDocumentation extends AbstractDocumentation {
 
     String bookLocation = this.mockMvc
             .perform(
-                    post(BOOKS_URL).contentType(MediaTypes.HAL_JSON)
+                    post(BOOKS_URL)
+                            .header(AUTHORIZATION, BEARER + authorization)
+                            .contentType(MediaTypes.HAL_JSON)
                             .accept(MediaType.ALL_VALUE)
                             .content(this.objectMapper.writeValueAsString(book)))
             .andExpect(status().isCreated())
@@ -392,7 +434,9 @@ class BooksDocumentation extends AbstractDocumentation {
       Assert.fail(BOOK_IS_NOT_CREATED_ERROR_MESSAGE);
     }
 
-    this.mockMvc.perform(get(bookLocation)).andExpect(status().isOk())
+    this.mockMvc.perform(get(bookLocation)
+            .header(AUTHORIZATION, BEARER + authorization))
+            .andExpect(status().isOk())
             .andExpect(jsonPath(TITLE, is(book.get(TITLE))))
             .andExpect(jsonPath(AUTHOR, is(book.get(AUTHOR))))
             .andExpect(jsonPath(BLURB, is(book.get(BLURB))))
@@ -404,7 +448,8 @@ class BooksDocumentation extends AbstractDocumentation {
 
     // WHEN:
     this.mockMvc.perform(
-            delete("/books/{bookId}", Long.parseLong(bookId)))
+            delete("/books/{bookId}", Long.parseLong(bookId))
+                    .header(AUTHORIZATION, BEARER + authorization))
             // THEN:
             .andExpect(status().isNoContent())
             .andDo(print())
