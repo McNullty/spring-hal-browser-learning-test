@@ -30,7 +30,8 @@ public class UserAuthorityController {
   }
 
   @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<Resources<UserAuthorityResource>> findAllForUser(@PathVariable final Long userId) {
+  public ResponseEntity<Resources<UserAuthorityResource>> findAllForUser(
+          @PathVariable final Long userId) throws UserService.UserNotFoundException {
     Collection<UserAuthority> userAuthorities = userAuthorityService.findAllAuthoritiesForUserId(userId);
 
     Resources<UserAuthorityResource> userAuthorityResources =

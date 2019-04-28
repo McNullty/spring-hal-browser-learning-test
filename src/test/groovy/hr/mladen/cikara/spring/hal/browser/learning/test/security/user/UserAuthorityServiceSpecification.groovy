@@ -1,8 +1,10 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import org.springframework.boot.test.mock.mockito.MockBean
 import spock.lang.Specification
 
 @DataJpaTest
@@ -13,10 +15,13 @@ class UserAuthorityServiceSpecification extends Specification {
     @Autowired
     private UserAuthorityRepository userAuthorityRepository
 
+    @MockBean
+    private UserService userService
+
     private UserAuthorityService userAuthorityService
 
     def setup() {
-        userAuthorityService = new UserAuthorityServiceImpl(userAuthorityRepository)
+        userAuthorityService = new UserAuthorityServiceImpl(userAuthorityRepository, userService)
     }
 
     def 'service returns roles for user'() {
@@ -43,5 +48,17 @@ class UserAuthorityServiceSpecification extends Specification {
 
         then: 'collection of authorities is returned'
         userAuthorities.contains(savedUserRole)
+    }
+
+    def 'if non-exiting userId is sent exception is raised'() {
+        given: 'user service is mocked to throw exception'
+        Mockito.when(userService.findById(1L))
+                .thenThrow(new UserService.UserNotFoundException(1L))
+
+        when: 'service find method is called'
+        userAuthorityService.findAllAuthoritiesForUserId(1L)
+
+        then: 'exception is raised'
+        thrown UserService.UserNotFoundException
     }
 }

@@ -42,4 +42,12 @@ class UserAuthorityRepositorySpecification extends Specification {
         then: 'list with ROLE_USER is returned'
         userAuthorities.contains(savedUserRole)
     }
+
+    def 'is user doesnt exist empty list is returned'() {
+        when: 'findAllUserAuthorityByUserId method is call'
+        def userAuthorities = userAuthorityRepository.findAllUserAuthorityByUserId(1L)
+
+        then: 'empty list is returned'
+        userAuthorities.isEmpty()
+    }
 }

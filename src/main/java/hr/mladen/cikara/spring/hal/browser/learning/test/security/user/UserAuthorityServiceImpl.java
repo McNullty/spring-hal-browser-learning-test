@@ -13,12 +13,19 @@ public class UserAuthorityServiceImpl implements UserAuthorityService {
 
   private final UserAuthorityRepository userAuthorityRepository;
 
-  public UserAuthorityServiceImpl(final UserAuthorityRepository userAuthorityRepository) {
+  private final UserService userService;
+
+  public UserAuthorityServiceImpl(
+          final UserAuthorityRepository userAuthorityRepository, final UserService userService) {
     this.userAuthorityRepository = userAuthorityRepository;
+    this.userService = userService;
   }
 
   @Override
-  public Collection<UserAuthority> findAllAuthoritiesForUserId(final Long userId) {
+  public Collection<UserAuthority> findAllAuthoritiesForUserId(final Long userId)
+          throws UserService.UserNotFoundException {
+    userService.findById(userId);
+
     return userAuthorityRepository.findAllUserAuthorityByUserId(userId);
   }
 }
