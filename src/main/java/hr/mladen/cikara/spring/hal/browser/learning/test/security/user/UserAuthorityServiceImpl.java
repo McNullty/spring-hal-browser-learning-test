@@ -28,4 +28,10 @@ public class UserAuthorityServiceImpl implements UserAuthorityService {
 
     return userAuthorityRepository.findAllUserAuthorityByUserId(userId);
   }
+
+  @Override
+  public void deleteAuthority(
+          final Long userId, final String toUpperCase) throws UserService.UserNotFoundException {
+
+  }
 }

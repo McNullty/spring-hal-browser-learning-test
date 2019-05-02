@@ -12,6 +12,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,20 @@ public class UserAuthorityController {
 
     return ResponseEntity.ok(userAuthorityResources);
   }
+
+  @DeleteMapping(
+          value = "/{authority}",
+          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<?> removeUserAuthority(
+          @PathVariable final Long userId, @PathVariable final String authority)
+          throws UserService.UserNotFoundException {
+    log.debug("Trying to delete authority {}", authority.toUpperCase());
+
+    userAuthorityService.deleteAuthority(userId, authority.toUpperCase());
+
+    return ResponseEntity.badRequest().build();
+  }
+
 
   private Resources<UserAuthorityResource> convertUserAuthoritiesToResources(
           final Collection<UserAuthority> userAuthorities) {
