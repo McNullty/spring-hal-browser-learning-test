@@ -2,6 +2,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookService;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
+import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserAuthorityService;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -60,6 +61,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
           UserService.PasswordsDontMatch ex) {
     ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
     apiError.setMessage("Passwords dont match");
+
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler({UserAuthorityService.UserAuthorityNotFoundException.class})
+  protected ResponseEntity<Object> handleUserAuthorityNotFound(
+          UserAuthorityService.UserAuthorityNotFoundException ex) {
+    ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
+    apiError.setMessage("Couldn't find user autority " + ex.getUserAuthority() +
+            " for user with id " + ex.getUserId());
 
     return buildResponseEntity(apiError);
   }

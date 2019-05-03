@@ -31,7 +31,8 @@ public class UserAuthorityServiceImpl implements UserAuthorityService {
 
   @Override
   public void deleteAuthority(
-          final Long userId, final String toUpperCase) throws UserService.UserNotFoundException {
+          final Long userId, final String toUpperCase)
+          throws UserService.UserNotFoundException, UserAuthorityNotFoundException {
 
   }
 }

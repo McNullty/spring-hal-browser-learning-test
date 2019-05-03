@@ -64,13 +64,29 @@ class UserAuthorityControllerUnitSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
     }
 
-    def 'when deleting for user that doesnt exist not fount is returned'() {
+    def 'when deleting for user that doesnt exist not found is returned'() {
         given: 'user service is mocked to return not found exception'
         Mockito.when(userAuthorityService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
                 .thenThrow(new UserService.UserNotFoundException(1L))
 
         when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
-        def result = mockMvc.perform(MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER_MANAGER")
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER_MANAGER")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'result is 404 Not Found'
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+    }
+
+    def 'when deleting for user athority that doesnt exist not found is returned'() {
+        given: 'user service is mocked to return not found exception'
+        Mockito.when(userAuthorityService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
+                .thenThrow(new UserAuthorityService.UserAuthorityNotFoundException(1L, "ROLE_USER_MANAGER"))
+
+        when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER_MANAGER")
                 .accept(MediaTypes.HAL_JSON_VALUE))
                 .andDo(MockMvcResultHandlers.print())
 

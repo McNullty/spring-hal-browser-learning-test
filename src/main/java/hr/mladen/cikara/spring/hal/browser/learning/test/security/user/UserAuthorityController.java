@@ -55,7 +55,8 @@ public class UserAuthorityController {
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<?> removeUserAuthority(
           @PathVariable final Long userId, @PathVariable final String authority)
-          throws UserService.UserNotFoundException {
+          throws UserService.UserNotFoundException,
+          UserAuthorityService.UserAuthorityNotFoundException {
     log.debug("Trying to delete authority {}", authority.toUpperCase());
 
     userAuthorityService.deleteAuthority(userId, authority.toUpperCase());
