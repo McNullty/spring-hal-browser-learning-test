@@ -61,7 +61,7 @@ public class UserAuthorityController {
 
     userAuthorityService.deleteAuthority(userId, authority.toUpperCase());
 
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.noContent().build();
   }
 
 

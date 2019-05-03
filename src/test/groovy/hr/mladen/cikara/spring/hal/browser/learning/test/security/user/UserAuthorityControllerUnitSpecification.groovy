@@ -93,4 +93,15 @@ class UserAuthorityControllerUnitSpecification extends Specification {
         then: 'result is 404 Not Found'
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
     }
+
+    def 'when deleting valid user authority no content is returned'() {
+        when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER_MANAGER")
+                        .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'result is No Content'
+        result.andExpect(MockMvcResultMatchers.status().isNoContent())
+    }
 }
