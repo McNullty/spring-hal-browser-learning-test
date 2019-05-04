@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import lombok.AccessLevel;
@@ -57,9 +58,9 @@ public class UserAuthorityController {
           @PathVariable final Long userId, @PathVariable final String authority)
           throws UserService.UserNotFoundException,
           UserService.UserAuthorityNotFoundException {
-    log.debug("Trying to delete authority {}", authority.toUpperCase());
+    log.debug("Trying to delete authority {}", authority.toUpperCase(Locale.getDefault()));
 
-    userService.deleteAuthority(userId, authority.toUpperCase());
+    userService.deleteAuthority(userId, authority.toUpperCase(Locale.getDefault()));
 
     return ResponseEntity.noContent().build();
   }

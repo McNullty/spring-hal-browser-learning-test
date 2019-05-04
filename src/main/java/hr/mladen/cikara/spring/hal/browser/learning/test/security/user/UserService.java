@@ -58,7 +58,7 @@ public interface UserService {
   Collection<UserAuthority> findAllAuthoritiesForUserId(Long userId)
           throws UserService.UserNotFoundException;
 
-  void deleteAuthority(Long userId, String toUpperCase)
+  void deleteAuthority(Long userId, String userAuthority)
           throws UserService.UserNotFoundException, UserAuthorityNotFoundException;
 
   @Getter(AccessLevel.PUBLIC)

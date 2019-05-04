@@ -70,8 +70,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleUserAuthorityNotFound(
           UserService.UserAuthorityNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
-    apiError.setMessage("Couldn't find user autority " + ex.getUserAuthority() +
-            " for user with id " + ex.getUserId());
+    apiError.setMessage("Couldn't find user autority " + ex.getUserAuthority()
+            + " for user with id " + ex.getUserId());
 
     return buildResponseEntity(apiError);
   }

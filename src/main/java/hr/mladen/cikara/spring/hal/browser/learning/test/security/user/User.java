@@ -92,13 +92,24 @@ public class User implements UserDetails {
             .collect(Collectors.toSet());
   }
 
-  public Optional<UserAuthority> getAuthority(final UserAuthorityEnum userAuthority) {
+  /**
+   * Returns a user authority if user has it, otherwise Optional.empty is returned.
+   * @param userAuthority User authority to find
+   * @return Optional User Authority
+   */
+  Optional<UserAuthority> getAuthority(final UserAuthorityEnum userAuthority) {
     return authorities.stream()
             .filter(userAuthority1 -> userAuthority1.getAuthority().equalsIgnoreCase(userAuthority.name()))
             .findFirst();
   }
 
-  public User removeUserAuthority(final UserAuthority userAuthority) {
+  /**
+   * Removes User Authority from entity
+   *
+   * @param userAuthority User Authority to remove
+   * @return User entity without User Authority
+   */
+  User removeUserAuthority(final UserAuthority userAuthority) {
     authorities.remove(userAuthority);
 
     return this;
