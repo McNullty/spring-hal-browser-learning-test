@@ -148,5 +148,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     if (!userAuthority.isPresent()) {
       throw new UserAuthorityNotFoundException(userId, userAuthorityString);
     }
+
+    final User userWithoutAuthority = user.removeUserAuthority(userAuthority.get());
+
+    userRepository.save(userWithoutAuthority);
   }
 }

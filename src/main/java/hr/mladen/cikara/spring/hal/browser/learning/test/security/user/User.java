@@ -98,6 +98,12 @@ public class User implements UserDetails {
             .findFirst();
   }
 
+  public User removeUserAuthority(final UserAuthority userAuthority) {
+    authorities.remove(userAuthority);
+
+    return this;
+  }
+
   public static class UserBuilder {
     /**
      * Adding authority to list of authorities.
