@@ -18,6 +18,8 @@ class UserServiceSpecification extends Specification {
 
     private UserRepository userRepository = Mockito.mock(UserRepository)
 
+    private UserAuthorityRepository userAuthorityRepository = Mockito.mock(UserAuthorityRepository)
+
     def setup() {
         userService = new UserServiceImpl(userRepository, userAuthorityRepository)
     }

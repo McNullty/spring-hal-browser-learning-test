@@ -1,6 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
-import org.mockito.Mockito
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
@@ -43,7 +43,7 @@ class UserAuthorityServiceSpecification extends Specification {
 
         when: 'service find method is called'
         def userAuthorities =
-                userAuthorityService.findAllAuthoritiesForUserId(savedUser.getId())
+                userService.findAllAuthoritiesForUserId(savedUser.getId())
 
         then: 'collection of authorities is returned'
         userAuthorities.contains(savedUserRole)
@@ -51,11 +51,9 @@ class UserAuthorityServiceSpecification extends Specification {
 
     def 'if non-exiting userId is sent exception is raised'() {
         given: 'user service is mocked to throw exception'
-        Mockito.when(userService.findById(1L))
-                .thenThrow(new UserService.UserNotFoundException(1L))
 
         when: 'service find method is called'
-        userAuthorityService.findAllAuthoritiesForUserId(1L)
+        userService.findAllAuthoritiesForUserId(1L)
 
         then: 'exception is raised'
         thrown UserService.UserNotFoundException
@@ -80,12 +78,12 @@ class UserAuthorityServiceSpecification extends Specification {
         entityManager.flush()
 
         when: 'deleteAuthority method is called'
-        userAuthorityService.deleteAuthority(
+        userService.deleteAuthority(
                 savedUser.getId(), UserAuthorityEnum.ROLE_USER.name())
 
         then: 'user authority is removed'
         def userAuthorities =
-                userAuthorityService.findAllAuthoritiesForUserId(savedUser.getId())
+                userService.findAllAuthoritiesForUserId(savedUser.getId())
         userAuthorities.isEmpty()
     }
 }
