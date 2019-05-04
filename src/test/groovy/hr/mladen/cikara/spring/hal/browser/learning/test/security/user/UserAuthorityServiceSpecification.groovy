@@ -61,4 +61,32 @@ class UserAuthorityServiceSpecification extends Specification {
         then: 'exception is raised'
         thrown UserService.UserNotFoundException
     }
+
+    def 'deleting user authority from user'() {
+        given: 'repository has user with user authority'
+        def userRole = UserAuthority.builder()
+                .authority(UserAuthorityEnum.ROLE_USER.name()).build()
+        def savedUserRole = entityManager.persist(userRole)
+
+        def adamsName = "adam@first.com"
+        final User adam = User.builder()
+                .username(adamsName)
+                .password("adamsPassword")
+                .firstName("Adam")
+                .lastName("First")
+                .addAuthority(savedUserRole)
+                .build()
+
+        def savedUser = entityManager.persist(adam)
+        entityManager.flush()
+
+        when: 'deleteAuthority method is called'
+        userAuthorityService.deleteAuthority(
+                savedUser.getId(), UserAuthorityEnum.ROLE_USER.name())
+
+        then: 'user authority is removed'
+        def userAuthorities =
+                userAuthorityService.findAllAuthoritiesForUserId(savedUser.getId())
+        userAuthorities.isEmpty()
+    }
 }

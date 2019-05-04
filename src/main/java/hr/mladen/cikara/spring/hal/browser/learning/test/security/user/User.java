@@ -3,6 +3,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -89,6 +90,12 @@ public class User implements UserDetails {
     return authorities.stream()
             .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
             .collect(Collectors.toSet());
+  }
+
+  public Optional<UserAuthority> getAuthority(final UserAuthorityEnum userAuthority) {
+    return authorities.stream()
+            .filter(userAuthority1 -> userAuthority1.getAuthority().equalsIgnoreCase(userAuthority.name()))
+            .findFirst();
   }
 
   public static class UserBuilder {
