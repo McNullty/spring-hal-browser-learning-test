@@ -4,7 +4,6 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.boot.test.mock.mockito.MockBean
 import spock.lang.Specification
 
 @DataJpaTest
@@ -13,15 +12,15 @@ class UserAuthorityServiceSpecification extends Specification {
     private TestEntityManager entityManager
 
     @Autowired
+    private UserRepository userRepository
+
+    @Autowired
     private UserAuthorityRepository userAuthorityRepository
 
-    @MockBean
     private UserService userService
 
-    private UserAuthorityService userAuthorityService
-
     def setup() {
-        userAuthorityService = new UserAuthorityServiceImpl(userAuthorityRepository, userService)
+        userService = new UserServiceImpl(userRepository, userAuthorityRepository)
     }
 
     def 'service returns roles for user'() {

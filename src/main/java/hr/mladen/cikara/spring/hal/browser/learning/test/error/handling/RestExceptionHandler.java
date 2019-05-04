@@ -2,9 +2,10 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookService;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
-import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserAuthorityService;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -65,9 +66,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return buildResponseEntity(apiError);
   }
 
-  @ExceptionHandler({UserAuthorityService.UserAuthorityNotFoundException.class})
+  @ExceptionHandler({UserService.UserAuthorityNotFoundException.class})
   protected ResponseEntity<Object> handleUserAuthorityNotFound(
-          UserAuthorityService.UserAuthorityNotFoundException ex) {
+          UserService.UserAuthorityNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
     apiError.setMessage("Couldn't find user autority " + ex.getUserAuthority() +
             " for user with id " + ex.getUserId());

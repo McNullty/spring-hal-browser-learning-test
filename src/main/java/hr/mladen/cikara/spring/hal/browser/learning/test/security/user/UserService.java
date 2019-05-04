@@ -1,6 +1,9 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
+
+import java.util.Collection;
+
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -52,6 +55,12 @@ public interface UserService {
   void changePassword(String username, ChangePasswordDto changePasswordDto)
           throws PasswordsDontMatch, UserNotFoundException;
 
+  Collection<UserAuthority> findAllAuthoritiesForUserId(Long userId)
+          throws UserService.UserNotFoundException;
+
+  void deleteAuthority(Long userId, String toUpperCase)
+          throws UserService.UserNotFoundException, UserAuthorityNotFoundException;
+
   @Getter(AccessLevel.PUBLIC)
   @EqualsAndHashCode(callSuper = false)
   class UserNotFoundException extends Exception {
@@ -79,5 +88,14 @@ public interface UserService {
 
   class PasswordsDontMatch extends Exception {
     private static final long serialVersionUID = -5232027232632055140L;
+  }
+
+  @Value
+  @EqualsAndHashCode(callSuper = false)
+  class UserAuthorityNotFoundException extends Exception {
+    private static final long serialVersionUID = -1196898544769707935L;
+
+    private final Long userId;
+    private final String userAuthority;
   }
 }

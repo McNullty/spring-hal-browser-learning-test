@@ -21,10 +21,13 @@ class UserServiceJpaTestSpecification extends Specification {
     @Autowired
     private UserRepository userRepository
 
+    @Autowired
+    private UserAuthorityRepository userAuthorityRepository
+
     def adamsName = "Adam"
 
     def setup() {
-        userService = new UserServiceImpl(userRepository)
+        userService = new UserServiceImpl(userRepository, userAuthorityRepository)
 
         // Setup mock registry
         final User adam = User.builder()
@@ -97,7 +100,7 @@ class UserServiceJpaTestSpecification extends Specification {
     def 'when instantiating UserService without registry exception is thrown'() {
         when: 'new UserService with null registry is created'
         //noinspection GroovyResultOfObjectAllocationIgnored
-        new UserServiceImpl(null)
+        new UserServiceImpl(null, userAuthorityRepository)
 
         then: 'assertion exception is thrown'
         thrown IllegalArgumentException

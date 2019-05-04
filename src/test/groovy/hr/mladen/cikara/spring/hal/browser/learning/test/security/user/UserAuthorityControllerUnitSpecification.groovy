@@ -22,12 +22,12 @@ class UserAuthorityControllerUnitSpecification extends Specification {
     private MockMvc mockMvc
 
     @MockBean
-    private UserAuthorityService userAuthorityService
+    private UserService userService
 
     def 'listing all roles for user'() {
 
         given: 'user service mocked for user with ID 1'
-        Mockito.when(userAuthorityService.findAllAuthoritiesForUserId(Mockito.any(Long.class)))
+        Mockito.when(userService.findAllAuthoritiesForUserId(Mockito.any(Long.class)))
                 .thenReturn(Arrays.asList(
                         new UserAuthority.UserAuthorityBuilder()
                                 .id(1L).authority("ROLE_USER").build(),
@@ -52,7 +52,7 @@ class UserAuthorityControllerUnitSpecification extends Specification {
     def 'for non existing user error is returned'() {
 
         given: 'user service is mocked to return not found exception'
-        Mockito.when(userAuthorityService.findAllAuthoritiesForUserId(1L))
+        Mockito.when(userService.findAllAuthoritiesForUserId(1L))
                 .thenThrow(new UserService.UserNotFoundException(1L))
 
         when: 'GET request to endpoint /users/1/authorities/'
@@ -66,7 +66,7 @@ class UserAuthorityControllerUnitSpecification extends Specification {
 
     def 'when deleting for user that doesnt exist not found is returned'() {
         given: 'user service is mocked to return not found exception'
-        Mockito.when(userAuthorityService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
+        Mockito.when(userService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
                 .thenThrow(new UserService.UserNotFoundException(1L))
 
         when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
@@ -81,8 +81,8 @@ class UserAuthorityControllerUnitSpecification extends Specification {
 
     def 'when deleting for user athority that doesnt exist not found is returned'() {
         given: 'user service is mocked to return not found exception'
-        Mockito.when(userAuthorityService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
-                .thenThrow(new UserAuthorityService.UserAuthorityNotFoundException(1L, "ROLE_USER_MANAGER"))
+        Mockito.when(userService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
+                .thenThrow(new UserService.UserAuthorityNotFoundException(1L, "ROLE_USER_MANAGER"))
 
         when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
         def result = mockMvc.perform(

@@ -1,6 +1,8 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
+
+import java.util.Collection;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import org.springframework.util.Assert;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UserRepository userRepository;
+  private final UserAuthorityRepository userAuthorityRepository;
   private final PasswordEncoder passwordEncoder =
       PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
@@ -28,11 +31,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
    * Initializes UserService.
    *
    * @param userRepository UserRepository
+   * @param userAuthorityRepository UserAuthorityRepository
    */
-  public UserServiceImpl(final UserRepository userRepository) {
-    Assert.notNull(userRepository, "Service can't work without repository");
+  public UserServiceImpl(final UserRepository userRepository,
+                         final UserAuthorityRepository userAuthorityRepository) {
+    Assert.notNull(userRepository, "Service can't work without user repository");
+    Assert.notNull(userAuthorityRepository,
+            "Service can't work without user authority repository");
 
     this.userRepository = userRepository;
+    this.userAuthorityRepository = userAuthorityRepository;
   }
 
   @Override
@@ -119,5 +127,26 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     userForChange.setPassword(passwordEncoder.encode(changePasswordDto.getPassword()));
 
     userRepository.save(userForChange);
+  }
+
+  @Override
+  public Collection<UserAuthority> findAllAuthoritiesForUserId(final Long userId)
+          throws UserService.UserNotFoundException {
+    findById(userId);
+
+    return userAuthorityRepository.findAllUserAuthorityByUserId(userId);
+  }
+
+  @Override
+  public void deleteAuthority(
+          final Long userId, final String userAuthorityString)
+          throws UserService.UserNotFoundException, UserAuthorityNotFoundException {
+    final User user = findById(userId);
+    final Optional<UserAuthority> userAuthority =
+            user.getAuthority(UserAuthorityEnum.valueOf(userAuthorityString));
+
+    if (!userAuthority.isPresent()) {
+      throw new UserAuthorityNotFoundException(userId, userAuthorityString);
+    }
   }
 }

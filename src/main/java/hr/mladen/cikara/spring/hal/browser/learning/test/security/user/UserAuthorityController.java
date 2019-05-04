@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @ExposesResourceFor(UserAuthority.class)
 public class UserAuthorityController {
 
-  private final UserAuthorityService userAuthorityService;
+  private final UserService userService;
 
-  public UserAuthorityController(final UserAuthorityService userAuthorityService) {
-    this.userAuthorityService = userAuthorityService;
+  public UserAuthorityController(final UserService userService) {
+    this.userService = userService;
   }
 
   /**
@@ -42,7 +42,7 @@ public class UserAuthorityController {
   public ResponseEntity<Resources<UserAuthorityResource>> findAllForUser(
           @PathVariable final Long userId) throws UserService.UserNotFoundException {
     Collection<UserAuthority> userAuthorities =
-            userAuthorityService.findAllAuthoritiesForUserId(userId);
+            userService.findAllAuthoritiesForUserId(userId);
 
     Resources<UserAuthorityResource> userAuthorityResources =
             convertUserAuthoritiesToResources(userAuthorities);
@@ -56,10 +56,10 @@ public class UserAuthorityController {
   public ResponseEntity<?> removeUserAuthority(
           @PathVariable final Long userId, @PathVariable final String authority)
           throws UserService.UserNotFoundException,
-          UserAuthorityService.UserAuthorityNotFoundException {
+          UserService.UserAuthorityNotFoundException {
     log.debug("Trying to delete authority {}", authority.toUpperCase());
 
-    userAuthorityService.deleteAuthority(userId, authority.toUpperCase());
+    userService.deleteAuthority(userId, authority.toUpperCase());
 
     return ResponseEntity.noContent().build();
   }
