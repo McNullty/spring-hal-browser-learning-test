@@ -50,9 +50,7 @@ class UserAuthorityServiceSpecification extends Specification {
     }
 
     def 'if non-exiting userId is sent exception is raised'() {
-        given: 'user service is mocked to throw exception'
-
-        when: 'service find method is called'
+        when: 'service find method is called fo user that doesnt exist'
         userService.findAllAuthoritiesForUserId(1L)
 
         then: 'exception is raised'
