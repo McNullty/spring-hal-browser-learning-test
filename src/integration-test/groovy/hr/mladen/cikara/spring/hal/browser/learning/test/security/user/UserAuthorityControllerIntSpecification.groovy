@@ -22,6 +22,9 @@ class UserAuthorityControllerIntSpecification extends Specification {
     @Autowired
     private MockMvc mockMvc
 
+    @Autowired
+    private UserRepository userRepository
+
     private AuthorizationUtil authorizationUtil
 
     def setup() {
@@ -58,5 +61,57 @@ class UserAuthorityControllerIntSpecification extends Specification {
 
         then: 'OK is returned'
         result.andExpect(MockMvcResultMatchers.status().isOk())
+    }
+
+    def 'when deleting for user that doesnt exist not found is returned'() {
+        given: 'valid authorization token with USER_MANAGER or ADMIN roles'
+        def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
+                "Tom234", "password")
+
+        when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/599/authorities/ROLE_USER_MANAGER")
+                        .header("Authorization", "Bearer " + authorization)
+                        .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'result is 404 Not Found'
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+    }
+
+    def 'when deleting for user authority that doesnt exist not found is returned'() {
+        given: 'valid authorization token with USER_MANAGER or ADMIN roles'
+        def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
+                "Tom234", "password")
+
+        when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER_MANAGER'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER_MANAGER")
+                        .header("Authorization", "Bearer " + authorization)
+                        .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'result is 404 Not Found'
+        result.andExpect(MockMvcResultMatchers.status().isNotFound())
+    }
+
+    def 'when deleting valid user authority no content is returned'() {
+        given: 'valid authorization token with USER_MANAGER or ADMIN roles'
+        def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(
+                "Tom234", "password")
+
+        when: 'DELETE request to endpoint /users/1/authorities/ROLE_USER'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/users/1/authorities/ROLE_USER")
+                        .header("Authorization", "Bearer " + authorization)
+                        .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'result is No Content'
+        result.andExpect(MockMvcResultMatchers.status().isNoContent())
+
+        and: 'user authority is removed'
+        def user = userRepository.findById(1L)
+        user.get().getAuthorities().isEmpty()
     }
 }

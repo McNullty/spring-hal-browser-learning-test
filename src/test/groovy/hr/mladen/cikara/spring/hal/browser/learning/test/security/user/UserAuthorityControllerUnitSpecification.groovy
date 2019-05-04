@@ -79,7 +79,7 @@ class UserAuthorityControllerUnitSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isNotFound())
     }
 
-    def 'when deleting for user athority that doesnt exist not found is returned'() {
+    def 'when deleting for user authority that doesnt exist not found is returned'() {
         given: 'user service is mocked to return not found exception'
         Mockito.when(userService.deleteAuthority(1L, "ROLE_USER_MANAGER"))
                 .thenThrow(new UserService.UserAuthorityNotFoundException(1L, "ROLE_USER_MANAGER"))
