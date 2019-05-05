@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hr.mladen.cikara.spring.hal.browser.learning.test.util.SpringSecurityWebAuxTestConfig
 import org.hamcrest.Matchers
 import org.mockito.Mockito
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.hateoas.MediaTypes
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -20,6 +22,9 @@ class UserAuthorityControllerUnitSpecification extends Specification {
 
     @Autowired
     private MockMvc mockMvc
+
+    @Autowired
+    private ObjectMapper objectMapper
 
     @MockBean
     private UserService userService
@@ -103,5 +108,27 @@ class UserAuthorityControllerUnitSpecification extends Specification {
 
         then: 'result is No Content'
         result.andExpect(MockMvcResultMatchers.status().isNoContent())
+    }
+
+    def 'adding user roles to user'() {
+        given: ''
+        and: 'JSON with list of user authorities'
+        def listAuthorities = Arrays.asList("ROLE_USER_MENAGER", "ROLE_ADMIN")
+
+        def requestBody = new HashMap<String, Object>()
+        requestBody.put("userAuthorities", "ROLE_USER_MENAGER")
+
+        when: 'POST to /users/1/authorities'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/1/authorities")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestBody))
+                        .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'OK is returned'
+        result.andExpect(MockMvcResultMatchers.status().isOk())
+
+        and: 'list of user authorities'
     }
 }
