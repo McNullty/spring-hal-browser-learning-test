@@ -70,8 +70,7 @@ public class UserAuthorityController {
   }
 
   @PostMapping(
-          consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE},
-          produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE}
+          consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE}
   )
   public ResponseEntity<?> addUserAuthorities(
           @PathVariable final Long userId,

@@ -1,6 +1,7 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.util.logging.Slf4j
 import hr.mladen.cikara.spring.hal.browser.learning.test.util.SpringSecurityWebAuxTestConfig
 import org.hamcrest.Matchers
 import org.mockito.Mockito
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import spock.lang.Specification
 
+@Slf4j
 @WebMvcTest(controllers = UserAuthorityController.class)
 @Import(SpringSecurityWebAuxTestConfig.class)
 class UserAuthorityControllerUnitSpecification extends Specification {
@@ -113,17 +115,18 @@ class UserAuthorityControllerUnitSpecification extends Specification {
     def 'adding user roles to user'() {
         given: ''
         and: 'JSON with list of user authorities'
-        def listAuthorities = Arrays.asList("ROLE_USER_MENAGER", "ROLE_ADMIN")
+        def listAuthorities = Arrays.asList("ROLE_USER_MANAGER", "ROLE_ADMIN")
 
-        def requestBody = new HashMap<String, Object>()
-        requestBody.put("userAuthorities", "ROLE_USER_MENAGER")
+        def requestBody = new HashMap<>()
+        requestBody.put("userAuthorities", listAuthorities)
+
 
         when: 'POST to /users/1/authorities'
+        log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/1/authorities")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(requestBody))
-                        .accept(MediaTypes.HAL_JSON_VALUE))
+                        .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
 
         then: 'OK is returned'
