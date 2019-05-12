@@ -204,4 +204,22 @@ class UserServiceJpaTestSpecification extends Specification {
         then: 'exception is thrown'
         thrown UserService.UserNotFoundException
     }
+
+    def 'adding authority to user'() {
+        given: 'existing user authorities'
+        final UserAuthority roleUserManager = UserAuthority.builder().authority("ROLE_USER_MANAGER").build()
+        final UserAuthority roleAdmin = UserAuthority.builder().authority("ROLE_ADMIN").build()
+
+        entityManager.persist(roleUserManager)
+        entityManager.persist(roleAdmin)
+        entityManager.flush()
+
+        when: 'calling addUserAuthorities whit valid list of user Authorities'
+        userService.addUserAuthorities(1L, Arrays.asList(
+                UserAuthorityEnum.ROLE_USER_MANAGER, UserAuthorityEnum.ROLE_ADMIN))
+
+        then: 'user has two new user authorities'
+        def user = userRepository.findById(1L)
+        !user.get().getAuthorities().isEmpty()
+    }
 }

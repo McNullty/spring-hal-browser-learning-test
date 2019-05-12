@@ -135,6 +135,9 @@ public class User implements UserDetails {
    * @return Entity with added User Authorities
    */
   User addAllUserAuthority(final List<UserAuthority> userAuthorities) {
+    if(authorities == null) {
+      authorities = new HashSet<>();
+    }
     authorities.addAll(userAuthorities);
 
     return this;
