@@ -1,5 +1,6 @@
 package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resources;
@@ -31,9 +33,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAuthorityController {
 
   private final UserService userService;
+  private final EntityLinks entityLinks;
 
-  public UserAuthorityController(final UserService userService) {
+  public UserAuthorityController(
+          final UserService userService, final EntityLinks entityLinks) {
     this.userService = userService;
+    this.entityLinks = entityLinks;
   }
 
   /**
@@ -75,7 +80,11 @@ public class UserAuthorityController {
   public ResponseEntity<?> addUserAuthorities(
           @PathVariable final Long userId,
           @Valid @RequestBody final UserAuthoritiesInputDto userAuthorities) {
-    return ResponseEntity.ok().build();
+
+    final URI uri = entityLinks.linkFor(UserAuthority.class, userId).toUri();
+
+    return ResponseEntity.created(uri).build();
+
   }
 
   private Resources<UserAuthorityResource> convertUserAuthoritiesToResources(

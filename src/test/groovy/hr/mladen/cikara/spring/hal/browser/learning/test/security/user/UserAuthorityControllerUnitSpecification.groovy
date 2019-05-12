@@ -113,13 +113,11 @@ class UserAuthorityControllerUnitSpecification extends Specification {
     }
 
     def 'adding user roles to user'() {
-        given: ''
-        and: 'JSON with list of user authorities'
+        given: 'JSON with list of user authorities'
         def listAuthorities = Arrays.asList("ROLE_USER_MANAGER", "ROLE_ADMIN")
 
         def requestBody = new HashMap<>()
         requestBody.put("userAuthorities", listAuthorities)
-
 
         when: 'POST to /users/1/authorities'
         log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
@@ -130,8 +128,12 @@ class UserAuthorityControllerUnitSpecification extends Specification {
                 .andDo(MockMvcResultHandlers.print())
 
         then: 'OK is returned'
-        result.andExpect(MockMvcResultMatchers.status().isOk())
+        result.andExpect(MockMvcResultMatchers.status().isCreated())
 
-        and: 'list of user authorities'
+        and: 'link to user authorities is in Location header'
+        result.andExpect(MockMvcResultMatchers.header().exists("Location"))
+        result.andReturn().getResponse().getHeader("Location") == "http://localhost/users/1/authorities"
     }
+
+
 }
