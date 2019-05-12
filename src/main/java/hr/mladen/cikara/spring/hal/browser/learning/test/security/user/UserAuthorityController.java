@@ -60,6 +60,15 @@ public class UserAuthorityController {
     return ResponseEntity.ok(userAuthorityResources);
   }
 
+  /**
+   * Endpoint for removing user authority.
+   *
+   * @param userId User Id.
+   * @param authority User Authority that is to be removed.
+   * @return No content
+   * @throws UserService.UserNotFoundException If user with userId doesn't exist
+   * @throws UserService.UserAuthorityNotFoundException if user authority doesnt exist
+   */
   @DeleteMapping(
           value = "/{authority}",
           produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -74,6 +83,14 @@ public class UserAuthorityController {
     return ResponseEntity.noContent().build();
   }
 
+  /**
+   * Endpoint for adding user authorities.
+   *
+   * @param userId User Id.
+   * @param userAuthorities List of user authorities to be added.
+   * @return Created response with link to list of user authorities
+   * @throws UserService.UserNotFoundException If user with userId doesn't exist
+   */
   @PostMapping(
           consumes = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE}
   )
@@ -87,7 +104,6 @@ public class UserAuthorityController {
     final URI uri = entityLinks.linkFor(UserAuthority.class, userId).toUri();
 
     return ResponseEntity.created(uri).build();
-
   }
 
   private Resources<UserAuthorityResource> convertUserAuthoritiesToResources(

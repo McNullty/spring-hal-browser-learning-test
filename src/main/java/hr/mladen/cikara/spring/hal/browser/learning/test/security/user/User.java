@@ -100,7 +100,8 @@ public class User implements UserDetails {
    */
   Optional<UserAuthority> getAuthority(final UserAuthorityEnum userAuthority) {
     return authorities.stream()
-            .filter(userAuthority1 -> userAuthority1.getAuthority().equalsIgnoreCase(userAuthority.name()))
+            .filter(userAuthority1 -> userAuthority1.getAuthority()
+                    .equalsIgnoreCase(userAuthority.name()))
             .findFirst();
   }
 
@@ -135,7 +136,7 @@ public class User implements UserDetails {
    * @return Entity with added User Authorities
    */
   User addAllUserAuthority(final List<UserAuthority> userAuthorities) {
-    if(authorities == null) {
+    if (authorities == null) {
       authorities = new HashSet<>();
     }
     authorities.addAll(userAuthorities);
