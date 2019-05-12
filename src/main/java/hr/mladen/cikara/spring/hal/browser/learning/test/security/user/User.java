@@ -118,18 +118,6 @@ public class User implements UserDetails {
   }
 
   /**
-   * Adds User Authority to entity.
-   *
-   * @param userAuthority User Authority to add
-   * @return User entity with User Authority
-   */
-  User addUserAuthority(final UserAuthority userAuthority) {
-    authorities.add(userAuthority);
-
-    return this;
-  }
-
-  /**
    * Adds User Authorities to entity.
    *
    * @param userAuthorities List of User Authorities to add to entity
