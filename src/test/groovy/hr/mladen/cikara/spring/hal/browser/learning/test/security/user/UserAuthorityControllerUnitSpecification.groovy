@@ -124,6 +124,7 @@ class UserAuthorityControllerUnitSpecification extends Specification {
         def result = mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/1/authorities")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaTypes.HAL_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -135,5 +136,61 @@ class UserAuthorityControllerUnitSpecification extends Specification {
         result.andReturn().getResponse().getHeader("Location") == "http://localhost/users/1/authorities"
     }
 
+    def 'sending empty list of user roles to add user authorities endpoint'() {
+        given: 'JSON with empty list of user authorities'
+        def listAuthorities = Collections.emptyList()
+
+        def requestBody = new HashMap<>()
+        requestBody.put("userAuthorities", listAuthorities)
+
+        when: 'POST to /users/1/authorities'
+        log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/1/authorities")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaTypes.HAL_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'BAD Request is returned'
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+    }
+
+    def 'sending empty body to add user authorities endpoint'() {
+        given: 'JSON with empty body'
+        def requestBody = new HashMap<>()
+
+        when: 'POST to /users/1/authorities'
+        log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/1/authorities")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaTypes.HAL_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'BAD Request is returned'
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+    }
+
+    def 'sending unknown user authority to add user authorities endpoint'() {
+        given: 'JSON with list of user authorities'
+        def listAuthorities = Arrays.asList("ROLE_USER_MANAGER", "ROLE_AMDIN")
+
+        def requestBody = new HashMap<>()
+        requestBody.put("userAuthorities", listAuthorities)
+
+        when: 'POST to /users/1/authorities'
+        log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/1/authorities")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaTypes.HAL_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+
+        then: 'BAD Request is returned'
+        result.andExpect(MockMvcResultMatchers.status().isBadRequest())
+    }
 
 }

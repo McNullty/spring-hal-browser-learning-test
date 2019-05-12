@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,8 +71,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleUserAuthorityNotFound(
           UserService.UserAuthorityNotFoundException ex) {
     ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
-    apiError.setMessage("Couldn't find user autority " + ex.getUserAuthority()
+    apiError.setMessage("Couldn't find user authority " + ex.getUserAuthority()
             + " for user with id " + ex.getUserId());
+
+    return buildResponseEntity(apiError);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+          HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status,
+          WebRequest request) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+    apiError.setMessage("Couldn't parse message. Error: " + ex.getLocalizedMessage());
 
     return buildResponseEntity(apiError);
   }
