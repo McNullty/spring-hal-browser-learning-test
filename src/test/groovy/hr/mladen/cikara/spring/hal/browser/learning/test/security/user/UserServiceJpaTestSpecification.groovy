@@ -24,6 +24,9 @@ class UserServiceJpaTestSpecification extends Specification {
     @Autowired
     private UserAuthorityRepository userAuthorityRepository
 
+    private Long adamsPartyId
+    private Long bobsPartyId
+
     def adamsName = "Adam"
 
     def setup() {
@@ -40,9 +43,12 @@ class UserServiceJpaTestSpecification extends Specification {
                 .password("bobsPassword")
                 .build()
 
-        entityManager.persist(adam)
-        entityManager.persist(bob)
+        def adamSaved = entityManager.persist(adam)
+        def bobSaved = entityManager.persist(bob)
         entityManager.flush()
+
+        adamsPartyId = adamSaved.getId()
+        bobsPartyId = bobSaved.getId()
     }
 
     def 'changing password'() {
@@ -214,12 +220,14 @@ class UserServiceJpaTestSpecification extends Specification {
         entityManager.persist(roleAdmin)
         entityManager.flush()
 
+
+
         when: 'calling addUserAuthorities whit valid list of user Authorities'
-        userService.addUserAuthorities(1L, Arrays.asList(
+        userService.addUserAuthorities(adamsPartyId, Arrays.asList(
                 UserAuthorityEnum.ROLE_USER_MANAGER, UserAuthorityEnum.ROLE_ADMIN))
 
         then: 'user has two new user authorities'
-        def user = userRepository.findById(1L)
+        def user = userRepository.findById(adamsPartyId)
         !user.get().getAuthorities().isEmpty()
     }
 }

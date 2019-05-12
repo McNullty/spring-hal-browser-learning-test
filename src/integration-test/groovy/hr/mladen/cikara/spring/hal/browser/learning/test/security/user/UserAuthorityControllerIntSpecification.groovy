@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.hateoas.MediaTypes
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -15,10 +16,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import spock.lang.Specification
 import spock.lang.Unroll
 
+
 @Slf4j
 @Unroll
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext
 class UserAuthorityControllerIntSpecification extends Specification {
 
     @Autowired
@@ -131,10 +134,10 @@ class UserAuthorityControllerIntSpecification extends Specification {
         def requestBody = new HashMap<>()
         requestBody.put("userAuthorities", listAuthorities)
 
-        when: 'POST to /users/1/authorities'
+        when: 'POST to /users/3/authorities'
         log.debug("Content: {}", objectMapper.writeValueAsString(requestBody))
         def result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/1/authorities")
+                MockMvcRequestBuilders.post("/users/3/authorities")
                         .header("Authorization", "Bearer " + authorization)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaTypes.HAL_JSON_VALUE)
@@ -146,10 +149,10 @@ class UserAuthorityControllerIntSpecification extends Specification {
 
         and: 'link to user authorities is in Location header'
         result.andExpect(MockMvcResultMatchers.header().exists("Location"))
-        result.andReturn().getResponse().getHeader("Location") == "http://localhost/users/1/authorities"
+        result.andReturn().getResponse().getHeader("Location") == "http://localhost/users/3/authorities"
 
         and: 'user now has all three roles'
-        def user = userRepository.findById(1L)
+        def user = userRepository.findById(3L)
         user.get().getAuthorities().size() == 3
     }
 
