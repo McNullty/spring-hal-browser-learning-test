@@ -3,6 +3,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 
 import java.util.Collection;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -60,6 +61,9 @@ public interface UserService {
 
   void deleteAuthority(Long userId, String userAuthority)
           throws UserService.UserNotFoundException, UserAuthorityNotFoundException;
+
+  void addUserAuthorities(Long userId, List<UserAuthorityEnum> userAuthorities)
+          throws UserService.UserNotFoundException;
 
   @Getter(AccessLevel.PUBLIC)
   @EqualsAndHashCode(callSuper = false)

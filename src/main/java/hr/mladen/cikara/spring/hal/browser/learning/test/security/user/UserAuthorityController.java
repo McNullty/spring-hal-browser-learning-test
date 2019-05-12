@@ -79,7 +79,10 @@ public class UserAuthorityController {
   )
   public ResponseEntity<?> addUserAuthorities(
           @PathVariable final Long userId,
-          @Valid @RequestBody final UserAuthoritiesInputDto userAuthorities) {
+          @Valid @RequestBody final UserAuthoritiesInputDto userAuthorities)
+          throws UserService.UserNotFoundException {
+
+    userService.addUserAuthorities(userId, userAuthorities.getUserAuthorities());
 
     final URI uri = entityLinks.linkFor(UserAuthority.class, userId).toUri();
 

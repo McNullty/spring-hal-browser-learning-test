@@ -3,6 +3,7 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -104,13 +105,37 @@ public class User implements UserDetails {
   }
 
   /**
-   * Removes User Authority from entity
+   * Removes User Authority from entity.
    *
    * @param userAuthority User Authority to remove
    * @return User entity without User Authority
    */
   User removeUserAuthority(final UserAuthority userAuthority) {
     authorities.remove(userAuthority);
+
+    return this;
+  }
+
+  /**
+   * Adds User Authority to entity.
+   *
+   * @param userAuthority User Authority to add
+   * @return User entity with User Authority
+   */
+  User addUserAuthority(final UserAuthority userAuthority) {
+    authorities.add(userAuthority);
+
+    return this;
+  }
+
+  /**
+   * Adds User Authorities to entity.
+   *
+   * @param userAuthorities List of User Authorities to add to entity
+   * @return Entity with added User Authorities
+   */
+  User addAllUserAuthority(final List<UserAuthority> userAuthorities) {
+    authorities.addAll(userAuthorities);
 
     return this;
   }

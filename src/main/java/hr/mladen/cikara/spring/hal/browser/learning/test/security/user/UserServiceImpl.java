@@ -3,7 +3,10 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.register.RegisterDto;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +18,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 @Slf4j
 @Getter(AccessLevel.PRIVATE)
 @Service(value = "userService")
+@Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UserRepository userRepository;
@@ -43,6 +48,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     this.userAuthorityRepository = userAuthorityRepository;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<User> user = userRepository.findByUsername(username);
@@ -53,11 +59,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     return user.get();
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Page<User> findAll(Pageable pageable) {
     return userRepository.findAll(pageable);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public User findById(final Long userId) throws UserNotFoundException {
     try {
@@ -95,6 +103,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     return userRepository.save(newUser);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public User findByUsername(final String username) throws UserNotFoundException {
     Optional<User> user = userRepository.findByUsername(username);
@@ -129,9 +138,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     userRepository.save(userForChange);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<UserAuthority> findAllAuthoritiesForUserId(final Long userId)
-          throws UserService.UserNotFoundException {
+          throws UserNotFoundException {
     findById(userId);
 
     return userAuthorityRepository.findAllUserAuthorityByUserId(userId);
@@ -140,7 +150,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   @Override
   public void deleteAuthority(
           final Long userId, final String userAuthorityString)
-          throws UserService.UserNotFoundException, UserAuthorityNotFoundException {
+          throws UserNotFoundException, UserAuthorityNotFoundException {
     final User user = findById(userId);
     final Optional<UserAuthority> userAuthority =
             user.getAuthority(UserAuthorityEnum.valueOf(userAuthorityString));
@@ -152,5 +162,24 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     final User userWithoutAuthority = user.removeUserAuthority(userAuthority.get());
 
     userRepository.save(userWithoutAuthority);
+  }
+
+  @Override
+  public void addUserAuthorities(
+          final Long userId, final List<UserAuthorityEnum> userAuthorities)
+          throws UserNotFoundException {
+    final User user = findById(userId);
+
+    final List<UserAuthority> allUserAuthorities = userAuthorityRepository.findAll();
+
+    final List<UserAuthority> newUserAuthorities =
+            allUserAuthorities.stream()
+                    .filter(userAuthority -> userAuthorities.contains(
+                            UserAuthorityEnum.valueOf(userAuthority.getAuthority())))
+                    .collect(Collectors.toList());
+
+    final User userWithAuthorities = user.addAllUserAuthority(newUserAuthorities);
+
+    userRepository.save(userWithAuthorities);
   }
 }
