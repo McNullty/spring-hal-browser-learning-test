@@ -31,7 +31,7 @@ Now HAL Browser can be accessed at http://localhost:8080/browser/index.html
 
 NOTE:  We could probably extract static files and serve them with nginx, but for now this is good enough.
 
-= Running application
+== Running application
 
 First you need to build application with:
 [source,bash]
