@@ -19,6 +19,8 @@ public class UserToUserResourceAssembler implements ResourceAssembler<User, User
   public UserResource toResource(final User entity) {
     UserResource userResource = new UserResource(entity);
     userResource.add(entityLinks.linkToSingleResource(User.class, entity.getId()).withSelfRel());
+    userResource.add(entityLinks.linkFor(
+            UserAuthority.class, entity.getId()).withRel("userAuthorities"));
 
     return userResource;
   }

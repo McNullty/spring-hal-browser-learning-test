@@ -18,8 +18,10 @@ class UserServiceSpecification extends Specification {
 
     private UserRepository userRepository = Mockito.mock(UserRepository)
 
+    private UserAuthorityRepository userAuthorityRepository = Mockito.mock(UserAuthorityRepository)
+
     def setup() {
-        userService = new UserServiceImpl(userRepository)
+        userService = new UserServiceImpl(userRepository, userAuthorityRepository)
     }
 
     def 'when findAll is called page with two user is returned'() {
@@ -49,7 +51,7 @@ class UserServiceSpecification extends Specification {
     def 'when instantiating UserService without registry exception is thrown'() {
         when: 'new UserService with null registry is created'
         //noinspection GroovyResultOfObjectAllocationIgnored
-        new UserServiceImpl(null)
+        new UserServiceImpl(null, userAuthorityRepository)
 
         then: 'assertion exception is thrown'
         thrown IllegalArgumentException

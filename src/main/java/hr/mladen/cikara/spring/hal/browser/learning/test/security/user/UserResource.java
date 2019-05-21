@@ -15,8 +15,7 @@ public class UserResource extends ResourceSupport {
 
   private final String lastName;
 
-
-  UserResource(User user) {
+  public UserResource(User user) {
     this.username = user.getUsername();
     this.firstName = user.getFirstName();
     this.lastName = user.getLastName();

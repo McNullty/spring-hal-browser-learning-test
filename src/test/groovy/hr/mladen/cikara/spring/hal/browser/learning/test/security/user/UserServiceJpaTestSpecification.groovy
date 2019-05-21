@@ -21,10 +21,16 @@ class UserServiceJpaTestSpecification extends Specification {
     @Autowired
     private UserRepository userRepository
 
+    @Autowired
+    private UserAuthorityRepository userAuthorityRepository
+
+    private Long adamsPartyId
+    private Long bobsPartyId
+
     def adamsName = "Adam"
 
     def setup() {
-        userService = new UserServiceImpl(userRepository)
+        userService = new UserServiceImpl(userRepository, userAuthorityRepository)
 
         // Setup mock registry
         final User adam = User.builder()
@@ -37,9 +43,12 @@ class UserServiceJpaTestSpecification extends Specification {
                 .password("bobsPassword")
                 .build()
 
-        entityManager.persist(adam)
-        entityManager.persist(bob)
+        def adamSaved = entityManager.persist(adam)
+        def bobSaved = entityManager.persist(bob)
         entityManager.flush()
+
+        adamsPartyId = adamSaved.getId()
+        bobsPartyId = bobSaved.getId()
     }
 
     def 'changing password'() {
@@ -97,7 +106,7 @@ class UserServiceJpaTestSpecification extends Specification {
     def 'when instantiating UserService without registry exception is thrown'() {
         when: 'new UserService with null registry is created'
         //noinspection GroovyResultOfObjectAllocationIgnored
-        new UserServiceImpl(null)
+        new UserServiceImpl(null, userAuthorityRepository)
 
         then: 'assertion exception is thrown'
         thrown IllegalArgumentException
@@ -200,5 +209,25 @@ class UserServiceJpaTestSpecification extends Specification {
 
         then: 'exception is thrown'
         thrown UserService.UserNotFoundException
+    }
+
+    def 'adding authority to user'() {
+        given: 'existing user authorities'
+        final UserAuthority roleUserManager = UserAuthority.builder().authority("ROLE_USER_MANAGER").build()
+        final UserAuthority roleAdmin = UserAuthority.builder().authority("ROLE_ADMIN").build()
+
+        entityManager.persist(roleUserManager)
+        entityManager.persist(roleAdmin)
+        entityManager.flush()
+
+
+
+        when: 'calling addUserAuthorities whit valid list of user Authorities'
+        userService.addUserAuthorities(adamsPartyId, Arrays.asList(
+                UserAuthorityEnum.ROLE_USER_MANAGER, UserAuthorityEnum.ROLE_ADMIN))
+
+        then: 'user has two new user authorities'
+        def user = userRepository.findById(adamsPartyId)
+        !user.get().getAuthorities().isEmpty()
     }
 }

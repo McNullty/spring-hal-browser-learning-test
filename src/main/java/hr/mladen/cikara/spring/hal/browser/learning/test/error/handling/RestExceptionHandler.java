@@ -3,12 +3,15 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.error.handling;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BookService;
 import hr.mladen.cikara.spring.hal.browser.learning.test.book.BooksController;
 import hr.mladen.cikara.spring.hal.browser.learning.test.security.user.UserService;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +63,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
           UserService.PasswordsDontMatch ex) {
     ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
     apiError.setMessage("Passwords dont match");
+
+    return buildResponseEntity(apiError);
+  }
+
+  @ExceptionHandler({UserService.UserAuthorityNotFoundException.class})
+  protected ResponseEntity<Object> handleUserAuthorityNotFound(
+          UserService.UserAuthorityNotFoundException ex) {
+    ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex);
+    apiError.setMessage("Couldn't find user authority " + ex.getUserAuthority()
+            + " for user with id " + ex.getUserId());
+
+    return buildResponseEntity(apiError);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+          HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status,
+          WebRequest request) {
+    ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex);
+    apiError.setMessage("Couldn't parse message. Error: " + ex.getLocalizedMessage());
 
     return buildResponseEntity(apiError);
   }

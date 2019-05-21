@@ -3,6 +3,8 @@ package hr.mladen.cikara.spring.hal.browser.learning.test.security.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -89,6 +91,45 @@ public class User implements UserDetails {
     return authorities.stream()
             .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
             .collect(Collectors.toSet());
+  }
+
+  /**
+   * Returns a user authority if user has it, otherwise Optional.empty is returned.
+   * @param userAuthority User authority to find
+   * @return Optional User Authority
+   */
+  Optional<UserAuthority> getAuthority(final UserAuthorityEnum userAuthority) {
+    return authorities.stream()
+            .filter(userAuthority1 -> userAuthority1.getAuthority()
+                    .equalsIgnoreCase(userAuthority.name()))
+            .findFirst();
+  }
+
+  /**
+   * Removes User Authority from entity.
+   *
+   * @param userAuthority User Authority to remove
+   * @return User entity without User Authority
+   */
+  User removeUserAuthority(final UserAuthority userAuthority) {
+    authorities.remove(userAuthority);
+
+    return this;
+  }
+
+  /**
+   * Adds User Authorities to entity.
+   *
+   * @param userAuthorities List of User Authorities to add to entity
+   * @return Entity with added User Authorities
+   */
+  User addAllUserAuthority(final List<UserAuthority> userAuthorities) {
+    if (authorities == null) {
+      authorities = new HashSet<>();
+    }
+    authorities.addAll(userAuthorities);
+
+    return this;
   }
 
   public static class UserBuilder {

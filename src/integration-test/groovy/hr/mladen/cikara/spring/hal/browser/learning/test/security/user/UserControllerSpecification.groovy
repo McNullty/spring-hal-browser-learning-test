@@ -54,18 +54,26 @@ class UserControllerSpecification extends Specification {
         result.andExpect(MockMvcResultMatchers.status().isOk())
 
         and: 'result should have json with this fields'
-        //TODO: add tests
-//        result.andExpect()
+        result.andExpect(MockMvcResultMatchers.jsonPath(
+                '$._embedded.users', Matchers.is(Matchers.notNullValue())))
     }
 
     def 'Getting data for current user'() {
-        given: 'valid authorization token'
         when: '/me endpoint is access'
+        def result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/me")
+                        .header("Authorization",
+                        "Bearer " + authorizationUtil.getAccessTokenFromAuthorizationResponse(
+                                TEST_USER, "password"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
         then: 'OK is returned'
+        result.andExpect(MockMvcResultMatchers.status().isOk())
         and: 'user resource is returned'
+        result.andExpect(MockMvcResultMatchers.jsonPath(
+                'username', Matchers.is(TEST_USER)))
     }
 
-    // TODO: Refactor so password is reset before every test
     def 'Changing password'() {
         given: 'valid authorization token'
         def authorization = authorizationUtil.getAccessTokenFromAuthorizationResponse(

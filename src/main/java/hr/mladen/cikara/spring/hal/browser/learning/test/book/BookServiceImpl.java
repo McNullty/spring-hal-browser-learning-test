@@ -7,10 +7,12 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 @Service
 @Getter(AccessLevel.PRIVATE)
+@Transactional
 public class BookServiceImpl implements BookService {
 
   private final BookRepository bookRepository;
@@ -20,11 +22,13 @@ public class BookServiceImpl implements BookService {
     this.bookRepository = bookRepository;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Page<Book> findAll(final Pageable pageable) {
     return bookRepository.findAll(pageable);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Page<Book> findByTitleContaining(final String query, final Pageable pageable) {
     return bookRepository.findByTitleContaining(query, pageable);
@@ -35,6 +39,7 @@ public class BookServiceImpl implements BookService {
     return bookRepository.save(book);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Book getBook(final Long bookId) throws BookNotFoundException {
     try {
