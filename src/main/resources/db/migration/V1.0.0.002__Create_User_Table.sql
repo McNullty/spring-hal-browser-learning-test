@@ -20,9 +20,9 @@ CREATE TABLE oauth2_authority (
 GRANT SELECT ON oauth2_authority TO haluser;
 GRANT USAGE, SELECT ON SEQUENCE oauth2_authority_authority_id_seq TO haluser;
 
-INSERT INTO oauth2_authority(authority) VALUES ("ROLE_USER");
-INSERT INTO oauth2_authority(authority) VALUES ("ROLE_ADMIN");
-INSERT INTO oauth2_authority(authority) VALUES ("ROLE_USER_MANAGER");
+INSERT INTO oauth2_authority(authority) VALUES ('ROLE_USER');
+INSERT INTO oauth2_authority(authority) VALUES ('ROLE_ADMIN');
+INSERT INTO oauth2_authority(authority) VALUES ('ROLE_USER_MANAGER');
 
 CREATE TABLE oauth2_user_authority (
     user_id BIGINT NOT NULL REFERENCES oauth2_user (user_id) ON DELETE CASCADE,
@@ -30,4 +30,5 @@ CREATE TABLE oauth2_user_authority (
     PRIMARY KEY(user_id, authority_id)
 );
 
+GRANT SELECT ON oauth2_user_authority TO haluser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON oauth2_user_authority TO haluser;

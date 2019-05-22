@@ -15,6 +15,11 @@ public class UserResource extends ResourceSupport {
 
   private final String lastName;
 
+  /**
+   * User resource that will be returned from controller.
+   *
+   * @param user Application User
+   */
   public UserResource(User user) {
     this.username = user.getUsername();
     this.firstName = user.getFirstName();

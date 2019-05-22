@@ -19,36 +19,18 @@ When adding up all problems Spring Data REST and Spring Data REST HAL Browser be
 * ALPS - Application-Level Profile Semantics - https://en.wikipedia.org/wiki/Application-Level_Profile_Semantics_(ALPS)[ALPS Wikipedia]
 * CURIE - Compact URI - https://en.wikipedia.org/wiki/CURIE[CURIE Wikipedia]
 
-== Better way
+== HAL Browser
+=== Better way
 HAL Browser should be outside of a project and provided by Docker image. That way you can target localhost while developing REST API for quick check, and then later you can target your project in separate docker container.
 
 Project should link to API documentation created with Spring REST Docs library.
 
-== Current solution
+=== Current solution
 For now I decided to use simplest solution so I copied https://github.com/mikekelly/hal-browser[HAL Browser] to static resources and created controller that redirects to static index.html.
 
 Now HAL Browser can be accessed at http://localhost:8080/browser/index.html
 
 NOTE:  We could probably extract static files and serve them with nginx, but for now this is good enough.
-
-= Running application
-
-First you need to build application with:
-[source,bash]
-----
-./gradlew clean build
-----
-Then you can star application with:
-[source,bash]
-----
-java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
-----
-
-== Debugging build
-[source,bash]
-----
-./gradlew -Dorg.gradle.debug=true -Penv=dev clean build
-----
 
 == AsciiDoctor
 AsciiDoctor creates this snippets. Snippets are ordered in a way they should appear in documentation. Not all snippets should be used for every endpoint.
@@ -102,14 +84,34 @@ When new endpoint is being developed you should add objects in this order.
 . User Guide documentation (adoc)
 . Method Documentation (java)
 
-== Profiles
+== Running application
+
+First you need to build application with:
+[source,bash]
+----
+./gradlew clean build
+----
+Then you can star application with:
+[source,bash]
+----
+java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
+----
+
+== Debugging build
+[source,bash]
+----
+./gradlew -Dorg.gradle.debug=true -Penv=dev clean build
+----
+
+
+=== Profiles
 
 There are two profiles. DEFAULT profile is default profile that is using H2 database and DEV profile that is using
 PostgreSQL database.
 
 DEV profile is using liquibase to version database and for DEFAULT profile database is created by hibernate.
 
-=== Default profile
+==== Default profile
 Building package:
 [source,bash]
 ----
@@ -122,7 +124,7 @@ Running application:
 java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
 ----
 
-=== Dev profile
+==== Dev profile
 Building package:
 [source,bash]
 ----
@@ -135,7 +137,7 @@ Starting Postgres database docker:
 docker run -it --rm --name hal-postgres -p 5432:5432 -e POSTGRES_USER=hal -e POSTGRES_PASSWORD=hal postgres
 ----
 
-Running application:
+Application can be run with dev profile from ide or from terminal with:
 [source,bash]
 ----
 java -jar build/libs/spring-hal-browser-learning-test-0.0.1-SNAPSHOT.jar
@@ -151,6 +153,12 @@ They can work with both JUnit4 (default) and with JUnit5 (configuration via plug
 
 Also Integration tests can be included but then runtime is considerable longer and much more timeout errors are
 recorded.
+
+PITest are not included in basic build process because it slows down build, but it can be run separately with:
+[source,bash]
+----
+./gradlew pitest
+----
 
 === Conclusions
 I have made sliced Unit tests. And they are grate for testing repository classes, especially custom methods that are
