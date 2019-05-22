@@ -5,5 +5,3 @@ pitest {
     // PITest will run only JUnit4/Spock tests
     pitestVersion = '1.4.6'
 }
-
-check.dependsOn 'pitest'
