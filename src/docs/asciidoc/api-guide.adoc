@@ -71,11 +71,7 @@ use of HTTP status codes.
 Whenever an error response (status code >= 400) is returned, the body will contain a JSON object
 that describes the problem. The error object has the following structure:
 
-include::{snippets}/error-example/response-fields.adoc[]
-
-Example of `400 Bad Request` response:
-
-include::{snippets}/error-example/http-response.adoc[]
+operation::error-example[snippets='response-fields,http-response']
 
 [[overview-hypermedia]]
 == Hypermedia
@@ -165,7 +161,7 @@ The Book resource is used to retrieve, update, and delete individual books
 [[resources-book-links]]
 === Links
 
-include::{snippets}/book-get-example/links.adoc[]
+operation::book-get-example[snippets='links']
 
 [[resources-book-retrieve]]
 === Retrieve a book
@@ -179,52 +175,24 @@ operation::book-get-example[snippets='path-parameters,response-fields,curl-reque
 
 A `PATCH` request is used to update a book
 
-==== Request structure
+To leave an attribute of a book unchanged, any of request fields may be omitted from the request.
 
-include::{snippets}/book-update-example/request-fields.adoc[]
+operation::book-update-example[snippets='request-fields,curl-request,http-response']
 
-To leave an attribute of a book unchanged, any of the above may be omitted from the request.
-
-==== Example request
-
-include::{snippets}/book-update-example/curl-request.adoc[]
-
-==== Example response
-
-include::{snippets}/book-update-example/http-response.adoc[]
 
 [[resources-book-replace]]
 === Replace a book
 
 A `PUT` request is used to replace a book
 
-==== Request structure
+If any of request fields is omitted from the request, is is the same as making that field null.
 
-include::{snippets}/book-replace-example/request-fields.adoc[]
+operation::book-replace-example[snippets='request-fields,curl-request,http-response']
 
-If any of the above is omitted from the request, is is the same as making that field null.
-
-==== Example request
-
-include::{snippets}/book-replace-example/curl-request.adoc[]
-
-==== Example response
-
-include::{snippets}/book-replace-example/http-response.adoc[]
 
 [[resources-book-delete]]
 === Delete a book
 
 A `DELETE` request is used to delete a book
 
-==== Path parameters
-
-include::{snippets}/book-delete-example/path-parameters.adoc[]
-
-==== Example request
-
-include::{snippets}/book-delete-example/curl-request.adoc[]
-
-==== Example response
-
-include::{snippets}/book-delete-example/http-response.adoc[]
+operation::book-delete-example[snippets='path-parameters,curl-request,http-response']
