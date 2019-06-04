@@ -129,7 +129,7 @@ operation::refresh-example[snippets='request-headers,request-parameters,response
 [[resources-users]]
 == Users
 
-The users resources are used to create and list nd manipulate with application users.
+The users resources are used to create and list and manipulate with application users.
 
 [[resources-books]]
 == Books
