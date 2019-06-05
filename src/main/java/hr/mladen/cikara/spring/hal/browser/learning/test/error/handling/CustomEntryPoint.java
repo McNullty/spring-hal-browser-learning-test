@@ -18,7 +18,7 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
           final HttpServletRequest request,
           final HttpServletResponse response,
           final AuthenticationException authException) throws IOException {
-    log.debug("Handle Access Denied exception: {}", authException);
+    log.debug("Handle Access Denied exception: {}", authException.toString());
     ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
     apiError.setMessage(authException.getMessage());
 
