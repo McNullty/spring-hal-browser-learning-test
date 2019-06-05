@@ -21,12 +21,12 @@ import org.springframework.stereotype.Component;
 @Profile({"dev", "default"})
 @Getter(AccessLevel.PRIVATE)
 @Component
-public class LoadSampleDataForDevProfile implements ApplicationListener<ContextRefreshedEvent> {
+public class LoadSampleDataForAllProfiles implements ApplicationListener<ContextRefreshedEvent> {
 
   private final UserRepository userRepository;
   private final AuthorityRepository authorityRepository;
 
-  public LoadSampleDataForDevProfile(
+  public LoadSampleDataForAllProfiles(
           final UserRepository userRepository,
           final AuthorityRepository authorityRepository) {
     this.userRepository = userRepository;
