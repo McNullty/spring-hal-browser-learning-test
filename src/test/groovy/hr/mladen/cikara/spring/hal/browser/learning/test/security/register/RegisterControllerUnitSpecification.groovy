@@ -58,8 +58,6 @@ class RegisterControllerUnitSpecification extends Specification {
                 .thenReturn(user)
 
         and: 'UserToUserResourceAssembler is mocked to return UserResource'
-
-
         def mockedUserResource = new UserResource(user)
         Link selfLink = new Link("/users/1", "self")
         mockedUserResource.add(selfLink)
